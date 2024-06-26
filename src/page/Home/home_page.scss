@@ -1,0 +1,12 @@
+#content {
+  margin-top: 56px;
+  width: 100vw;
+  height: calc(100vh - 56px);
+  overflow: hidden;
+  position: fixed;
+  z-index: 0;
+  .content-container {
+    height: 100%;
+    display: flex;
+  }
+}
