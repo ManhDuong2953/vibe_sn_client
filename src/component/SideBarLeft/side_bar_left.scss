@@ -1,9 +1,14 @@
 #sidebar-left--container {
-  flex: 1;
+  flex: 2;
   height: 100%;
   overflow-y: auto;
   overflow-x: hidden;
   background: var(--bg-temp-color);
+
+  &::-webkit-scrollbar {
+    display: none !important;
+  }
+
   span {
     background: url("https://the-weather-forecasting.netlify.app/static/media/bg.e0d46b6d28d5c7baa29c.png");
     padding: 0 25px;
@@ -34,8 +39,6 @@
           font-size: 12px;
         }
       }
-
-     
 
       h5 {
         color: var(--text-blur-color);
@@ -80,6 +83,7 @@
             margin-bottom: 4px;
           }
           p.status {
+            text-transform: uppercase;
             font-size: 10px !important;
             color: var(--text-blur-color);
           }
@@ -195,6 +199,11 @@
             rgba(0, 0, 0, 0.05) 0px 4px 6px -2px;
           h3 {
             font-size: 14px !important ;
+          }
+          b {
+            text-transform: uppercase;
+            font-size: 10px;
+            font-size: 400;
           }
           .row {
             height: 31px;

@@ -1,0 +1,22 @@
+li.story-item {
+  //   width: calc(100% / 4);
+  flex: 1;
+  aspect-ratio: 3 / 5;
+  margin: 10px;
+  overflow: hidden;
+  border-radius: 10px;
+
+  a {
+    overflow: hidden;
+    img {
+      width: 100%;
+      object-fit: contain;
+      transform: scale(1);
+      transition: 0.5s ease-out;
+    }
+    img:hover {
+      filter: brightness(0.9);
+      transform: scale(1.1);
+    }
+  }
+}

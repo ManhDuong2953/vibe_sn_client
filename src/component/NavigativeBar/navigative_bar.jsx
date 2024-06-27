@@ -8,6 +8,7 @@ import { HiMiniUserGroup } from "react-icons/hi2";
 import { BiLogoMessenger, BiSolidBellRing } from "react-icons/bi";
 import { MdDarkMode } from "react-icons/md";
 import { IoSettingsSharp } from "react-icons/io5";
+import { IoMdSearch } from "react-icons/io";
 import { FaChevronRight } from "react-icons/fa";
 import { MdLogout } from "react-icons/md";
 import { Link } from "react-router-dom";
@@ -19,8 +20,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { darkHandle, lightHandle } from "../../redux/Reducer/reducer";
 
 function NavigativeBar() {
-    const theme = useSelector((state) => state.themeUI.theme) 
-    const [darkOn, setDarkOn] = useState(theme === "dark"? true : false);
+    const theme = useSelector((state) => state.themeUI.theme)
+    const [darkOn, setDarkOn] = useState(theme === "dark" ? true : false);
     const dispatch = useDispatch()
     useEffect(() => {
         if (darkOn) {
@@ -42,6 +43,11 @@ function NavigativeBar() {
                         <div className="logo-container">
                             <img src={logo} onError={(e) => { e.target.src = imgError }} alt="" />
                         </div>
+                        <form action="" method="get">
+                            <IoMdSearch />
+                            <input type="text" placeholder="Tìm kiếm theo bài viết..." name="searchString" />
+                        </form>
+                        <div className="temp"></div>
                     </div>
                     <ul className="navbar-side--middle">
                         <Link className="active" title="Trang chủ">
@@ -116,7 +122,7 @@ function NavigativeBar() {
                                             value={darkOn}
                                             onToggle={() => {
                                                 setDarkOn(!darkOn);
-                                              
+
                                             }}
                                             activeLabel="Bật"
                                             inactiveLabel="Tắt"

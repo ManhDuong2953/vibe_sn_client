@@ -1,0 +1,11 @@
+.list-stories--container {
+  overflow-y: hidden;
+  overflow-x: auto;
+  width: 100%;
+  ul.list-stories {
+    display: flex;
+    align-items: center;
+    padding: 20px 0;
+    margin: -10px;
+  }
+}
