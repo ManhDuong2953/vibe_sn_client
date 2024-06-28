@@ -4,8 +4,8 @@ import ContentLoader from 'react-content-loader'
 const ArticleLoader = props => (
   <ContentLoader
     width={850} 
-    height={1000} 
-    viewBox="0 0 850 1000"
+    height={1200} 
+    viewBox="0 0 850 1300"
     backgroundColor="gray"  // Black background
     foregroundColor="white"  // White foreground
     {...props}

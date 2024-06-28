@@ -1,4 +1,5 @@
 .popup {
+  position: relative;
   .popup-info--container {
     position: absolute;
     width: 300px;
@@ -8,119 +9,140 @@
     z-index: 20;
     border-radius: 15px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    padding: 5px;
     display: none;
-    flex-direction: column;
-    justify-content: space-between;
-    .row {
-      width: 100%;
-      img {
-        width: 80px;
-        height: 80px;
-        object-fit: cover;
-        border-radius: 50%;
-      }
-      .info-short {
-        margin-left: 10px;
-        padding: 5px 0;
-        b.name-user {
-          font-size: 16px;
+
+    .popup-row-container {
+      padding: 15px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+
+      .popup-row {
+        width: 100%;
+        
+        img.popup-avt {
+          width: 80px;
+          height: 80px;
+          object-fit: cover;
+          border-radius: 50%;
         }
-        p.nickname-user {
-          font-size: 12px;
-          margin: 2px 0 6px 0;
-          color: var(--text-blur-color);
-        }
-        .info-short--item {
-          font-size: 13px;
-          padding: 3px 0;
-          svg {
-            font-size: 15px;
-            margin: 0px 5px -2px 0;
-            path {
-              color: var(--text-blur-color);
+
+        .popup-info-short {
+          margin-left: 15px;
+          padding: 5px 0;
+
+          b.popup-name-user {
+            font-size: 16px;
+          }
+
+          p.popup-nickname-user {
+            font-size: 12px;
+            margin: 2px 0 6px 0;
+            color: var(--text-blur-color);
+          }
+
+          .popup-info-short--item {
+            font-size: 12px;
+            padding: 3px 0;
+
+            svg {
+              font-size: 15px;
+              margin: 0 5px -2px 0;
+
+              path {
+                color: var(--text-blur-color);
+              }
             }
           }
         }
       }
-      a {
-        width: 100%;
-        height: 50px;
-        padding: 10px 0;
+
+      .popup-row.action {
         display: flex;
         align-items: center;
-        justify-content: space-between;
-        h5.direct-info--detail {
-          flex: 50;
-          line-height: 40px;
-          text-align: center;
-          padding: 0 10px;
-          border-radius: 10px;
-          background-color: var(--active-color);
-          color: var(--text-blur-color);
-          svg {
-            font-size: 15px;
-            margin: 0px 5px -2px 0;
-            path {
-              color: var(--text-blur-color);
+        padding: 10px 0 0 0;
+        flex-direction: row;
+
+        a {
+          padding: 0;
+          flex: 45;
+          width: 100%;
+
+          h5.popup-direct-info--detail {
+            width: 100%;
+            line-height: 40px;
+            text-align: center;
+            padding: 0 5px;
+            border-radius: 10px;
+            background-color: var(--active-color);
+            color: white;
+
+            svg {
+              font-size: 15px;
+              margin: 0 5px -2px 0;
+
+              path {
+                color: white;
+              }
             }
           }
         }
-        .temp {
-          flex: 1;
+
+        a:hover {
+          filter: brightness(0.9);
         }
+
+        .popup-temp {
+          flex: 3;
+        }
+
         form {
-          flex: 30;
+          flex: 25;
           display: flex;
           align-items: center;
           justify-content: center;
           padding: 10px;
           border-radius: 10px;
           background-color: var(--disable-status-color);
+
           p {
             color: var(--text-blur-color);
           }
         }
+
         form.active {
           background-color: var(--bg-accent-color);
+
           p {
             font-weight: 700;
             color: var(--accent-color);
           }
+
           svg {
             path {
               color: var(--accent-color);
             }
           }
-        }
-      }
-      a:hover {
-        h5.direct-info--detail {
-          color: var(--text-color);
-          svg {
-            path {
-              color: var(--text-color);
-            }
+
+          &:hover {
+            filter: brightness(0.8);
           }
         }
-        form {
-          filter: brightness(0.8);
-        }
+      }
+
+      .popup-row.popup-info {
+        display: flex;
+        align-items: flex-start;
+        color: var(--text-color);
+        padding-bottom: 10px;
+        border-bottom: 1px solid var(--border-color);
       }
     }
-    .row.info {
-      display: flex;
-      align-items: flex-start;
-      color: var(--text-color);
-      padding-bottom: 10px;
-      padding: 10px;
-      border-bottom: 1px solid var(--border-color);
-    }
   }
-}
 
-.popup:hover {
-  .popup-info--container {
-    display: flex;
+  &:hover {
+    .popup-info--container {
+      display: block;
+    }
   }
 }

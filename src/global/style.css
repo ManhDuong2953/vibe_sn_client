@@ -17,6 +17,10 @@
     /* Màu nền khi hoạt động */
     --active-status-color: #46AB5E;
     --disable-status-color: #787878;
+    --black-text: black;
+    --blue-link: #5AA7FF;
+    --always-dark-overlay: rgba(0, 0, 0, 0.7); 
+  --shadow-1: rgba(0, 0, 0, 0.3); 
 }
 
 [data-theme="dark"] {
@@ -25,6 +29,7 @@
     --navbar-color: #242526;
     --border-color: #5b5c5e;
     --text-color: #E4E6EB;
+    --text-black-color: #161616;
     --icon-color: #E4E6EB;
     --hover-color: #2f3136;
     --disabled-color: #95a5a6;
@@ -42,6 +47,8 @@
     --border-color: #cccccc;
     /* Màu viền */
     --text-color: #000000;
+    --text-black-color: #ffffff;
+
     /* Màu chữ */
     --icon-color: #606266;
     /* Màu chữ */
@@ -119,7 +126,9 @@ i {
     width: -webkit-fill-available;
     height: auto;
 }
-
+.loading-skeleton{
+    height: 100%;
+}
 
 ::-webkit-scrollbar {
     width: 5px;

@@ -1,0 +1,39 @@
+li.user-story--item {
+    padding: 5px;
+    border-radius: 5px;
+    display: flex;
+    align-items: c;
+    width: 100%;
+    &:hover, &.active {
+      background-color: var(--hover-color);
+    }
+    a {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      .img {
+        img {
+          width: 45px;
+          height: 45px;
+          object-fit: cover;
+          aspect-ratio: 1;
+          border-radius: 50%;
+          border: 5px solid var(--active-color);
+        }
+      }
+      .info {
+            margin-left: 10px;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        p.name {
+          font-weight: 500;
+          font-size: 13px;
+        }
+        p.time {
+          font-size: 10px;
+          color: var(--text-blur-color);
+        }
+      }
+    }
+  }

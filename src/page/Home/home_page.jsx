@@ -15,7 +15,7 @@ function HomePage({ title }) {
         <React.Fragment>
             <NavigativeBar />
             <div id="content">
-                <div className="content-container">
+                <div className="content-container container">
                     <SideBarLeft />
                     <ListPosts />
                     <SideBarRight />

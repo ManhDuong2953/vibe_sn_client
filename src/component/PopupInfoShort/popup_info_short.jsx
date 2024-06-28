@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import "./popup_info_short.scss";
 import { Link } from "react-router-dom";
 import { FaSchoolCircleCheck, FaArrowUpRightFromSquare } from "react-icons/fa6";
@@ -7,59 +7,76 @@ import { FaUserFriends } from "react-icons/fa";
 import { IoHeartCircleSharp } from "react-icons/io5";
 
 function PopupInfoShort() {
+    const [hearted, setHearted] = useState(false);
     useEffect(() => {
-        const popupInfo = document.querySelector(".popup-info--container");
-        const avtParent = popupInfo?.parentNode;
-        avtParent.classList.add("popup");
-        const handleMouseEnter = () => {
+        const popupInfoElements = document.querySelectorAll(".popup-info--container");
+
+        const handleMouseEnter = (popupInfoElement, avtParent) => () => {
             if (avtParent) {
                 //fetch data 
                 const screenMidpoint = window.innerHeight / 2;
                 const y = avtParent.getBoundingClientRect().y;
                 if (y <= screenMidpoint) {
-                    popupInfo.style.top = "45px"
+                    popupInfoElement.style.top = "40px";
                 } else {
-                    popupInfo.style.top = "-245px"
+                    popupInfoElement.style.top = "-245px";
                 }
             }
         };
 
-        if (avtParent) {
-            avtParent.addEventListener("mouseenter", handleMouseEnter);
-        }
+        popupInfoElements.forEach((popupInfoElement) => {
+            const avtParent = popupInfoElement?.parentNode;
+            avtParent.classList.add("popup");
+            const enterHandler = handleMouseEnter(popupInfoElement, avtParent);
+
+            if (avtParent) {
+                avtParent.addEventListener("mouseenter", enterHandler);
+                popupInfoElement._enterHandler = enterHandler;
+            }
+        });
 
         return () => {
-            if (avtParent) {
-                avtParent.removeEventListener("mouseenter", handleMouseEnter);
-            }
+            popupInfoElements.forEach((popupInfoElement) => {
+                const avtParent = popupInfoElement?.parentNode;
+                if (avtParent && popupInfoElement._enterHandler) {
+                    avtParent.removeEventListener("mouseenter", popupInfoElement._enterHandler);
+                }
+            });
         };
     }, []);
 
+    const handleHeartClick = (e) => {
+        e.preventDefault();
+        setHearted((prev) => !prev);
+    };
     return (
         <React.Fragment>
             <div className="popup-info--container">
-                <div className="row info">
-                    <img src="https://cdn.24h.com.vn/upload/1-2023/images/2023-01-04/Ve-dep-dien-dao-chung-sinh-cua-co-gai-sinh-nam-1999-lot-top-guong-mat-dep-nhat-the-gioi-57068584_2351143488502839_871658938696715268_n-1672812988-819-width1080height1080.jpg" alt="" />
-                    <div className="info-short">
-                        <b className="name-user">Dastra Taran</b>
-                        <p className="nickname-user">@dastrataran533</p>
-                        <div className="info-short--item info-school"><FaSchoolCircleCheck />Từng học tại <b>Trường đại học Mát-cơ-va</b></div>
-                        <div className="info-short--item info-address"><IoHome />Đang sống tại <b>Moscow</b></div>
-                        <div className="info-short--item info-quantity--fr"><FaUserFriends />Có <b>1000 bạn bè</b></div>
-                        <div className="info-short--item info-quantity--fr"><IoHeartCircleSharp />Có <b>1000 lượt yêu thích</b></div>
+                <div className="popup-row-container">
 
+                    <div className="popup-row popup-info">
+                        <img className="popup-avt" src="https://cdn.24h.com.vn/upload/1-2023/images/2023-01-04/Ve-dep-dien-dao-chung-sinh-cua-co-gai-sinh-nam-1999-lot-top-guong-mat-dep-nhat-the-gioi-57068584_2351143488502839_871658938696715268_n-1672812988-819-width1080height1080.jpg" alt="" />
+                        <div className="popup-info-short">
+                            <b className="popup-name-user">Dastra Taran</b>
+                            <p className="popup-nickname-user">@dastrataran533</p>
+                            <div className="popup-info-short--item info-school"><FaSchoolCircleCheck />Từng học tại <b>Trường đại học Mát-cơ-va</b></div>
+                            <div className="popup-info-short--item info-address"><IoHome />Đang sống tại <b>Moscow</b></div>
+                            <div className="popup-info-short--item info-quantity--fr"><FaUserFriends />Có <b>1000 bạn bè</b></div>
+                            <div className="popup-info-short--item info-quantity--fr"><IoHeartCircleSharp />Có <b>{hearted ? 1000 + 1 : 1000 - 1} lượt yêu thích</b></div>
+
+                        </div>
                     </div>
-                </div>
-                <div className="row">
-                    <Link >
-                        <h5 className="direct-info--detail">
-                            Xem trang cá nhân <FaArrowUpRightFromSquare />
-                        </h5>
-                        <div className="temp"></div>
-                        <form action="" method="post" className="active">
-                            <IoHeartCircleSharp /> <p>Đã thích</p>
+                    <div className="popup-row action">
+                        <Link >
+                            <h5 className="popup-direct-info--detail">
+                                Xem trang cá nhân <FaArrowUpRightFromSquare />
+                            </h5>
+                        </Link>
+                        <div className="popup-temp"></div>
+                        <form action="" onClick={handleHeartClick} method="post" className={hearted ? "active" : ""}>
+                            <IoHeartCircleSharp /> <p>{hearted ? "Đã thích" : "Thích"}</p>
                         </form>
-                    </Link>
+                    </div>
                 </div>
             </div>
         </React.Fragment>

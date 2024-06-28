@@ -24,8 +24,8 @@ li.list-contact--item {
       .avt-contact::before {
         content: "";
         position: absolute;
-        bottom: 2px;
-        right: -1px;
+        bottom: 0px;
+        right: 0px;
         width: 9px;
         height: 9px;
         border: 2px solid var(--bg-color);

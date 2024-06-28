@@ -1,21 +1,55 @@
 li.story-item {
-  //   width: calc(100% / 4);
-  flex: 1;
+  flex: 0 0 calc(25% - 10px); // Để hiển thị tối đa 4 phần tử cùng lúc, với khoảng cách giữa các phần tử
   aspect-ratio: 3 / 5;
-  margin: 10px;
+  margin: 0 5px;
   overflow: hidden;
   border-radius: 10px;
-
+  position: relative;
   a {
     overflow: hidden;
-    img {
+    display: block;
+    height: 100%;
+
+    img.media-story {
       width: 100%;
-      object-fit: contain;
+      height: 100%;
+      object-fit: cover; // Để hình ảnh phù hợp với tỷ lệ khung
       transform: scale(1);
       transition: 0.5s ease-out;
+      background-color: antiquewhite;
     }
-    img:hover {
-      filter: brightness(0.9);
+
+    .info-container {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      top: 0;
+      left: 0;
+      z-index: 5;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      justify-content: space-between;
+      padding: 5px 10px;
+      img {
+        width: 35px;
+        height: 35px;
+        object-fit: cover;
+        aspect-ratio: 1;
+        border-radius: 50%;
+        border: 5px solid var(--active-color);
+      }
+      .name {
+        font-size: 12px;
+        font-weight: 500;
+        text-shadow: -0.4px 0 var(--black-text), 0 0.4px var(--black-text),
+          0.4px 0 var(--black-text), 0 -0.4px var(--black-text);
+      }
+    }
+  }
+  a:hover {
+    img.media-story {
+      filter: brightness(0.8);
       transform: scale(1.1);
     }
   }

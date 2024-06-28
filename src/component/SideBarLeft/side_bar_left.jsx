@@ -45,6 +45,7 @@ function SideBarLeft() {
                 <span>
 
                     <div className="template-container">
+                        <div className="template-wrap">
                         {
                             loaderWeather === true ? (
                                 <React.Fragment>
@@ -185,7 +186,7 @@ function SideBarLeft() {
                                     <ArticleLoader />
                                 </div>)
                         }
-
+                        </div>
                     </div>
                 </span>
             </div>
