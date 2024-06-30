@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 import "./suggest_item.scss";
 import { useEffect, useState } from "react";
 import AvatarWithText from "../../../../skeleton/avatarwithtext";
-import PopupInfoShort from "../../../PopupInfoShort/popup_info_short";
+import PopupInfoShort from "../../../../component/PopupInfoShort/popup_info_short";
 function SuggestItem() {
     const [loading, setLoading] = useState(false);
     useEffect(() => {

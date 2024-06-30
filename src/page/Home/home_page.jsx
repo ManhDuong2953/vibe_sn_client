@@ -1,9 +1,10 @@
 import React, { useEffect } from "react";
 import "./home_page.scss";
-import NavigativeBar from "../../component/NavigativeBar/navigative_bar";
-import SideBarLeft from "../../component/SideBarLeft/side_bar_left";
-import ListPosts from "../../component/ListPosts/list_posts";
-import SideBarRight from "../../component/SideBarRight/side_bar_right";
+import NavigativeBar from "../../layout/NavigativeBar/navigative_bar";
+import SideBarLeft from "../../layout/SideBarLeft/side_bar_left";
+import ListPosts from "../../layout/ListPosts/list_posts";
+import SideBarRight from "../../layout/SideBarRight/side_bar_right";
+
 function HomePage({ title }) {
 
     // Create a new title of the HomePage
@@ -17,7 +18,7 @@ function HomePage({ title }) {
             <div id="content">
                 <div className="content-container container">
                     <SideBarLeft />
-                    <ListPosts />
+                    <ListPosts/>
                     <SideBarRight />
                 </div>
             </div>

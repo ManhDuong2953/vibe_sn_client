@@ -5,6 +5,7 @@ li.story-item {
   overflow: hidden;
   border-radius: 10px;
   position: relative;
+  border: 0.1px solid var(--border-color);
   a {
     overflow: hidden;
     display: block;
@@ -16,7 +17,7 @@ li.story-item {
       object-fit: cover; // Để hình ảnh phù hợp với tỷ lệ khung
       transform: scale(1);
       transition: 0.5s ease-out;
-      background-color: antiquewhite;
+      filter: brightness(0.8);
     }
 
     .info-container {
@@ -42,6 +43,7 @@ li.story-item {
       .name {
         font-size: 12px;
         font-weight: 500;
+        color: white;
         text-shadow: -0.4px 0 var(--black-text), 0 0.4px var(--black-text),
           0.4px 0 var(--black-text), 0 -0.4px var(--black-text);
       }
@@ -49,7 +51,7 @@ li.story-item {
   }
   a:hover {
     img.media-story {
-      filter: brightness(0.8);
+      filter: brightness(1);
       transform: scale(1.1);
     }
   }

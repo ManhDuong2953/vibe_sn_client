@@ -53,7 +53,7 @@ function ListStories() {
                 <FaCircleChevronLeft className="btn btn-prev" />
                 <ul className="list-stories">
                     <li className="story-item add-story--icon">
-                        <Link>
+                        <Link to="/story/create">
                             <img className="avt-logo" src="https://gaixinhbikini.com/wp-content/uploads/2022/08/Hinh-anh-gai-Nga-dep-luvvn-51.jpg" alt="" />
                             <div className="icon-container">
                                 <FaPlus />
@@ -86,3 +86,4 @@ function ListStories() {
 }
 
 export default ListStories;
+

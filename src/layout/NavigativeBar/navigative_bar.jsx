@@ -13,7 +13,7 @@ import { FaChevronRight } from "react-icons/fa";
 import { MdLogout } from "react-icons/md";
 import { Link } from "react-router-dom";
 import imgError from "../../www/error_image.png";
-import NoticeItem from "../NoticeItem/notice_item";
+import NoticeItem from "../../component/NoticeItem/notice_item";
 import ToggleButton from 'react-toggle-button'
 import useToggleListener from "../../ultils/animation/ToggleActive";
 import { useDispatch, useSelector } from "react-redux";
@@ -41,7 +41,9 @@ function NavigativeBar() {
                 <div className="container">
                     <div className="navbar-side--left">
                         <div className="logo-container">
+                            <Link to="/">
                             <img src={logo} onError={(e) => { e.target.src = imgError }} alt="" />
+                            </Link>
                         </div>
                         <form action="" method="get">
                             <IoMdSearch />
@@ -50,7 +52,7 @@ function NavigativeBar() {
                         <div className="temp"></div>
                     </div>
                     <ul className="navbar-side--middle">
-                        <Link className="active" title="Trang chủ">
+                        <Link to="/" className="active" title="Trang chủ">
                             <li><AiFillHome /></li>
                         </Link>
                         <Link title="Cửa hàng">

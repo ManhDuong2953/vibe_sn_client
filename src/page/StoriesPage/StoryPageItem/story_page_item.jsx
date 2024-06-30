@@ -5,6 +5,9 @@ import React, { useState } from "react";
 import AvatarWithText from "../../../skeleton/avatarwithtext";
 function StoryPageItem({ active }) {
     const [loaded, setLoaded] = useState(false)
+    setTimeout(() => {
+        setLoaded(true);
+    }, 2000);
     return (
         <React.Fragment>
             {loaded ? (
