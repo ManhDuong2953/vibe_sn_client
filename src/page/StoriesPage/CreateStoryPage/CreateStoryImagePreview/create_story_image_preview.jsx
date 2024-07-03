@@ -10,7 +10,12 @@ import NavigativeBar from "../../../../layout/NavigativeBar/navigative_bar";
 import { FaCropSimple } from "react-icons/fa6";
 import { IoText } from "react-icons/io5";
 
-function CreateStoryImagePreview() {
+function CreateStoryImagePreview({titlePage}) {
+    
+    useEffect(() => {
+        document.title = titlePage;
+    }, [titlePage]);
+
     const { image } = useContext(ImageContext);
     const [text, setText] = useState("");
     const [showTextEditor, setShowTextEditor] = useState(false); // Trạng thái hiển thị editor text
@@ -77,14 +82,16 @@ function CreateStoryImagePreview() {
                     <div className="container">
                         <div className="story-container-preview--wrapper">
                             <div className="side-left">
-                                <h3>Tạo tin</h3>
+                                <h1>Tạo tin</h1>
                                 {showTextEditor && (
-                                    <div className="controls">
+                                    <div className="controls-text">
+                                        <h3>Chỉnh sửa văn bản</h3>
                                         <div className="control-group">
                                             <label htmlFor="text-input">Nhập văn bản:</label>
                                             <input
                                                 type="text"
                                                 id="text-input"
+                                                placeholder="Thêm văn bản vào đây..."
                                                 value={text}
                                                 onChange={(e) => setText(e.target.value)}
                                             />
@@ -164,48 +171,51 @@ function CreateStoryImagePreview() {
                                 </div>
                             </div>
                             <div className="side-right">
-                                <div className="preview" ref={previewRef}>
-                                    {!croppedImage && (
-                                        <div className="crop-container">
-                                            <Cropper
-                                                image={image}
-                                                crop={crop}
-                                                zoom={zoom}
-                                                aspect={1 / 2}
-                                                onCropChange={setCrop}
-                                                onZoomChange={setZoom}
-                                                onCropComplete={onCropComplete}
-                                            />
-                                        </div>
-                                    )}
-                                    {croppedImage && (
-                                        <img src={croppedImage} alt="Cropped" className="cropped-image" />
-                                    )}
-                                    {showTextEditor && (
-                                        <Draggable
-                                            onDrag={(e) => {
-                                                if (textRef.current) {
-                                                    setTextPosition({
-                                                        x: e.clientX - textRef.current.offsetWidth / 2,
-                                                        y: e.clientY - textRef.current.offsetHeight / 2
-                                                    });
-                                                }
-                                            }}
-                                            onStop={(e) => {
-                                                if (textRef.current) {
-                                                    setTextPosition({
-                                                        x: e.clientX - textRef.current.offsetWidth / 2,
-                                                        y: e.clientY - textRef.current.offsetHeight / 2
-                                                    });
-                                                }
-                                            }}
-                                            bounds=".preview"
-                                        >
-                                            <div ref={textRef} style={textStyle} >
-                                                {text}
+                                <p className="text-title--right">Xem trước</p>
+                                <div className="preview-container">
+                                    <div className="preview" ref={previewRef}>
+                                        {!croppedImage && (
+                                            <div className="crop-container">
+                                                <Cropper
+                                                    image={image}
+                                                    crop={crop}
+                                                    zoom={zoom}
+                                                    aspect={1 / 2}
+                                                    onCropChange={setCrop}
+                                                    onZoomChange={setZoom}
+                                                    onCropComplete={onCropComplete}
+                                                />
                                             </div>
-                                        </Draggable>
-                                    )}
+                                        )}
+                                        {croppedImage && (
+                                            <img src={croppedImage} alt="Cropped" className="cropped-image" />
+                                        )}
+                                        {showTextEditor && (
+                                            <Draggable
+                                                onDrag={(e) => {
+                                                    if (textRef.current) {
+                                                        setTextPosition({
+                                                            x: e.clientX - textRef.current.offsetWidth / 2,
+                                                            y: e.clientY - textRef.current.offsetHeight / 2
+                                                        });
+                                                    }
+                                                }}
+                                                onStop={(e) => {
+                                                    if (textRef.current) {
+                                                        setTextPosition({
+                                                            x: e.clientX - textRef.current.offsetWidth / 2,
+                                                            y: e.clientY - textRef.current.offsetHeight / 2
+                                                        });
+                                                    }
+                                                }}
+                                                bounds=".preview"
+                                            >
+                                                <div ref={textRef} style={textStyle} >
+                                                    {text}
+                                                </div>
+                                            </Draggable>
+                                        )}
+                                    </div>
                                 </div>
                             </div>
                         </div>

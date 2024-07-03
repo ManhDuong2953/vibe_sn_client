@@ -17,7 +17,7 @@ function NoticeItem() {
                     </div>
                     <div className="content-notice">
                         <p>
-                            Dastra Taran đã đồng ý nhắn tin với bạn, bây giờ bạn có thể trò chuyện với họ như hai người bạn ngay nào!!
+                            Dasha Taran đã đồng ý nhắn tin với bạn, bây giờ bạn có thể trò chuyện với họ như hai người bạn ngay nào!!
                         </p>
                         <b>
                             1 giờ trước

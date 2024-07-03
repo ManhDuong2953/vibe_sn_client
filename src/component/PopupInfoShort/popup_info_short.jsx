@@ -57,8 +57,8 @@ function PopupInfoShort() {
                     <div className="popup-row popup-info">
                         <img className="popup-avt" src="https://cdn.24h.com.vn/upload/1-2023/images/2023-01-04/Ve-dep-dien-dao-chung-sinh-cua-co-gai-sinh-nam-1999-lot-top-guong-mat-dep-nhat-the-gioi-57068584_2351143488502839_871658938696715268_n-1672812988-819-width1080height1080.jpg" alt="" />
                         <div className="popup-info-short">
-                            <b className="popup-name-user">Dastra Taran</b>
-                            <p className="popup-nickname-user">@dastrataran533</p>
+                            <b className="popup-name-user">Dasha Taran</b>
+                            <p className="popup-nickname-user">@Dashataran533</p>
                             <div className="popup-info-short--item info-school"><FaSchoolCircleCheck />Từng học tại <b>Trường đại học Mát-cơ-va</b></div>
                             <div className="popup-info-short--item info-address"><IoHome />Đang sống tại <b>Moscow</b></div>
                             <div className="popup-info-short--item info-quantity--fr"><FaUserFriends />Có <b>1000 bạn bè</b></div>

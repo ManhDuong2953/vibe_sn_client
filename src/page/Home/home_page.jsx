@@ -5,12 +5,12 @@ import SideBarLeft from "../../layout/SideBarLeft/side_bar_left";
 import ListPosts from "../../layout/ListPosts/list_posts";
 import SideBarRight from "../../layout/SideBarRight/side_bar_right";
 
-function HomePage({ title }) {
+function HomePage({ titlePage }) {
 
     // Create a new title of the HomePage
     useEffect(() => {
-        document.title = title;
-    }, [title]);
+        document.title = titlePage;
+    }, [titlePage]);
 
     return (
         <React.Fragment>

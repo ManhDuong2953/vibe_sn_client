@@ -7,11 +7,10 @@ import { FaImage } from "react-icons/fa6";
 import { ImageContext } from "../../../Provider/ImageContext";
 import NavigativeBar from "../../../layout/NavigativeBar/navigative_bar";
 
-function CreateStoryPage({ title }) {
+function CreateStoryPage({ titlePage }) {
     useEffect(() => {
-        document.title = title;
-    }, [title]);
-
+        document.title = titlePage;
+    }, [titlePage]);
     const inputRef = useRef(null);
     const navigate = useNavigate();
     const { setImage } = useContext(ImageContext);
@@ -22,7 +21,7 @@ function CreateStoryPage({ title }) {
             const reader = new FileReader();
             reader.onloadend = () => {
                 setImage(reader.result);
-                navigate('/story/create/preview');
+                navigate('/story/create/preview/image');
             };
             reader.readAsDataURL(file);
         }
@@ -45,12 +44,12 @@ function CreateStoryPage({ title }) {
                                         src="https://cdn.24h.com.vn/upload/1-2023/images/2023-01-04/Ve-dep-dien-dao-chung-sinh-cua-co-gai-sinh-nam-1999-lot-top-guong-mat-dep-nhat-the-gioi-57068584_2351143488502839_871658938696715268_n-1672812988-819-width1080height1080.jpg"
                                         alt=""
                                     />
-                                    <h4>Dastra Taran</h4>
+                                    <h4>Dasha Taran</h4>
                                 </div>
                             </Link>
                         </div>
                         <div className="side-right">
-                            <Link to="#">
+                            <Link to="/story/create/preview/text">
                                 <div className="direct create-story--text-container">
                                     <div className="icon"><IoText /></div>
                                     <p>Tạo tin bằng văn bản</p>

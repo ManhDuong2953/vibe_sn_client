@@ -15,7 +15,7 @@ function StoryItem() {
                         <img className="media-story" src="https://gaixinhbikini.com/wp-content/uploads/2022/08/Hinh-anh-gai-Nga-dep-luvvn-51.jpg" alt="" />
                         <div className="info-container">
                             <img src="https://gaixinhbikini.com/wp-content/uploads/2022/08/Hinh-anh-gai-Nga-dep-luvvn-51.jpg" alt="" />
-                            <div className="name">Dastra Taran</div>
+                            <div className="name">Dasha Taran</div>
                         </div>
                     </Link>
             ) : (

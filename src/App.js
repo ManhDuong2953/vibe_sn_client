@@ -32,6 +32,7 @@ function App() {
           </Routes>
         </Router>
       </ImageProvider>
+      <div id="overlay"></div>
     </div>
   );
 }
