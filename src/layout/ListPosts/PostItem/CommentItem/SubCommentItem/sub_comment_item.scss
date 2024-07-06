@@ -1,0 +1,44 @@
+.container-item-main.sub-comment {
+
+  .input-wrapper {
+    flex: 12;
+    padding: 0 10px;
+    display: flex;
+    align-items: center;
+    .input-control--container {
+      width: 100%;
+      border: 1px solid var(--text-blur-color);
+      border-radius: 10px;
+      background-color: var(--hover-color);
+      display: flex;
+      padding: 5px 15px;
+      align-items: center;
+
+      input[type="text"] {
+        padding: 5px;
+        color: var(--text-color);
+        font-size: 15px;
+        border: none;
+        background-color: transparent !important;
+        flex: 15;
+        &::placeholder {
+          font-weight: 500;
+          font-size: 15px;
+          color: var(--text-blur-color);
+        }
+        &:focus {
+          outline: unset;
+        }
+      }
+      .input-media {
+        flex: 1;
+        &:hover {
+          opacity: 0.8;
+        }
+        label {
+          cursor: pointer;
+        }
+      }
+    }
+  }
+}

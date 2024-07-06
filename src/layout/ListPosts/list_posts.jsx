@@ -14,11 +14,7 @@ function ListPosts() {
                     <FormPost />
 
                     <PostItem />
-                    <PostItem />
-                    <PostItem />
-                    <PostItem />
-                    <PostItem />
-                    <PostItem />
+                 
                 </span>
             </div>
         </React.Fragment>

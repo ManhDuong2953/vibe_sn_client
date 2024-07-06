@@ -1,23 +1,11 @@
-/* File: src/index.css hoặc src/App.css */
-
 @import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap');
 
-
-
-
 :root {
-
-    /* Màu chính */
     --success-color: #2ecc71;
-    /* Màu thành công */
     --accent-color: #e74c3c;
-    /* Màu nhấn */
     --bg-accent-color: #e74d3c1e;
-    /* Màu nền cho màu nhấn */
     --active-color: #0654D2;
-    /* Màu hoạt động */
     --bg-active-color: #0654d21b;
-    /* Màu nền khi hoạt động */
     --active-status-color: #46AB5E;
     --black-text: black;
     --blue-link: #5AA7FF;
@@ -44,24 +32,15 @@
     --disable-status-color: #d3cece;
     --primary-color: rgb(9 99 131);
     --bg-color: #F0F2F5;
-    /* Màu nền sáng */
     --navbar-color: #FFFFFF;
-    /* Màu nền thanh điều hướng */
     --border-color: #cccccc;
-    /* Màu viền */
     --text-color: #000000;
     --text-black-color: #ffffff;
-
-    /* Màu chữ */
     --icon-color: #606266;
-    /* Màu chữ */
     --hover-color: #f1f1f1;
-    /* Màu khi rê chuột */
     --disabled-color: #cccccc;
-    /* Màu vô hiệu */
-    --text-blur-color: #000000;
-    --bg-temp-color: #897ee7;
-
+    --text-blur-color: #515151;
+    --bg-temp-color: #897ee7;   
 }
 
 
@@ -84,6 +63,18 @@ svg {
     path {
         color: var(--icon-color);
     }
+}
+
+button[type="submit"] {
+    border: none;
+    outline: unset;
+    background-color: transparent !important;
+}
+
+.avt-img img {
+    border-radius: 50%;
+    aspect-ratio: 1;
+    object-fit: cover;
 }
 
 h1,
