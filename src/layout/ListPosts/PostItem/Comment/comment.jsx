@@ -8,10 +8,10 @@ import { VscShare } from "react-icons/vsc";
 import { FaHandHoldingHeart } from "react-icons/fa6";
 import { ImReply } from "react-icons/im";
 import CommentItem from "../CommentItem/comment_item";
-function Comment() {
+function Comment({setShowCommentPage}) {
     const [activeIcon, setActiveIcon] = useState("default");
     const [activeTitle, setActiveTitle] = useState("");
-    const [showCommentContainer, setShowCommentContainer] = useState(false);
+    const [showCommentContainer, setShowCommentContainer] = useState(setShowCommentPage??false);
 
     const handleIconClick = (icon, title) => {
         setActiveIcon(icon);

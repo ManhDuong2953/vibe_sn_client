@@ -124,6 +124,7 @@ a {
 }
 
 .loading-skeleton {
+    padding: 0 30px;
     height: 100%;
 }
 

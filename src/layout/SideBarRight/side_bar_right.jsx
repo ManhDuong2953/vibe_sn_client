@@ -14,7 +14,9 @@ function SideBarRight() {
                         <img src={iconsHbbd} alt="" />
                         <p>Hôm nay là sinh nhật của <Link><b>Dasha Taran</b></Link> và <Link><b>Dasha Taran</b></Link> </p>
                     </div>
+                    <h4>Người liên hệ</h4>
                     <ListContact />
+                    <h4>Gợi ý cho bạn</h4>
                     <ListSuggest />
                 </span>
 

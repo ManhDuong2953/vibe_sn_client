@@ -67,7 +67,7 @@ function PopupInfoShort() {
                         </div>
                     </div>
                     <div className="popup-row action">
-                        <Link >
+                        <Link to="/profile/123">
                             <h5 className="popup-direct-info--detail">
                                 Xem trang cá nhân <FaArrowUpRightFromSquare />
                             </h5>
