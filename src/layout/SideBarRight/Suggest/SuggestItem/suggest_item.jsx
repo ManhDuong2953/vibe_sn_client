@@ -8,7 +8,7 @@ function SuggestItem() {
     useEffect(() => {
         setTimeout(() => {
             setLoading(true);
-        }, 0)
+        }, 1000)
     }, []);
     return (
         <li className="list-suggest--item">

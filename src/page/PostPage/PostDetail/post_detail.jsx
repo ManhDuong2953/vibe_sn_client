@@ -1,13 +1,13 @@
 import React, { useEffect } from "react";
 import "./post_detail.scss";
-import NavigativeBar from "../../layout/NavigativeBar/navigative_bar";
 import { FaChevronLeft } from "react-icons/fa6";
 import { FaChevronRight } from "react-icons/fa6";
-import HeaderPost from "../../layout/ListPosts/PostItem/HeaderPost/header_post";
-import ContentText from "../../layout/ListPosts/PostItem/ContentText/content_text";
-import Comment from "../../layout/ListPosts/PostItem/Comment/comment";
 import { MdOutlineClose } from "react-icons/md";
 import { useNavigate } from "react-router-dom";
+import NavigativeBar from "../../../layout/NavigativeBar/navigative_bar";
+import HeaderPost from "../../../layout/ListPosts/PostItem/HeaderPost/header_post";
+import ContentText from "../../../layout/ListPosts/PostItem/ContentText/content_text";
+import Comment from "../../../layout/ListPosts/PostItem/Comment/comment";
 
 function PostDetail({ titlePage }) {
 

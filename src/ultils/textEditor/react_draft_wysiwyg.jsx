@@ -1,13 +1,23 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Editor } from 'react-draft-wysiwyg';
-import { EditorState, convertToRaw } from 'draft-js';
+import { EditorState, convertFromHTML, ContentState, convertToRaw } from 'draft-js';
 import { convertToHTML } from 'draft-convert';
 import debounce from 'lodash/debounce';
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
 import './react_draft_wysiwyg.scss';
 
-const MyEditor = () => {
-  const [editorState, setEditorState] = useState(EditorState.createEmpty());
+const TextEditor = ({ initialContent }) => {
+  const [editorState, setEditorState] = useState(() => {
+    if (initialContent) {
+      const blocksFromHTML = convertFromHTML(initialContent);
+      const state = ContentState.createFromBlockArray(
+        blocksFromHTML.contentBlocks,
+        blocksFromHTML.entityMap
+      );
+      return EditorState.createWithContent(state);
+    }
+    return EditorState.createEmpty();
+  });
   const editorRef = useRef(null);
 
   useEffect(() => {
@@ -21,7 +31,7 @@ const MyEditor = () => {
     const textArray = [];
     const mentions = [];
     const hashtags = [];
-    
+
     content.blocks.forEach(block => {
       const text = block.text;
       textArray.push(text);
@@ -88,4 +98,4 @@ const MyEditor = () => {
   );
 };
 
-export default MyEditor;
+export default TextEditor;

@@ -6,6 +6,8 @@ import { FaSchoolCircleCheck } from "react-icons/fa6";
 import { IoHome } from "react-icons/io5";
 import PostItem from "../../layout/ListPosts/PostItem/post_item";
 import { Link } from "react-router-dom";
+import { MdDateRange, MdEditNote } from "react-icons/md";
+import FormPost from "../../component/FormPost/form_post";
 
 function ProfilePage({ titlePage }) {
     useEffect(() => {
@@ -26,38 +28,41 @@ function ProfilePage({ titlePage }) {
                                 <div className="slogan">Tuyền Văn Hóa - Vlogger với những góc nhìn độc đáo về bóng đá trong nước & Quốc tế</div>
                                 <div className="info-short--item info-school"><FaSchoolCircleCheck />Từng học tại <b>Trường đại học Mát-cơ-va</b></div>
                                 <div className="info-short--item info-address"><IoHome />Đang sống tại <b>Moscow</b></div>
+                                <div className="info-short--item info-school"><MdDateRange />Tạo ngày: <b>29/05/2024</b></div>
 
+                                <Link to="/profile/123/edit">
+                                    <div className="edit-btn"> <MdEditNote /><p>Sửa thông tin</p></div>
+                                </Link>
                             </div>
                             <div className="title-friend box">
                                 <h3>
                                     Bạn bè
                                 </h3>
                                 <Link to="/profile/123/image">
-                                <ul className="list-fr">
-                                    <li className="friend-item">
-                                        <img src="https://pbs.twimg.com/profile_images/1415999849888055300/8zvKC-eE_400x400.jpg" alt="" />
-                                    </li>
-                                    <li className="friend-item">
-                                        <img src="https://pbs.twimg.com/profile_images/1415999849888055300/8zvKC-eE_400x400.jpg" alt="" />
-                                    </li>
-                                    <li className="friend-item">
-                                        <img src="https://pbs.twimg.com/profile_images/1415999849888055300/8zvKC-eE_400x400.jpg" alt="" />
-                                    </li>
-                                    <li className="friend-item">
-                                        <img src="https://pbs.twimg.com/profile_images/1415999849888055300/8zvKC-eE_400x400.jpg" alt="" />
-                                    </li>
-                                </ul>
+                                    <ul className="list-fr">
+                                        <li className="friend-item">
+                                            <img src="https://pbs.twimg.com/profile_images/1415999849888055300/8zvKC-eE_400x400.jpg" alt="" />
+                                        </li>
+                                        <li className="friend-item">
+                                            <img src="https://pbs.twimg.com/profile_images/1415999849888055300/8zvKC-eE_400x400.jpg" alt="" />
+                                        </li>
+                                        <li className="friend-item">
+                                            <img src="https://pbs.twimg.com/profile_images/1415999849888055300/8zvKC-eE_400x400.jpg" alt="" />
+                                        </li>
+                                        <li className="friend-item">
+                                            <img src="https://pbs.twimg.com/profile_images/1415999849888055300/8zvKC-eE_400x400.jpg" alt="" />
+                                        </li>
+                                    </ul>
                                 </Link>
                             </div>
                         </div>
                         <div className="profile-right">
+                            <FormPost />
                             <div className="title-content box">
                                 <h3>
                                     Bài viết
                                 </h3>
                             </div>
-                            <PostItem />
-                            <PostItem />
                             <PostItem />
                             <PostItem />
                         </div>

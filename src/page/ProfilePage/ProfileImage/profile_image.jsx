@@ -17,6 +17,7 @@ function ProfileImage() {
                             <Link to="/post/123">
                                 <li className="post-image--item">
                                     <img src="https://i.pinimg.com/736x/89/fd/69/89fd69b76f1fc3ed1cf1ab79446d8cec.jpg" alt="" />
+                                    <p className="time">12/12/2023</p>
                                 </li>
                             </Link>
                           

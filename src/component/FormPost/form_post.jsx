@@ -2,9 +2,11 @@ import React, { useEffect, useState } from "react";
 import ReactDOM from "react-dom";
 import "./form_post.scss";
 import { Link } from "react-router-dom";
-import { FaPlus, FaImages } from "react-icons/fa";
+import { FaImages } from "react-icons/fa";
 import { BsEmojiLaughingFill } from "react-icons/bs";
 import { IoIosCloseCircle } from "react-icons/io";
+import { IoNewspaperSharp } from "react-icons/io5";
+
 import * as FilePond from 'filepond';
 import 'filepond/dist/filepond.min.css';
 import FilePondPluginImagePreview from 'filepond-plugin-image-preview';
@@ -185,7 +187,7 @@ export default function FormPost() {
                     <div className="row row-func">
                         <Link to="/story/create">
                             <div className="func btn-create--story">
-                                <FaPlus /> Đăng tin
+                                <IoNewspaperSharp /> Đăng tin
                             </div>
                         </Link>
                         <div onClick={() => { setShowPopup(true); setShowImage(true); setShowEmotion(false) }} className="func btn-create--img">

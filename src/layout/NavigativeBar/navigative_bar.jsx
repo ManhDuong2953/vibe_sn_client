@@ -69,7 +69,7 @@ function NavigativeBar() {
                         <Link title="Bạn bè của bạn">
                             <li><FaUserFriends /></li>
                         </Link>
-                        <Link title="Nhóm">
+                        <Link to="/group/123" title="Nhóm">
                             <li><HiMiniUserGroup /></li>
                         </Link>
                     </ul>

@@ -7,7 +7,7 @@ import { FaRegComment } from "react-icons/fa6";
 import { VscShare } from "react-icons/vsc";
 import { FaHandHoldingHeart } from "react-icons/fa6";
 import { ImReply } from "react-icons/im";
-import CommentItem from "../CommentItem/comment_item";
+import CommentItem from "./CommentItem/comment_item";
 function Comment({setShowCommentPage}) {
     const [activeIcon, setActiveIcon] = useState("default");
     const [activeTitle, setActiveTitle] = useState("");
@@ -102,7 +102,7 @@ function Comment({setShowCommentPage}) {
             <div className="comment-container--main">
                 <p className="load-more--comment">Tải thêm bình luận</p>
                 <ul className="comment-container">
-                    <CommentItem />
+                    <CommentItem/>
                     <CommentItem />
                     <CommentItem />
                 </ul>

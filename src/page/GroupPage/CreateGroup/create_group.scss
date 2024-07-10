@@ -1,0 +1,77 @@
+.create-group-page {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px;
+  background-color: var(--bg-color);
+  color: var(--text-color);
+  margin: 70px auto 0 auto;
+
+  form {
+    h1 {
+      width: 100%;
+      margin-bottom: 20px;
+      color: var(--primary-color);
+    }
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    max-width: 500px;
+    background-color: var(--navbar-color);
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px var(--shadow-1);
+
+    .form-group {
+      margin-bottom: 15px;
+
+      label {
+        display: block;
+        margin-bottom: 5px;
+        font-weight: bold;
+      }
+
+      input,
+      select,
+      textarea {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid var(--border-color);
+        border-radius: 4px;
+        background-color: var(--bg-color);
+        color: var(--text-color);
+        transition: border-color 0.3s ease;
+
+        &:focus {
+          border-color: var(--active-color);
+          outline: none;
+        }
+      }
+
+      option,
+      select {
+        padding: 5px;
+      }
+
+      textarea {
+        height: 100px;
+        resize: vertical;
+      }
+    }
+
+    button {
+      padding: 10px 15px;
+      border: none;
+      border-radius: 4px;
+      background-color: var(--active-color) !important;
+      color: white;
+      font-size: 16px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+
+      &:hover {
+        background-color: var(--success-color) !important;
+      }
+    }
+  }
+}

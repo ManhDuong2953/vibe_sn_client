@@ -1,0 +1,50 @@
+.group-main {
+  width: 100vw;
+  margin-top: 56px;
+  .group-container {
+    width: 1000px;
+    margin: auto;
+
+    .group-main {
+      display: flex;
+      margin: 20px 0;
+      width: 100%;
+      .box {
+        border-radius: 5px;
+        padding: 15px;
+        margin: 20px 0;
+        background-color: var(--navbar-color);
+      }
+      .group-right {
+        padding-left: 15px;
+        flex: 3;
+        .title-intro {
+          .slogan {
+            padding: 10px 0;
+            font-size: 13px;
+            border-bottom: 1px solid var(--border-color);
+          }
+          .info-short--item {
+            font-size: 14px !important;
+            padding: 10px 0 0;
+            margin-top: 5px;
+            display: flex;
+            font-size: 15px;
+            align-items: center;
+            b {
+              padding: 0 4px;
+            }
+
+            svg {
+              margin-right: 5px;
+            }
+          }
+        }
+      }
+      .group-left {
+        padding: 0 0 0 20px;
+        flex: 5;
+      }
+    }
+  }
+}

@@ -6,6 +6,7 @@
   position: fixed;
   top: 0;
   z-index: 100;
+  box-shadow: 0 2px 8px 0 rgba(99, 99, 99, 0.2);
 
   .container {
     height: 100%;
@@ -38,8 +39,8 @@
           position: absolute;
           left: 8px;
           top: calc(50% - 10px);
-          font-size: 20px ;
-          path{
+          font-size: 20px;
+          path {
             color: var(--text-color);
           }
         }
@@ -180,6 +181,8 @@
           border: 0.1px solid var(--border-color);
           padding: 10px;
           display: none;
+          box-shadow: 0 2px 8px 0 rgba(99, 99, 99, 0.2);
+
           .box-notice--header {
             display: flex;
             justify-content: space-between;
@@ -254,6 +257,7 @@
           border-radius: 50%;
         }
         .box-personal {
+          box-shadow: 0 2px 8px 0 rgba(99, 99, 99, 0.2);
           display: none;
           z-index: 20;
           position: absolute;

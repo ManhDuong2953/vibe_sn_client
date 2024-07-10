@@ -3,9 +3,9 @@ import "./comment_item.scss";
 import { FaCamera, FaHeart } from "react-icons/fa6";
 import { ImReply } from "react-icons/im";
 import { IoSendSharp } from "react-icons/io5";
-import PopupInfoShort from "../../../../component/PopupInfoShort/popup_info_short";
 import SubCommentItem from "./SubCommentItem/sub_comment_item";
 import { LiaReplySolid } from "react-icons/lia";
+import PopupInfoShort from "../../../../../component/PopupInfoShort/popup_info_short";
 
 function CommentItem() {
     const [showInputComment, setShowInputComment] = useState(false);

@@ -8,7 +8,7 @@ function ContactItem({ active }) {
     useEffect(() => {
         setTimeout(() => {
             setLoading(true);    
-        }, 0)
+        }, 1000)
     }, []);
     return (
         <React.Fragment>

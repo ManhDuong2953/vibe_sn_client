@@ -65,6 +65,9 @@ function ProfileHeader({ classNameActive }) {
                     <Link to="/profile/123/request-add--fr">
                         <li className="profile-navigation--item request-add--fr">Yêu cầu kết bạn</li>
                     </Link>
+                    <Link to="/profile/123/store-story">
+                        <li className="profile-navigation--item store-story">Kho lưu trữ tin</li>
+                    </Link>
                 </ul>
             </div>
         </React.Fragment>

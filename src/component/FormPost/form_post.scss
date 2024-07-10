@@ -8,6 +8,8 @@
     background-color: var(--navbar-color);
     border: 0.1px solid var(--hover-color);
     overflow: hidden;
+    box-shadow: 0 2px 8px 0 rgba(99, 99, 99, 0.2);
+
     .row {
       width: 100%;
       display: flex;
@@ -44,9 +46,9 @@
             background-color: var(--border-color);
           }
           svg {
-            font-size: 25px;
+            font-size: 24px;
             margin-right: 5px;
-            padding: 4px;
+            padding: 2px;
           }
         }
         a {
@@ -56,10 +58,9 @@
             align-items: center;
             justify-content: center;
             svg {
-              border-radius: 50%;
-              background-color: var(--active-color);
               path {
-                color: white;
+                color: var(--active-color);
+                background-color: white;
               }
             }
           }
@@ -73,7 +74,7 @@
           align-items: center;
           svg {
             path {
-              color: #58C472;
+              color: #58c472;
             }
           }
         }
@@ -85,7 +86,7 @@
           align-items: center;
           svg {
             path {
-              color: #E8B43E;
+              color: #e8b43e;
             }
           }
         }
@@ -240,12 +241,12 @@
     border-radius: 5px;
     margin: 10px 0;
     border: 1px solid var(--border-color);
-    &:hover{
+    &:hover {
       opacity: 0.7;
     }
     svg {
       path {
-        color: #E8B43E;
+        color: #e8b43e;
       }
     }
   }
@@ -259,12 +260,12 @@
     border-radius: 5px;
     margin: 10px 0;
     border: 1px solid var(--border-color);
-    &:hover{
+    &:hover {
       opacity: 0.7;
     }
     svg {
       path {
-        color: #58C472;
+        color: #58c472;
       }
     }
   }

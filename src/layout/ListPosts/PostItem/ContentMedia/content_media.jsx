@@ -5,7 +5,7 @@ function ContentMedia() {
     return (
         <React.Fragment>
             <Link to="/post/123">
-                <div className="content content-media">
+                <div className="content-media">
                     <div className="row-content">
                         <img src="https://c4.wallpaperflare.com/wallpaper/243/676/950/dasha-taran-photoshopped-lips-face-women-hd-wallpaper-preview.jpg" alt="" />
                     </div>

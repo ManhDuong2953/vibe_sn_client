@@ -1,0 +1,58 @@
+li.list-suggest--item.request {
+    width: -webkit-fill-available;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px;
+    background-color: var(--navbar-color);
+    .item-container {
+      display: flex;
+      align-items: center;
+      .avt-suggest {
+        display: flex;
+        align-items: center;
+        position: relative;
+        margin-right: 7px;
+        img {
+          border-radius: 50%;
+          object-fit: cover;
+          width: 38px;
+          height: 38px;
+          aspect-ratio: 1;
+        }
+      }
+
+      .name-suggest {
+        b {
+          font-size: 14px;
+          font-weight: 500;
+        }
+        p {
+          font-size: 10px;
+          color: var(--text-blur-color);
+        }
+      }
+    }
+    .btn-container {
+      display: flex;
+      align-items: center;
+      .btn {
+        cursor: pointer;
+        font-size: 13px;
+        padding: 5px 10px;
+        margin: 0 2px;
+        border: 1px solid var(--border-color);
+        &.btn-accept {
+          color: var(--success-color);
+          background-color: var(--bg-success-color);
+        }
+        &.btn-refuse {
+          color: var(--accent-color);
+          background-color: var(--bg-accent-color);
+        }
+        &:hover{
+          opacity: 0.8;
+        }
+      }
+    }
+  }

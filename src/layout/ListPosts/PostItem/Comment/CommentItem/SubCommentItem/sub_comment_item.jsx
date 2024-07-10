@@ -1,7 +1,7 @@
 import React, { useState } from "react";
-import PopupInfoShort from "../../../../../component/PopupInfoShort/popup_info_short";
 import { FaHeart } from "react-icons/fa6";
 import { ImReply } from "react-icons/im";
+import PopupInfoShort from "../../../../../../component/PopupInfoShort/popup_info_short";
 
 function SubCommentItem({ handleGetSupplyID, ID }) {
 

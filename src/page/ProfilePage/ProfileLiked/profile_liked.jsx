@@ -10,7 +10,7 @@ function ProfileLiked() {
             <NavigativeBar />
             <div className="profile">
                 <div className="profile-container">
-                    <ProfileHeader classNameActive="friends" />
+                    <ProfileHeader classNameActive="liked" />
                     <div className="profile-liked--container">
                         <h3 className="box">Đã thích <form action="" method="get">
                             <input type="text" placeholder="&#x1F50D; Nhập tên hoặc biệt danh của người bạn đã thích"/>

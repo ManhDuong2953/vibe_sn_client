@@ -3,6 +3,7 @@ import "./stories_page.scss";
 import { FaPlus } from "react-icons/fa6";
 import { FaHandHoldingHeart } from "react-icons/fa6";
 import { Link } from "react-router-dom";
+import { MdDelete } from "react-icons/md";
 import StoryPageItem from "./StoryPageItem/story_page_item";
 import soundClickHeart from "../../www/mp3/comedy_pop_finger_in_mouth_001.mp3";
 import ClassicPostLoader from "../../skeleton/classic_post_loader";
@@ -79,7 +80,10 @@ function StoriesPage({ titlePage }) {
                                                 <img src="https://cdn.24h.com.vn/upload/1-2023/images/2023-01-04/Ve-dep-dien-dao-chung-sinh-cua-co-gai-sinh-nam-1999-lot-top-guong-mat-dep-nhat-the-gioi-57068584_2351143488502839_871658938696715268_n-1672812988-819-width1080height1080.jpg" alt="" />
                                             </div>
                                             <div className="content-info--detail">
-                                                <p className="name">Dasha Taran <b>5 giờ trước</b></p>
+                                                <div className="info">
+                                                    <p className="name">Dasha Taran <b>5 giờ trước</b></p>
+                                                    <MdDelete />
+                                                </div>
                                                 <p className="quantity-heart">
                                                     <FaHandHoldingHeart /> <p>{heartQuantity} lượt thích</p>
                                                 </p>

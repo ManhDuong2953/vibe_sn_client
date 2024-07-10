@@ -33,14 +33,14 @@
     --primary-color: rgb(9 99 131);
     --bg-color: #F0F2F5;
     --navbar-color: #FFFFFF;
-    --border-color: #cccccc;
+    --border-color: #ececec;
     --text-color: #000000;
     --text-black-color: #ffffff;
-    --icon-color: #606266;
+    --icon-color: #7c7c7c;
     --hover-color: #f1f1f1;
     --disabled-color: #cccccc;
     --text-blur-color: #515151;
-    --bg-temp-color: #897ee7;   
+    --bg-temp-color: #897ee7;
 }
 
 
@@ -82,10 +82,11 @@ h2,
 h3,
 h4,
 h5,
-h6 {
+h6,
+i,
+b {
     margin: 0;
     color: var(--text-color);
-
 }
 
 
@@ -97,6 +98,13 @@ a {
     font-family: "Roboto", sans-serif;
     font-weight: 400;
     font-style: normal;
+}
+
+.text-danger {
+    color: red;
+    font-style: italic;
+    padding: 5px 0;
+    font-size: 13px;
 }
 
 ul {
