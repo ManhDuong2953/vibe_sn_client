@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import "./profile_request.scss";
-import "../profile_page.scss";
+
 import NavigativeBar from "../../../layout/NavigativeBar/navigative_bar";
 import ProfileHeader from "../../../layout/ProfileHeader/profile_header";
 import ProfileRequestItem from "./ProfileRequestItem/profile_request_item";

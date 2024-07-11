@@ -61,6 +61,9 @@
               cursor: pointer;
               opacity: 0.8;
             }
+            svg{
+              margin: 0 4px;
+            }
             &.btn-like {
               background-color: var(--disable-status-color);
 
@@ -87,7 +90,7 @@
                 }
               }
             }
-            &.btn-add--friend {
+            &.btn-add--friend, &.btn-messenger {
               color: white;
               background-color: var(--active-color);
               svg {

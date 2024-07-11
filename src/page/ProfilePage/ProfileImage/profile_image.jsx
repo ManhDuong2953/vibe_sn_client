@@ -1,6 +1,6 @@
 import React from "react";
 import "./profile_image.scss";
-import "../profile_page.scss";
+
 import NavigativeBar from "../../../layout/NavigativeBar/navigative_bar";
 import ProfileHeader from "../../../layout/ProfileHeader/profile_header";
 import { Link } from "react-router-dom";

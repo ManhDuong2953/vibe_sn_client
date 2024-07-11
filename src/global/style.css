@@ -11,6 +11,8 @@
     --blue-link: #5AA7FF;
     --always-dark-overlay: rgba(0, 0, 0, 0.7);
     --shadow-1: rgba(0, 0, 0, 0.3);
+    --input-color: #e7e7e7;
+
 }
 
 [data-theme="dark"] {
@@ -33,7 +35,7 @@
     --primary-color: rgb(9 99 131);
     --bg-color: #F0F2F5;
     --navbar-color: #FFFFFF;
-    --border-color: #ececec;
+    --border-color: #bfbfbf;
     --text-color: #000000;
     --text-black-color: #ffffff;
     --icon-color: #7c7c7c;

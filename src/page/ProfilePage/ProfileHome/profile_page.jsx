@@ -1,13 +1,13 @@
 import React, { useEffect } from "react";
 import "./profile_page.scss";
-import NavigativeBar from "../../layout/NavigativeBar/navigative_bar";
-import ProfileHeader from "../../layout/ProfileHeader/profile_header";
+import NavigativeBar from "../../../layout/NavigativeBar/navigative_bar";
+import ProfileHeader from "../../../layout/ProfileHeader/profile_header";
 import { FaSchoolCircleCheck } from "react-icons/fa6";
 import { IoHome } from "react-icons/io5";
-import PostItem from "../../layout/ListPosts/PostItem/post_item";
+import PostItem from "../../../layout/ListPosts/PostItem/post_item";
 import { Link } from "react-router-dom";
 import { MdDateRange, MdEditNote } from "react-icons/md";
-import FormPost from "../../component/FormPost/form_post";
+import FormPost from "../../../component/FormPost/form_post";
 
 function ProfilePage({ titlePage }) {
     useEffect(() => {

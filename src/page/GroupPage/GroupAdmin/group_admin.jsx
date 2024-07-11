@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import "./group_home.scss";
+import "./group_admin.scss";
 import NavigativeBar from "../../../layout/NavigativeBar/navigative_bar";
 import PostItem from "../../../layout/ListPosts/PostItem/post_item";
 import GroupHeader from "../../../layout/GroupHeader/group_header";
@@ -10,7 +10,7 @@ import ListSuggest from "../../../layout/SideBarRight/Suggest/list_suggest";
 import { CgPushChevronLeft, CgPushChevronRight } from "react-icons/cg";
 
 
-function GroupHomePage({ titlePage }) {
+function GroupAdminPage({ titlePage }) {
     useEffect(() => {
         document.title = titlePage;
     }, [titlePage]);
@@ -20,15 +20,13 @@ function GroupHomePage({ titlePage }) {
                 <NavigativeBar />
                 <div className="group-wrapper container">
                     <div className="group-container">
-                        <GroupHeader classNameActive={"post"} />
+                        <GroupHeader classNameActive={"admin"} />
                         <div className="group-main">
                             <div className="group-left">
-                                <FormPost />
                                 <div className="title-content box">
                                     <h3>
                                         Bài viết
                                     </h3>
-
                                 </div>
                                 <PostItem />
                                 <PostItem />
@@ -52,4 +50,4 @@ function GroupHomePage({ titlePage }) {
     );
 }
 
-export default GroupHomePage;
+export default GroupAdminPage;

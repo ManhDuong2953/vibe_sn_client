@@ -4,6 +4,7 @@ import { IoHeartCircle } from "react-icons/io5";
 import { IoIosPersonAdd } from "react-icons/io";
 import { FaUserCheck } from "react-icons/fa";
 import { Link } from "react-router-dom";
+import { FaFacebookMessenger } from "react-icons/fa6";
 function ProfileHeader({ classNameActive }) {
     const [isHearted, setIsHearted] = useState(false);
     const [isFriend, setIsFriend] = useState(false);
@@ -37,7 +38,13 @@ function ProfileHeader({ classNameActive }) {
                                     <p className="quantity-same--fr">1002 bạn chung</p>
                                 </div>
                             </div>
-                            <div className="btn-action">
+                            <div className="btn-action">   
+                                
+                                <Link>
+                                    <div className="btn btn-messenger" >
+                                        <FaFacebookMessenger /> Nhắn tin
+                                    </div>
+                                </Link>
                                 <div className={`btn btn-like ${isHearted ? "active" : ""}`} onClick={() => setIsHearted(!isHearted)}><IoHeartCircle /> {isHearted ? "Đã thích" : "Thích"}</div>
                                 <div className={`btn btn-add--friend ${isFriend ? "active" : ""}`} onClick={() => setIsFriend(!isFriend)}>
                                     {isFriend ? (<><FaUserCheck /> Bạn bè</>) : (<><IoIosPersonAdd /> Thêm bạn bè</>)}

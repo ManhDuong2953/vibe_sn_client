@@ -2,13 +2,11 @@ import React, { useEffect, useState } from "react";
 import "./navigative_bar.scss";
 import logo from "../../www/logo_sm.png";
 import { AiFillHome } from "react-icons/ai";
-import { FaUserFriends } from "react-icons/fa";
 import { FaShop } from "react-icons/fa6";
 import { HiMiniUserGroup } from "react-icons/hi2";
 import { BiLogoMessenger, BiSolidBellRing } from "react-icons/bi";
 import { MdDarkMode } from "react-icons/md";
-import { IoSettingsSharp } from "react-icons/io5";
-import { IoMdSearch } from "react-icons/io";
+import { IoMdSearch, IoMdSettings } from "react-icons/io";
 import { FaChevronRight } from "react-icons/fa";
 import { MdLogout } from "react-icons/md";
 import { Link } from "react-router-dom";
@@ -18,6 +16,7 @@ import ToggleButton from 'react-toggle-button'
 import useToggleListener from "../../ultils/animation/ToggleActive";
 import { useDispatch, useSelector } from "react-redux";
 import { darkHandle, lightHandle } from "../../redux/Reducer/reducer";
+import { IoSettingsSharp } from "react-icons/io5";
 
 function NavigativeBar() {
     const theme = useSelector((state) => state.themeUI.theme)
@@ -66,11 +65,11 @@ function NavigativeBar() {
                                 </div>
                             </li>
                         </Link>
-                        <Link title="Bạn bè của bạn">
-                            <li><FaUserFriends /></li>
-                        </Link>
                         <Link to="/group/123" title="Nhóm">
                             <li><HiMiniUserGroup /></li>
+                        </Link>
+                        <Link title="Cài đặt">
+                            <li><IoMdSettings /></li>
                         </Link>
                     </ul>
                     <div className="navbar-side--right">
