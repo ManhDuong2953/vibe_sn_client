@@ -10,30 +10,6 @@ import ListSuggest from "../SideBarRight/Suggest/list_suggest";
 import { CgPushChevronLeft, CgPushChevronRight } from "react-icons/cg";
 
 function GroupHeader({ classNameActive }) {
-    useEffect(() => {
-        const listGr = document.querySelector(".list-group--container");
-        const iconPush = document.querySelector(".icon-push");
-        const iconPop = document.querySelector(".title-list");
-
-        const handlePush = () => handlePopup("push");
-        const handlePop = () => handlePopup("pop");
-
-        const handlePopup = (action) => {
-            if (action === "push") {
-                listGr.style.transform = "translateX(-65%)";
-            } else if (action === "pop") {
-                listGr.style.transform = "translateX(-270%)";
-            }
-        };
-
-        iconPush.addEventListener("click", handlePush);
-        iconPop.addEventListener("click", handlePop);
-
-        return () => {
-            iconPush.removeEventListener("click", handlePush);
-            iconPop.removeEventListener("click", handlePop);
-        };
-    }, []);
 
     const [isFriend, setIsFriend] = useState(false);
     useEffect(() => {
@@ -48,14 +24,7 @@ function GroupHeader({ classNameActive }) {
     return (
         <React.Fragment>
             <div className="group-header--main">
-                <div className="icon-push"><p>Nhóm của bạn</p><CgPushChevronRight /></div>
-                <div className="list-group--container">
-                    <h3 className="title-list"><p>Nhóm của bạn</p><CgPushChevronLeft />
-                    </h3>
-                    <div className="list-gr">
-                        <ListSuggest />
-                    </div>
-                </div>
+        
                 <div className="group-header--container">
                     <div className="group-header">
                         <div className="group-cover--img">

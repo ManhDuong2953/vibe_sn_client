@@ -129,8 +129,9 @@ a {
 
 
 .loading-skeleton svg {
-    width: -webkit-fill-available;
+    width: 100%;
     height: auto;
+    padding: 5px 0 0;
 }
 
 .loading-skeleton {

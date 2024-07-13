@@ -3,12 +3,11 @@ import "./group_admin.scss";
 import NavigativeBar from "../../../layout/NavigativeBar/navigative_bar";
 import PostItem from "../../../layout/ListPosts/PostItem/post_item";
 import GroupHeader from "../../../layout/GroupHeader/group_header";
-import { MdDateRange } from "react-icons/md";
-import { FaPeopleGroup } from "react-icons/fa6";
-import FormPost from "../../../component/FormPost/form_post";
-import ListSuggest from "../../../layout/SideBarRight/Suggest/list_suggest";
-import { CgPushChevronLeft, CgPushChevronRight } from "react-icons/cg";
-
+import { MdDateRange, MdGroupOff } from "react-icons/md";
+import { FaFileCircleCheck, FaPeopleGroup, FaPeopleLine } from "react-icons/fa6";
+import { RiDeleteBin5Fill } from "react-icons/ri";
+import { Link } from "react-router-dom";
+import { FaInfoCircle } from "react-icons/fa";
 
 function GroupAdminPage({ titlePage }) {
     useEffect(() => {
@@ -25,22 +24,69 @@ function GroupAdminPage({ titlePage }) {
                             <div className="group-left">
                                 <div className="title-content box">
                                     <h3>
-                                        Bài viết
+                                        Phê duyệt bài viết (15)
                                     </h3>
                                 </div>
-                                <PostItem />
-                                <PostItem />
+                                <form action="" method="get">
+                                    <input type="text" placeholder="&#x1F50D; Nhập tên thành viên đăng bài hoặc nội dung bài viết" />
+                                </form>
+
+                                <div className="action-post--admin">
+                                    <div className="action-post">
+                                        <div className="btn-action btn-accept"><FaFileCircleCheck /><p>Phê duyệt</p></div>
+                                        <div className="btn-action btn-delete"><RiDeleteBin5Fill /><p>Xóa bài</p></div>
+                                    </div>
+                                    <PostItem />
+                                </div>
+
+
+                                <div className="action-post--admin">
+                                    <div className="action-post">
+                                        <div className="btn-action btn-accept"><FaFileCircleCheck /><p>Phê duyệt</p></div>
+                                        <div className="btn-action btn-delete"><RiDeleteBin5Fill /><p>Xóa bài</p></div>
+                                    </div>
+                                    <PostItem />
+                                </div>
+
                             </div>
                             <div className="group-right">
                                 <div className="title-intro box">
                                     <h3>
-                                        Giới thiệu
+                                        Thống kê bài viết
                                     </h3>
-                                    <div className="slogan">Tuyền Văn Hóa - Vlogger với những góc nhìn độc đáo về bóng đá trong nước & Quốc tế</div>
-                                    <div className="info-short--item info-school"><MdDateRange />Tạo ngày: <b>29/05/2024</b></div>
-                                    <div className="info-short--item info-address"><FaPeopleGroup />Thành viên nhóm: <b> 100.000 </b> thành viên</div>
+                                    <div className="info-short--item info-school"><MdDateRange />100.000 bài viết (+3 bài viết hôm nay)
+                                    </div>
+                                    <div className="info-short--item info-address"><FaPeopleGroup />100.000 thành viên (+5 thành viên hôm nay)</div>
 
                                 </div>
+                                <Link to="/group/123/admin/edit">
+                                    <div className="title-direct-member info box">
+                                        <p>
+                                            Sửa thông tin nhóm
+                                        </p>
+                                        <FaInfoCircle />
+
+                                    </div>
+                                </Link>
+                                <Link to="/group/123/admin/member">
+                                    <div className="title-direct-member box">
+                                        <p>
+                                            Quản lý thành viên
+                                        </p>
+                                        <FaPeopleLine />
+
+                                    </div>
+                                </Link>
+
+                                <Link to="/group/123/admin/member">
+                                    <div className="title-direct-member delete box">
+                                        <p>
+                                            Giải tán nhóm
+                                        </p>
+                                        <MdGroupOff />
+
+                                    </div>
+                                </Link>
                             </div>
                         </div>
                     </div>

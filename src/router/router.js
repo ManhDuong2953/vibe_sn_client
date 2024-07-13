@@ -1,10 +1,14 @@
 // routes.js
 
 import CreateGroupPage from "../page/GroupPage/CreateGroup/create_group";
+import EditInfoGroupPage from "../page/GroupPage/EditInfoGroup/edit_info_group";
 import GroupAdminPage from "../page/GroupPage/GroupAdmin/group_admin";
+import GroupAdminMemberPage from "../page/GroupPage/GroupAdminMember/group_admin_member";
 import GroupHomePage from "../page/GroupPage/GroupHome/group_home";
 import GroupMemberPage from "../page/GroupPage/GroupMember/group_member";
+import ListPostGroupPage from "../page/GroupPage/ListPostGroup/list_post_group";
 import HomePage from "../page/Home/home_page";
+import MarketplaceSearchPage from "../page/MarketplacePage/MarketplaceSearch/marketplace_search";
 import PostDetail from "../page/PostPage/PostDetail/post_detail";
 import EditPost from "../page/PostPage/PostEdit/post_edit";
 import ProfileEditor from "../page/ProfilePage/ProfileEditor/profile_editor";
@@ -25,7 +29,7 @@ const routes = [
   {
     path: '/',
     exact: true,
-    component: <HomePage titlePage="Vibe"/>,
+    component: <HomePage titlePage="Vibe" />,
   },
 
 
@@ -33,97 +37,119 @@ const routes = [
   {
     path: '/story/create',
     exact: true,
-    component: <CreateStoryPage titlePage="Tạo tin | Vibe"/>,
+    component: <CreateStoryPage titlePage="Tạo tin | Vibe" />,
   },
   {
     path: '/story/create/preview/image',
     exact: true,
-    component: <CreateStoryImagePreview titlePage="Xem trước tin | Vibe"/>,
+    component: <CreateStoryImagePreview titlePage="Xem trước tin | Vibe" />,
   },
   {
     path: '/story/create/preview/text',
     exact: true,
-    component: <CreateStoryTextPreview titlePage="Xem trước tin | Vibe"/>,
+    component: <CreateStoryTextPreview titlePage="Xem trước tin | Vibe" />,
   },
   {
     path: '/story/:story_id',
     exact: true,
-    component: <StoriesPage titlePage="Tin | Vibe"/>,
+    component: <StoriesPage titlePage="Tin | Vibe" />,
   },
 
   //post
   {
     path: '/post/:post_id',
     exact: true,
-    component: <PostDetail titlePage="Bài viết | Vibe"/>,
+    component: <PostDetail titlePage="Bài viết | Vibe" />,
   },
   {
     path: '/post/:post_id/edit',
     exact: true,
-    component: <EditPost titlePage="Bài viết | Vibe"/>,
+    component: <EditPost titlePage="Bài viết | Vibe" />,
   },
 
   //profile
   {
     path: '/profile/:user_id',
     exact: true,
-    component: <ProfilePage titlePage="Trang cá nhân | Vibe"/>,
+    component: <ProfilePage titlePage="Trang cá nhân | Vibe" />,
   },
   {
     path: '/profile/:user_id/image',
     exact: true,
-    component: <ProfileImage titlePage="Trang cá nhân | Vibe"/>,
+    component: <ProfileImage titlePage="Trang cá nhân | Vibe" />,
   },
   {
     path: '/profile/:user_id/friends',
     exact: true,
-    component: <ProfileFriend titlePage="Trang cá nhân | Vibe"/>,
+    component: <ProfileFriend titlePage="Trang cá nhân | Vibe" />,
   },
   {
     path: '/profile/:user_id/group',
     exact: true,
-    component: <ProfileGroup titlePage="Trang cá nhân | Vibe"/>,
+    component: <ProfileGroup titlePage="Trang cá nhân | Vibe" />,
   },
   {
     path: '/profile/:user_id/liked',
     exact: true,
-    component: <ProfileLiked titlePage="Trang cá nhân | Vibe"/>,
+    component: <ProfileLiked titlePage="Trang cá nhân | Vibe" />,
   },
   {
     path: '/profile/:user_id/request-add--fr',
     exact: true,
-    component: <ProfileRequest titlePage="Trang cá nhân | Vibe"/>,
+    component: <ProfileRequest titlePage="Trang cá nhân | Vibe" />,
   },
   {
     path: '/profile/:user_id/edit',
     exact: true,
-    component: <ProfileEditor titlePage="Trang cá nhân | Vibe"/>,
+    component: <ProfileEditor titlePage="Trang cá nhân | Vibe" />,
   },
   {
     path: '/profile/:user_id/store-story',
     exact: true,
-    component: <ProfileStoreStory titlePage="Trang cá nhân | Vibe"/>,
+    component: <ProfileStoreStory titlePage="Trang cá nhân | Vibe" />,
   },
 
+
+  {
+    path: '/group/',
+    exact: true,
+    component: <ListPostGroupPage titlePage="Nhóm | Vibe" />,
+  },
   {
     path: '/group/create',
     exact: true,
-    component: <CreateGroupPage titlePage="Nhóm | Vibe"/>,
+    component: <CreateGroupPage titlePage="Nhóm | Vibe" />,
   },
   {
     path: '/group/:group_id',
     exact: true,
-    component: <GroupHomePage titlePage="Nhóm | Vibe"/>,
+    component: <GroupHomePage titlePage="Nhóm | Vibe" />,
   },
   {
     path: '/group/:group_id/members',
     exact: true,
-    component: <GroupMemberPage titlePage="Nhóm | Vibe"/>,
+    component: <GroupMemberPage titlePage="Nhóm | Vibe" />,
   },
   {
     path: '/group/:group_id/admin',
     exact: true,
-    component: <GroupAdminPage titlePage="Nhóm | Vibe"/>,
+    component: <GroupAdminPage titlePage="Nhóm | Vibe" />,
+  },
+  {
+    path: '/group/:group_id/admin/member',
+    exact: true,
+    component: <GroupAdminMemberPage titlePage="Nhóm | Vibe" />,
+  },
+  {
+    path: '/group/:group_id/admin/edit',
+    exact: true,
+    component: <EditInfoGroupPage titlePage="Nhóm | Vibe" />,
+  },
+
+  {
+    path: '/marketplace',
+    exact: true,
+    component: <MarketplaceSearchPage titlePage="Nhóm | Vibe" />,
   }
 
 ];

@@ -14,7 +14,7 @@ function HeaderPost() {
                 </div>
                 <div className="info-header">
                     <div className="row">
-                        <Link><p className="name">Nhóm Lập trình NodeJS</p> </Link>
+                        <Link to="/group/123"><p className="name">Nhóm Lập trình NodeJS</p> </Link>
                         <p className="react">đang cảm thấy vui vẻ trong khoảng khắc này: </p>
                     </div>
                     <div className="row">

@@ -28,13 +28,13 @@ function GroupMemberPage({ titlePage }) {
                             <input type="text" placeholder="&#x1F50D; Nhập tên hoặc biệt danh của thành viên"/>
                         </form>
 
-                            <h3 className="box">Quản trị viên</h3>
+                            <h3 className="box">Quản trị viên (4)</h3>
                             <ul className="list-members">
                                 <ListSuggest />
 
                             </ul>
                             <div className="temp"></div>
-                            <h3 className="box">Thành viên nhóm</h3>
+                            <h3 className="box">Thành viên nhóm (1334)</h3>
                             <ul className="list-members">
                                 <ListSuggest />
                             </ul>

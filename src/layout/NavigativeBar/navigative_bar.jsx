@@ -33,6 +33,17 @@ function NavigativeBar() {
     // Use useToggleListener hook for bell-notice--icon and personal-icon
     useToggleListener("bell-notice--icon", "box-notice");
     useToggleListener("personal-icon", "box-personal");
+    useEffect(() => {
+        const currentPath = window.location.pathname.split("/")[0] + "/" + window.location.pathname.split("/")[1];
+        const activeLink = document.querySelector(".navbar-side--middle a.active");
+        if (activeLink) activeLink.classList.remove("active");
+
+        document.querySelectorAll(".navbar-side--middle a").forEach(link => {
+            if (link.getAttribute("href") === currentPath) {
+                link.classList.add("active");
+            }
+        });
+    }, []);
 
     return (
         <React.Fragment>
@@ -41,7 +52,7 @@ function NavigativeBar() {
                     <div className="navbar-side--left">
                         <div className="logo-container">
                             <Link to="/">
-                            <img src={logo} onError={(e) => { e.target.src = imgError }} alt="" />
+                                <img src={logo} onError={(e) => { e.target.src = imgError }} alt="" />
                             </Link>
                         </div>
                         <form action="" method="get">
@@ -54,10 +65,10 @@ function NavigativeBar() {
                         <Link to="/" className="active" title="Trang chủ">
                             <li><AiFillHome /></li>
                         </Link>
-                        <Link title="Cửa hàng">
+                        <Link to="/marketplace" title="Cửa hàng">
                             <li><FaShop /></li>
                         </Link>
-                        <Link title="Nhắn tin">
+                        <Link to="/messenger" title="Nhắn tin">
                             <li>
                                 <div className="messenger-icon--container">
                                     <BiLogoMessenger />
@@ -65,10 +76,10 @@ function NavigativeBar() {
                                 </div>
                             </li>
                         </Link>
-                        <Link to="/group/123" title="Nhóm">
+                        <Link to="/group" title="Nhóm">
                             <li><HiMiniUserGroup /></li>
                         </Link>
-                        <Link title="Cài đặt">
+                        <Link to="/setting" title="Cài đặt">
                             <li><IoMdSettings /></li>
                         </Link>
                     </ul>

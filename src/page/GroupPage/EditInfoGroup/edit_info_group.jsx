@@ -1,17 +1,20 @@
 import React, { useState, useCallback, useRef, useEffect } from "react";
-import "./create_group.scss"
+import "./edit_info_group.scss"
 import { FaCropSimple } from "react-icons/fa6";
 import getCroppedImg from "../../../ultils/cropImage/get_crop_image";
 import NavigativeBar from "../../../layout/NavigativeBar/navigative_bar";
 import Cropper from "react-easy-crop";
 import BackButton from "../../../component/BackButton/back_button";
 
-function CreateGroupPage({ titlePage }) {
-    const [isShowCropContainer, setIsShowCropContainer] = useState(false);
+function EditInfoGroupPage({ titlePage }) {
+    useEffect(() => {
+        document.title = titlePage;
+    }, [titlePage]);
     const [groupName, setGroupName] = useState("");
     const [privacy, setPrivacy] = useState("public");
     const [introduction, setIntroduction] = useState("");
-
+    
+    const [isShowCropContainer, setIsShowCropContainer] = useState(false);
     const [avatarImage, setAvatarImage] = useState(null);
     const [coverImage, setCoverImage] = useState(null);
     const [croppedAvatar, setCroppedAvatar] = useState(null);
@@ -21,9 +24,6 @@ function CreateGroupPage({ titlePage }) {
     const [zoom, setZoom] = useState(1);
     const [croppedAreaPixels, setCroppedAreaPixels] = useState(null);
 
-    useEffect(() => {
-        document.title = titlePage;
-    }, [titlePage]);
 
     const onCropComplete = useCallback((croppedArea, croppedAreaPixels) => {
         setCroppedAreaPixels(croppedAreaPixels);
@@ -64,10 +64,10 @@ function CreateGroupPage({ titlePage }) {
     return (
         <React.Fragment>
             <NavigativeBar />
-            <div className="create-group-page">
+            <div className="edit-group-page">
                 <BackButton />
                 <form>
-                    <h1>Tạo nhóm</h1>
+                    <h1>Sửa thông tin nhóm</h1>
                     <div className="side-container">
                         <div className="side-left">
                             <div className="form-group">
@@ -116,7 +116,7 @@ function CreateGroupPage({ titlePage }) {
                             </div>
                         </div>
                     </div>
-                    <button type="submit">Tạo nhóm</button>
+                    <button type="submit">Lưu thay đổi</button>
                 </form>
                 {(isShowCropContainer) && (
                     <div className="crop-img-container">
@@ -170,4 +170,4 @@ function CreateGroupPage({ titlePage }) {
     );
 };
 
-export default CreateGroupPage;
+export default EditInfoGroupPage;
