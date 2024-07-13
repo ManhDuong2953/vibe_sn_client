@@ -8,7 +8,7 @@ function ListPosts() {
     return (
         <React.Fragment>
             <div id="list-post--container">
-                <span>
+                <span className="list-post--span">
 
                     <ListStories />
                     <FormPost />

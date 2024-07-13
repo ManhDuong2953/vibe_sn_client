@@ -2,6 +2,8 @@ import React from "react";
 import { Link } from "react-router-dom";
 import "./marketplace_search.scss";
 import NavigativeBar from "../../../layout/NavigativeBar/navigative_bar";
+import { IoMdAddCircle } from "react-icons/io";
+import Pagination from "../../../layout/Pagination/pagination";
 
 function MarketplaceSearchPage() {
     return (
@@ -10,17 +12,19 @@ function MarketplaceSearchPage() {
             <div className="marketplace-container">
                 <div className="side-left">
                     <h3 className="title-page">Marketplace</h3>
-                    <Link to="/create-product" className="create-product-button">Tạo sản phẩm</Link>
+                    <Link to="/marketplace/create" className="create-product-button"><IoMdAddCircle /> Tạo sản phẩm</Link>
                     <div className="search-section">
                         <input
                             type="text"
-                            placeholder="Tìm kiếm theo tên sản phẩm hoặc mô tả"
+                            placeholder=" 🔍Tìm kiếm theo tên sản phẩm hoặc mô tả"
                             className="search-input"
                         />
                         <div className="filter-section">
                             <h4>Lọc giá</h4>
-                            <input type="number" placeholder="Từ" className="filter-input" />
-                            <input type="number" placeholder="Đến" className="filter-input" />
+                            <span>
+                                <input type="number" placeholder="Từ" className="filter-input" />
+                                <input type="number" placeholder="Đến" className="filter-input" />
+                            </span>
                             <h4>Lọc loại sản phẩm</h4>
                             <select className="filter-select">
                                 <option value="">Chọn loại sản phẩm</option>
@@ -42,17 +46,19 @@ function MarketplaceSearchPage() {
                     <h3 className="product-list-title">Danh sách sản phẩm</h3>
                     <div className="product-list">
                         {/* Sản phẩm mẫu */}
-                        {Array.from({ length: 5 }).map((_, index) => (
-                            <Link to={`/product/${index}`} key={index} className="product-item">
-                                <img src={`https://via.placeholder.com/150`} alt="Product" />
+                        {Array.from({ length: 20 }).map((_, index) => (
+                            <Link to={`/marketplace/product/detail/${index}`} key={index} className="product-item">
+                                <img src={`https://giaycaosmartmen.com/wp-content/uploads/2020/12/cach-chup-giay-dep-6.jpg`} alt="Product" />
                                 <div className="product-info">
-                                    <h4 className="product-name">Tên sản phẩm {index + 1}</h4>
-                                    <p className="product-description">Mô tả sản phẩm {index + 1}</p>
-                                    <p className="product-price">Giá: 100.000 VNĐ</p>
-                                    <p className="product-location">Vị trí: Hà Nội</p>
+                                    <h4 className="product-name">Giày Tây Nam {index + 1}</h4>
+                                    <p className="product-description">Giày tây nam chính hãng làm bằng 100% da thật.</p>
+                                    <p className="product-price">Giá: <b>100.000 VNĐ</b></p>
+                                    <p className="product-location">Vị trí: <b>Hà Nội</b></p>
                                 </div>
                             </Link>
                         ))}
+                        <Pagination totalPages={10}
+                            currentPage={4} />
                     </div>
                 </div>
             </div>

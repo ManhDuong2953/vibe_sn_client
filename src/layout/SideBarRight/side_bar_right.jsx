@@ -8,7 +8,7 @@ function SideBarRight() {
     return (
         <React.Fragment>
             <div id="sidebar-right--container">
-                <span>
+                <span className="sidebar-right--span">
                     <h4>Sinh nhật</h4>
                     <div className="dob-container">
                         <img src={iconsHbbd} alt="" />

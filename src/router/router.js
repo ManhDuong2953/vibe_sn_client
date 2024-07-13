@@ -8,6 +8,9 @@ import GroupHomePage from "../page/GroupPage/GroupHome/group_home";
 import GroupMemberPage from "../page/GroupPage/GroupMember/group_member";
 import ListPostGroupPage from "../page/GroupPage/ListPostGroup/list_post_group";
 import HomePage from "../page/Home/home_page";
+import CreateProductPage from "../page/MarketplacePage/MarketplaceCreate/marketplace_create";
+import MarketplaceDetail from "../page/MarketplacePage/MarketplaceDetail/marketplace_detail";
+import EditProductPage from "../page/MarketplacePage/MarketplaceEdit/marketplace_edit";
 import MarketplaceSearchPage from "../page/MarketplacePage/MarketplaceSearch/marketplace_search";
 import PostDetail from "../page/PostPage/PostDetail/post_detail";
 import EditPost from "../page/PostPage/PostEdit/post_edit";
@@ -149,7 +152,22 @@ const routes = [
   {
     path: '/marketplace',
     exact: true,
-    component: <MarketplaceSearchPage titlePage="Nhóm | Vibe" />,
+    component: <MarketplaceSearchPage titlePage="Chợ | Vibe" />,
+  },
+  {
+    path: '/marketplace/create',
+    exact: true,
+    component: <CreateProductPage titlePage="Chợ | Vibe" />,
+  },
+  {
+    path: '/marketplace/product/detail/:id_product',
+    exact: true,
+    component: <MarketplaceDetail titlePage="Chợ | Vibe" />,
+  },
+  {
+    path: '/marketplace/product/detail/:id_product/edit',
+    exact: true,
+    component: <EditProductPage titlePage="Chợ | Vibe" />,
   }
 
 ];

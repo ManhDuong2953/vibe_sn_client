@@ -42,7 +42,7 @@ function SideBarLeft() {
     return (
         <React.Fragment>
             <div id="sidebar-left--container">
-                <span>
+                <span className="sidebar-left--span">
 
                     <div className="template-container">
                         <div className="template-wrap">

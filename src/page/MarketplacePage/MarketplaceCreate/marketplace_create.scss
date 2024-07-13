@@ -1,0 +1,87 @@
+.create-product-container {
+  padding: 20px;
+  max-width: 1200px;
+  margin: 90px auto;
+  background-color: var(--navbar-color);
+  border: 1px solid var(--border-color);
+  border-radius: 5px;
+  .title {
+    margin-bottom: 20px;
+    text-align: center;
+  }
+
+  .product-form {
+    .side-container {
+      margin: 0 -10px;
+      display: flex;
+      .form-group {
+        margin-bottom: 15px;
+
+        label {
+          margin-bottom: 5px;
+          display: block;
+        }
+
+        .form-input,
+        .form-textarea {
+          width: 100%;
+          padding: 10px;
+          border: 1px solid var(--text-black-color);
+          border-radius: 5px;
+          font-size: 1rem;
+          background-color: var(--hover-color);
+        }
+
+        .form-textarea {
+          resize: vertical;
+          min-height: 80px;
+        }
+      }
+      .side-left {
+        flex: 3;
+        padding: 10px;
+      }
+
+      .side-right {
+        padding: 10px;
+        flex: 2;
+        label,
+        span {
+          color: var(--text-black-color);
+        }
+      }
+    }
+    .btn {
+      display: flex;
+      align-items: center;
+      .submit-button {
+        padding: 10px;
+        background-color: var(--success-color) !important;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background-color 0.3s;
+font-size: 14px;
+        &:hover {
+          background-color: var(--active-color) !important;
+        }
+      }
+
+      .cancel-button {
+        padding: 10px;
+        margin-left: 10px;
+        border-radius: 5px;
+        text-align: center;
+        color: var(--accent-color);
+        background-color: var(--bg-accent-color);
+        text-decoration: none;
+        font-size: 14px;
+
+        &:hover {
+          text-decoration: underline;
+        }
+      }
+    }
+  }
+}

@@ -118,7 +118,7 @@
 .form-post--popup--container {
   border: 1px solid var(--border-color);
   padding: 10px;
-  border-radius: 15px;
+  border-radius: 5px;
   width: 50vw;
   height: 70vh;
   display: flex;
@@ -274,7 +274,7 @@
 
   button[type="submit"] {
     width: calc(100% - 20px);
-    background-color: var(--active-color);
+    background-color: var(--active-color) !important;
     color: white;
     padding: 10px;
     margin: 10px auto;

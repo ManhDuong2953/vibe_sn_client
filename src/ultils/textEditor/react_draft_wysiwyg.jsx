@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useCallback } from 'react';
 import { Editor } from 'react-draft-wysiwyg';
 import { EditorState, convertFromHTML, ContentState, convertToRaw } from 'draft-js';
 import { convertToHTML } from 'draft-convert';
@@ -26,37 +26,40 @@ const TextEditor = ({ initialContent }) => {
     }
   }, []);
 
-  const logContent = debounce(() => {
-    const content = convertToRaw(editorState.getCurrentContent());
-    const textArray = [];
-    const mentions = [];
-    const hashtags = [];
+  const logContent = useCallback(
+    debounce(() => {
+      const content = convertToRaw(editorState.getCurrentContent());
+      const textArray = [];
+      const mentions = [];
+      const hashtags = [];
 
-    content.blocks.forEach(block => {
-      const text = block.text;
-      textArray.push(text);
+      content.blocks.forEach(block => {
+        const text = block.text;
+        textArray.push(text);
 
-      const words = text.split(' ');
-      words.forEach(word => {
-        if (word.startsWith('@')) {
-          mentions.push(word);
-        } else if (word.startsWith('#')) {
-          hashtags.push(word);
-        }
+        const words = text.split(' ');
+        words.forEach(word => {
+          if (word.startsWith('@')) {
+            mentions.push(word);
+          } else if (word.startsWith('#')) {
+            hashtags.push(word);
+          }
+        });
       });
-    });
 
-    const html = convertToHTML(editorState.getCurrentContent());
+      const html = convertToHTML(editorState.getCurrentContent());
 
-    const result = {
-      text: textArray.join(' '),
-      html: html,
-      mentions: mentions,
-      hashtags: hashtags
-    };
+      const result = {
+        text: textArray.join(' '),
+        html: html,
+        mentions: mentions,
+        hashtags: hashtags
+      };
 
-    console.log(result);
-  }, 500); // 500ms debounce
+      console.log(result);
+    }, 500),
+    [editorState]
+  );
 
   useEffect(() => {
     logContent();
