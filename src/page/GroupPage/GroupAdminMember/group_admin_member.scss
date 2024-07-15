@@ -1,4 +1,4 @@
-.group-dom {
+.group-admin-members {
   .group-wrapper {
     width: 100vw;
     margin-top: 56px !important;
@@ -30,7 +30,7 @@
             outline: none;
             color: var(--text-color);
 
-            background-color: var(--bg-color);
+            background-color: var(--navbar-color);
 
             &::placeholder {
               color: var(--text-color);

@@ -36,6 +36,28 @@
         display: flex;
         align-items: center;
       }
+
+      span.my-product-checkbox {
+        padding: 0 0 10px;
+        label {
+          font-size: 14px;
+        }
+      }
+      span.nearest {
+        width: fit-content;
+        font-size: 13px;
+        border-radius: 5px;
+        padding: 4px;
+        background-color: var(--active-color);
+        margin: 0 0 10px;
+        .svg{
+          font-size: 14px;
+        }
+        &:hover{
+          cursor: pointer;
+          opacity: 0.8;
+        }
+      }
       .search-input {
         width: 100%;
         padding: 10px;
@@ -45,7 +67,6 @@
       }
 
       .filter-section {
-      
         h4 {
           margin-bottom: 10px;
         }
@@ -65,7 +86,6 @@
             color: black;
           }
         }
-
 
         .filter-button {
           width: 100%;

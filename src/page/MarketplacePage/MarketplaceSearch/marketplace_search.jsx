@@ -4,6 +4,7 @@ import "./marketplace_search.scss";
 import NavigativeBar from "../../../layout/NavigativeBar/navigative_bar";
 import { IoMdAddCircle } from "react-icons/io";
 import Pagination from "../../../layout/Pagination/pagination";
+import { FaLocationCrosshairs } from "react-icons/fa6";
 
 function MarketplaceSearchPage() {
     return (
@@ -19,6 +20,9 @@ function MarketplaceSearchPage() {
                             placeholder=" 🔍Tìm kiếm theo tên sản phẩm hoặc mô tả"
                             className="search-input"
                         />
+                        <span className="my-product-checkbox">
+                            <input type="checkbox" name="" id="my-prd" /><label htmlFor="my-prd">Sản phẩm của tôi</label>
+                        </span>
                         <div className="filter-section">
                             <h4>Lọc giá</h4>
                             <span>
@@ -38,6 +42,10 @@ function MarketplaceSearchPage() {
                                 placeholder="Nhập vị trí"
                                 className="filter-input"
                             />
+                            <span className="nearest">
+                                <FaLocationCrosshairs />
+                                Gần bạn nhất
+                            </span>
                             <button className="filter-button">Lọc</button>
                         </div>
                     </div>

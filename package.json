@@ -10,6 +10,7 @@
     "dom-to-image": "^2.6.0",
     "draft-convert": "^2.1.13",
     "draft-js": "^0.11.7",
+    "face-api.js": "^0.22.2",
     "filepond-plugin-file-encode": "^2.1.14",
     "filepond-plugin-file-poster": "^2.5.1",
     "filepond-plugin-file-validate-size": "^2.2.8",

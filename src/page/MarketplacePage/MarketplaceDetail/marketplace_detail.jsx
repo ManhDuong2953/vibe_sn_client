@@ -6,9 +6,8 @@ import { MdDeleteSweep, MdOutlineClose } from "react-icons/md";
 import { Link, useNavigate } from "react-router-dom";
 import NavigativeBar from "../../../layout/NavigativeBar/navigative_bar";
 import HeaderPost from "../../../layout/ListPosts/PostItem/HeaderPost/header_post";
-import ContentText from "../../../layout/ListPosts/PostItem/ContentText/content_text";
-import Comment from "../../../layout/ListPosts/PostItem/Comment/comment";
 import { FaEdit } from "react-icons/fa";
+import { IoMdMore } from "react-icons/io";
 
 function MarketplaceDetail({ titlePage }) {
 
@@ -18,6 +17,20 @@ function MarketplaceDetail({ titlePage }) {
 
 
     const navigate = useNavigate();
+
+
+    useEffect(() => {
+        const btnFunc = document.querySelector(".btn-func");
+        const iconMore = document.querySelector(".icon-more");
+        console.log(btnFunc, iconMore);
+        function handleClick() {
+            btnFunc.classList.toggle("active");
+        }
+        iconMore.addEventListener("click", handleClick);
+        return () => {
+            iconMore.removeEventListener("click", handleClick);
+        }
+    }, []);
     return (
         <React.Fragment>
             <NavigativeBar />
@@ -32,19 +45,24 @@ function MarketplaceDetail({ titlePage }) {
                         <div className="btn btn-next"><FaChevronRight /></div>
                     </div>
                     <div className="marketplace-detail--comment">
-                        <HeaderPost />
-                        <div className="btn-func">
-                            <Link to="/marketplace/product/detail/123/edit">
-                                <span>
-                                    <FaEdit /> Sửa thông tin
-                                </span>
-                            </Link>
-                            <Link>
-                                <span className="delete">
-                                    <MdDeleteSweep /> Xóa sản phẩm
-                                </span>
-                            </Link>
+                        <div className="header-container--detail">
+                            <div className="header-detail">
+                                <HeaderPost /><div className="icon-more"><IoMdMore /></div>
+                            </div>
+                            <div className="btn-func">
+                                <Link to="/marketplace/product/detail/123/edit">
+                                    <span>
+                                        <FaEdit /> Sửa thông tin
+                                    </span>
+                                </Link>
+                                <Link>
+                                    <span className="delete">
+                                        <MdDeleteSweep /> Xóa sản phẩm
+                                    </span>
+                                </Link>
+                            </div>
                         </div>
+
                         <div className="info-product-container">
                             <h3 className="name-prd">Giày Tây Nam</h3>
                             <h2 className="price-prd">200.000VNĐ</h2>

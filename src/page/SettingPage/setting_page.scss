@@ -1,0 +1,151 @@
+.setting-page {
+  padding: 30px 15px;
+  max-width: 700px;
+  margin: 70px auto;
+  background-color: var(--bg-color);
+  border-radius: 10px;
+  box-shadow: 0 4px 12px var(--shadow-1);
+border: 1px solid var(--border-color);
+  h1 {
+    text-align: center;
+    color: var(--text-color);
+    margin-bottom: 25px;
+    font-size: 1.5rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+
+  .setting-container {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+
+    .setting-option {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      padding: 15px;
+      border-radius: 8px;
+      background-color: var(--navbar-color);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+
+      label {
+        font-size: 1rem;
+        font-weight: 500;
+        color: var(--text-color);
+      }
+
+      select {
+        width: 100%;
+        padding: 10px 12px;
+        border-radius: 6px;
+        border: 1px solid var(--border-color);
+        background-color: var(--bg-color);
+        color: var(--text-color);
+        font-size: 0.9rem;
+        appearance: none;
+        outline: none;
+        cursor: pointer;
+        transition: border-color 0.3s ease;
+
+        &:hover {
+          border-color: var(--primary-color);
+        }
+      }
+
+      .setting-link {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 12px 15px;
+        border-radius: 6px;
+        text-decoration: none;
+        color: var(--text-color);
+        background-color: var(--hover-color);
+        font-weight: 500;
+        transition: background-color 0.3s;
+
+        &:hover {
+          background-color: var(--primary-color);
+        }
+      }
+
+      .btn {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 10px 15px;
+        border-radius: 6px;
+        font-size: 0.9rem;
+        font-weight: 500;
+        border: none;
+        cursor: pointer;
+        transition: background-color 0.3s;
+
+        &.btn-danger {
+          background-color: var(--accent-color);
+          color: var(--text-black-color);
+
+          &:hover {
+            background-color: var(--accent-color);
+          }
+        }
+
+        &.btn-primary {
+          background-color: var(--hover-color);
+          color: var(--text-color);
+
+          &:hover {
+            background-color: var(--primary-color);
+          }
+        }
+
+        &.btn-secondary {
+          background-color: var(--bg-active-color);
+          color: var(--active-color);
+
+          &:hover {
+            background-color: var(--bg-active-color);
+          }
+        }
+
+        &.btn-save {
+          background-color: var(--success-color);
+          color: var(--text-color);
+
+          &:hover {
+            background-color: var(--success-color);
+          }
+        }
+      }
+
+      &.face-recognition-option {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 12px;
+
+        .face-images {
+          display: flex;
+          flex-wrap: wrap;
+          gap: 12px;
+          margin-top: 12px;
+
+          img {
+            width: 90px;
+            height: 90px;
+            border-radius: 8px;
+            object-fit: cover;
+            border: 2px solid var(--border-color);
+            transition: transform 0.3s;
+
+            &:hover {
+              transform: scale(1.05);
+            }
+          }
+        }
+      }
+    }
+  }
+}

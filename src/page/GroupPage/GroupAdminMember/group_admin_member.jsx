@@ -15,7 +15,7 @@ function GroupAdminMemberPage({ titlePage }) {
     }, [titlePage]);
     return (
         <React.Fragment>
-            <div className="group-dom">
+            <div className="group-admin-members">
                 <NavigativeBar />
                 <div className="group-wrapper container">
                     <div className="group-container">
