@@ -9,7 +9,7 @@ import { MdDarkMode } from "react-icons/md";
 import { IoMdSearch, IoMdSettings } from "react-icons/io";
 import { FaChevronRight } from "react-icons/fa";
 import { MdLogout } from "react-icons/md";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import imgError from "../../www/error_image.png";
 import NoticeItem from "../../component/NoticeItem/notice_item";
 import ToggleButton from 'react-toggle-button'
@@ -19,8 +19,20 @@ import { darkHandle, lightHandle } from "../../redux/Reducer/reducer";
 import { IoSettingsSharp } from "react-icons/io5";
 
 function NavigativeBar() {
+    const navigate = useNavigate();
     const theme = useSelector((state) => state.themeUI.theme)
     const [darkOn, setDarkOn] = useState(theme === "dark" ? true : false);
+    const [searchString, setSearchString] = useState("");
+    const handleInput = (e) => {
+        setSearchString(e);
+    }
+
+    const handleSubmit = (e) => {
+        if (e === "Enter") {
+            navigate(`/search?searchString=` + searchString);
+        }
+
+    }
     const dispatch = useDispatch()
     useEffect(() => {
         if (darkOn) {
@@ -55,9 +67,9 @@ function NavigativeBar() {
                                 <img src={logo} onError={(e) => { e.target.src = imgError }} alt="" />
                             </Link>
                         </div>
-                        <form action="" method="get">
+                        <form method="get" onSubmit={e => e.preventDefault()}>
                             <IoMdSearch />
-                            <input type="text" placeholder="Tìm kiếm theo bài viết..." name="searchString" />
+                            <input type="text" onKeyDown={e => handleSubmit(e.key)} onChange={e => handleInput(e.target.value)} placeholder="Tìm kiếm theo bài viết..." value={searchString} name="searchString" />
                         </form>
                         <div className="temp"></div>
                     </div>

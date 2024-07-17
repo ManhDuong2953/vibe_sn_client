@@ -117,9 +117,9 @@ const CreateFaceRecognitionPage = () => {
             <video ref={videoRef} autoPlay muted />
             <canvas ref={canvasRef} className="overlay" />
           </div>
-          {!uploading && (<h6 className='text-danger'>Đang thu thập dữ liệu khuôn mặt {'.'.repeat(dots)} </h6>) }
-            
-         
+          {!uploading && (<h6 className='text-danger'>Đang thu thập dữ liệu khuôn mặt {'.'.repeat(dots)} </h6>)}
+
+
           {capturedImages.length > 0 && (
             <ul className="captured-images">
               {capturedImages.map((img, index) => (
@@ -129,10 +129,12 @@ const CreateFaceRecognitionPage = () => {
               ))}
             </ul>
           )}
-          {uploading && (<h5>Đang gửi dữ liệu {'.'.repeat(dots)} </h5>) }
+          {uploading && (<h5>Đang gửi dữ liệu {'.'.repeat(dots)} </h5>)}
 
 
         </div>
+     
+       
       </div>
     </React.Fragment>
   );

@@ -28,9 +28,12 @@
     --disabled-color: #95a5a6;
     --text-blur-color: rgba(255, 255, 255, 0.6);
     --bg-temp-color: transparent !important;
+    --input-color: #5b5c5e;
+
 }
 
 [data-theme="light"] {
+    --input-color: #e7e7e7;
     --disable-status-color: #d3cece;
     --primary-color: rgb(9 99 131);
     --bg-color: #F0F2F5;
@@ -77,6 +80,10 @@ button[type="submit"] {
     border-radius: 50%;
     aspect-ratio: 1;
     object-fit: cover;
+}
+
+input:focus{
+    outline: unset !important;
 }
 
 h1,
@@ -137,6 +144,9 @@ a {
 .loading-skeleton {
     padding: 0 30px;
     height: 100%;
+}
+a.filepond--credits{
+    display: none;
 }
 
 ::-webkit-scrollbar {

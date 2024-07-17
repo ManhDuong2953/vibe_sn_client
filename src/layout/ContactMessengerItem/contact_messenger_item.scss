@@ -1,0 +1,70 @@
+.chat-list {
+  li.list-contact--item {
+    display: block;
+    width: -webkit-fill-available;
+    a {
+      border-radius: 5px;
+      padding: 10px 16px;
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      .avt-contact {
+        display: flex;
+        align-items: center;
+        position: relative;
+        margin-right: 7px;
+        img {
+          border-radius: 50%;
+          object-fit: cover;
+          width: 45px;
+          height: 45px;
+          aspect-ratio: 1;
+        }
+      }
+      .avt-contact::before {
+        content: "";
+        position: absolute;
+        bottom: 0px;
+        right: 0px;
+        width: 9px;
+        height: 9px;
+        border: 2px solid var(--bg-color);
+        border-radius: 50%;
+        background-color: var(--disable-status-color);
+      }
+      span {
+        p,
+        i {
+          font-size: 15px;
+          font-weight: 500;
+          &.newest-messenger,
+          i {
+            font-weight: 500;
+            font-size: 12px;
+            color: var(--text-blur-color);
+          }
+        }
+      }
+      &.active {
+        p.newest-messenger,
+        i {
+          font-weight: 700;
+          color: var(--text-color);
+        }
+      .avt-contact {
+    img{
+        border: 3px solid var(--active-color);
+    }  
+    }
+      }
+    }
+    a:hover {
+      background-color: var(--hover-color);
+    }
+  }
+  li.list-contact--item.active {
+    .avt-contact::before {
+      background-color: var(--active-status-color);
+    }
+  }
+}

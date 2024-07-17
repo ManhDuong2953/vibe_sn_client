@@ -1,5 +1,6 @@
 // routes.js
 
+import ChatMessengerPage from "../page/ChatPage/chat_page";
 import CreateFaceRecognitionPage from "../page/FaceRecognitionPage/CreateFaceRecognition/create_face_recognition";
 import LoginFaceRecognitionPage from "../page/FaceRecognitionPage/LoginFaceRecognition/login_face_recognition";
 import CreateGroupPage from "../page/GroupPage/CreateGroup/create_group";
@@ -24,11 +25,13 @@ import ProfileImage from "../page/ProfilePage/ProfileImage/profile_image";
 import ProfileLiked from "../page/ProfilePage/ProfileLiked/profile_liked";
 import ProfileRequest from "../page/ProfilePage/ProfileRequest/profile_request";
 import ProfileStoreStory from "../page/ProfilePage/ProfileStoreStory/profile_store_story";
+import SearchPage from "../page/SearchPage/search_page";
 import SettingPage from "../page/SettingPage/setting_page";
 import CreateStoryImagePreview from "../page/StoriesPage/CreateStoryPage/CreateStoryImagePreview/create_story_image_preview";
 import CreateStoryTextPreview from "../page/StoriesPage/CreateStoryPage/CreateStoryTextPreview/create_story_text_preview";
 import CreateStoryPage from "../page/StoriesPage/CreateStoryPage/create_story_page";
 import StoriesPage from "../page/StoriesPage/stories_page";
+import VideoCall from "../page/VideoCall/video_call";
 
 
 const routes = [
@@ -186,7 +189,29 @@ const routes = [
     path: '/face-recognition/create',
     exact: true,
     component: <CreateFaceRecognitionPage titlePage="Chợ | Vibe" />,
+  },
+  {
+    path: '/messenger',
+    exact: true,
+    component: <ChatMessengerPage titlePage="Chợ | Vibe" />,
+  },
+  {
+    path: '/messenger/video-call',
+    exact: true,
+    component: <VideoCall titlePage="Chợ | Vibe" />,
+  },
+  {
+    path: '/messenger/audio-call',
+    exact: true,
+    component: <VideoCall isVideoCall={false} titlePage="Chợ | Vibe" />,
+  },
+  {
+    path: '/search',
+    exact: true,
+    component: <SearchPage titlePage="Chợ | Vibe" />,
   }
+
+
 
 ];
 

@@ -2,6 +2,11 @@
   margin-top: 56px;
   display: flex;
   min-height: calc(100vh - 56px);
+  svg{
+    path{
+      color: white;
+    }
+  }
   .side-left {
     flex: 1;
     background-color: var(--navbar-color);
@@ -47,9 +52,10 @@
         width: fit-content;
         font-size: 13px;
         border-radius: 5px;
-        padding: 4px;
+        padding: 8px;
         background-color: var(--active-color);
         margin: 0 0 10px;
+        color: white;
         .svg{
           font-size: 14px;
         }

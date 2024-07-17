@@ -45,7 +45,7 @@
           padding: 0.75rem;
           border: 1px solid var(--border-color);
           border-radius: 4px;
-          background-color: var(--bg-temp-color);
+          background-color: var(--input-color);
           color: var(--text-color);
           transition: border-color 0.3s;
 
@@ -109,7 +109,7 @@
         margin-bottom: 1rem;
         border: 1px solid var(--border-color);
         border-radius: 4px;
-        background-color: var(--bg-temp-color);
+        background-color: var(--input-color);
         color: var(--text-color);
         transition: border-color 0.3s;
 

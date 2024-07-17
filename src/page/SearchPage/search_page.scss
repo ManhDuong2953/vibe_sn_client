@@ -1,0 +1,112 @@
+.search-page {
+  display: flex;
+  margin-top: 56px;
+  height: calc(100vh - 56px);
+  background-color: var(--bg-color);
+
+  .left-panel {
+    flex: 1;
+    padding: 20px;
+    border-right: 1px solid var(--border-color);
+    background-color: var(--navbar-color);
+    box-shadow: 0 2px 4px var(--shadow-1);
+
+    h1 {
+      margin-bottom: 20px;
+      color: var(--text-color);
+      font-size: 24px;
+    }
+
+    input[type="text"] {
+      width: 100%;
+      padding: 12px;
+      margin-bottom: 20px;
+      border: 1px solid var(--border-color);
+      border-radius: 4px;
+      color: var(--text-color);
+      background-color: var(--input-color);
+      &::placeholder {
+        color: var(--text-color);
+      }
+    }
+
+    .filters {
+      margin-bottom: 20px;
+
+      .filter {
+        display: flex;
+        align-items: center;
+        margin-bottom: 10px;
+        font-weight: 600;
+        padding: 6px 0;
+
+        input[type="checkbox"] {
+          appearance: none; /* Ẩn checkbox mặc định */
+          -webkit-appearance: none;
+          -moz-appearance: none;
+          width: 20px;
+          height: 20px;
+          border: 2px solid var(--border-color);
+          border-radius: 4px;
+          margin-right: 10px;
+          cursor: pointer;
+          outline: none; /* Ẩn outline mặc định */
+          transition: all 0.3s;
+
+          &:checked {
+            background-color: var(--active-color);
+            border-color: var(--active-color);
+          }
+
+          &:checked::after {
+            content: "";
+            display: block;
+            width: 12px;
+            height: 12px;
+            background-color: white; /* Màu bên trong khi được chọn */
+            border-radius: 2px;
+            margin: 2px; /* Để tạo khoảng cách với viền */
+          }
+        }
+
+        label {
+          cursor: pointer;
+          color: var(--text-color);
+          transition: color 0.3s;
+
+          &:hover {
+            color: var(--active-color);
+          }
+        }
+      }
+    }
+  }
+
+  .right-panel {
+    flex: 3;
+    padding: 20px 100px 0;
+    background-color: var(--bg-color);
+    box-shadow: 0 2px 4px var(--shadow-1);
+    height: calc(100vh - 56px - 10px);
+    overflow-y: auto;
+    .title {
+      border-bottom: 1px solid var(--border-color);
+      padding: 10px 0;
+    }
+    .results {
+      i {
+        color: var(--active-color);
+      }
+      background-color: var(--bg-color);
+      #group-container {
+        li.list-suggest--item {
+          .avt-suggest img {
+            border-radius: 5px;
+            width: 45px;
+            height: 45px;
+          }
+        }
+      }
+    }
+  }
+}
