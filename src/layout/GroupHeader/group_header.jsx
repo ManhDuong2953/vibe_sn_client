@@ -8,10 +8,23 @@ import { AiOutlineGlobal } from "react-icons/ai";
 import { FaFacebookMessenger } from "react-icons/fa6";
 import ListSuggest from "../SideBarRight/Suggest/list_suggest";
 import { CgPushChevronLeft, CgPushChevronRight } from "react-icons/cg";
+import { IoQrCodeOutline } from "react-icons/io5";
+import QRCodePopup from "../../component/QRCode/qr_code";
 
 function GroupHeader({ classNameActive }) {
 
     const [isFriend, setIsFriend] = useState(false);
+    const [showQRCodePopup, setShowQRCodePopup] = useState(false);
+
+    const handleQRCodeClick = () => {
+        setShowQRCodePopup(true);
+    };
+
+    const handleClosePopup = () => {
+        setShowQRCodePopup(false);
+    };
+
+    const currentURL = window.location.href;
     useEffect(() => {
         const listNavigation = document.querySelectorAll('.group-navigation a li');
         listNavigation.forEach(navigation => {
@@ -44,6 +57,8 @@ function GroupHeader({ classNameActive }) {
                                     </div>
                                 </div>
                                 <div className="btn-action">
+                                <IoQrCodeOutline onClick={handleQRCodeClick} className="code-qr" />
+                                <QRCodePopup show={showQRCodePopup} url={currentURL} onClose={handleClosePopup} />
                                     <Link>
                                         <div className="btn btn-messenger" >
                                             <FaFacebookMessenger /> Nhắn tin

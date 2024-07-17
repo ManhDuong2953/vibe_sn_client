@@ -3,6 +3,7 @@
 import ChatMessengerPage from "../page/ChatPage/chat_page";
 import CreateFaceRecognitionPage from "../page/FaceRecognitionPage/CreateFaceRecognition/create_face_recognition";
 import LoginFaceRecognitionPage from "../page/FaceRecognitionPage/LoginFaceRecognition/login_face_recognition";
+import ForgotPasswordPage from "../page/ForgotPassword/forgot_password";
 import CreateGroupPage from "../page/GroupPage/CreateGroup/create_group";
 import EditInfoGroupPage from "../page/GroupPage/EditInfoGroup/edit_info_group";
 import GroupAdminPage from "../page/GroupPage/GroupAdmin/group_admin";
@@ -11,6 +12,7 @@ import GroupHomePage from "../page/GroupPage/GroupHome/group_home";
 import GroupMemberPage from "../page/GroupPage/GroupMember/group_member";
 import ListPostGroupPage from "../page/GroupPage/ListPostGroup/list_post_group";
 import HomePage from "../page/Home/home_page";
+import LoginPage from "../page/LoginPage/login_page";
 import CreateProductPage from "../page/MarketplacePage/MarketplaceCreate/marketplace_create";
 import MarketplaceDetail from "../page/MarketplacePage/MarketplaceDetail/marketplace_detail";
 import EditProductPage from "../page/MarketplacePage/MarketplaceEdit/marketplace_edit";
@@ -27,6 +29,7 @@ import ProfileRequest from "../page/ProfilePage/ProfileRequest/profile_request";
 import ProfileStoreStory from "../page/ProfilePage/ProfileStoreStory/profile_store_story";
 import SearchPage from "../page/SearchPage/search_page";
 import SettingPage from "../page/SettingPage/setting_page";
+import SignupPage from "../page/SignupPage/signup_page";
 import CreateStoryImagePreview from "../page/StoriesPage/CreateStoryPage/CreateStoryImagePreview/create_story_image_preview";
 import CreateStoryTextPreview from "../page/StoriesPage/CreateStoryPage/CreateStoryTextPreview/create_story_text_preview";
 import CreateStoryPage from "../page/StoriesPage/CreateStoryPage/create_story_page";
@@ -184,6 +187,21 @@ const routes = [
     path: '/login/face-recognition/',
     exact: true,
     component: <LoginFaceRecognitionPage titlePage="Chợ | Vibe" />,
+  },
+  {
+    path: '/login',
+    exact: true,
+    component: <LoginPage titlePage="Chợ | Vibe" />,
+  },
+  {
+    path: '/login/forgot-password',
+    exact: true,
+    component: <ForgotPasswordPage titlePage="Chợ | Vibe" />,
+  },
+  {
+    path: '/signup',
+    exact: true,
+    component: <SignupPage titlePage="Chợ | Vibe" />,
   },
   {
     path: '/face-recognition/create',

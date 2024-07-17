@@ -1,13 +1,25 @@
 import React, { useEffect, useState } from "react";
 import "./profile_header.scss";
-import { IoHeartCircle } from "react-icons/io5";
+import { IoHeartCircle, IoQrCodeOutline } from "react-icons/io5";
 import { IoIosPersonAdd } from "react-icons/io";
 import { FaUserCheck } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import { FaFacebookMessenger } from "react-icons/fa6";
+import QRCodePopup from "../../component/QRCode/qr_code";
 function ProfileHeader({ classNameActive }) {
     const [isHearted, setIsHearted] = useState(false);
     const [isFriend, setIsFriend] = useState(false);
+    const [showQRCodePopup, setShowQRCodePopup] = useState(false);
+
+    const handleQRCodeClick = () => {
+        setShowQRCodePopup(true);
+    };
+
+    const handleClosePopup = () => {
+        setShowQRCodePopup(false);
+    };
+
+    const currentURL = window.location.href;
     useEffect(() => {
         const listNavigation = document.querySelectorAll('.profile-navigation a li');
         listNavigation.forEach(navigation => {
@@ -38,8 +50,9 @@ function ProfileHeader({ classNameActive }) {
                                     <p className="quantity-same--fr">1002 bạn chung</p>
                                 </div>
                             </div>
-                            <div className="btn-action">   
-                                
+                            <div className="btn-action">
+                                <IoQrCodeOutline onClick={handleQRCodeClick} className="code-qr" />
+                                <QRCodePopup show={showQRCodePopup} url={currentURL} onClose={handleClosePopup} />
                                 <Link>
                                     <div className="btn btn-messenger" >
                                         <FaFacebookMessenger /> Nhắn tin
