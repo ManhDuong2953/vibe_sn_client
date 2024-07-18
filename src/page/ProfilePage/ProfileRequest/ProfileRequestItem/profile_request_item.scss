@@ -5,6 +5,9 @@ li.list-suggest--item.request {
     justify-content: space-between;
     padding: 10px;
     background-color: var(--navbar-color);
+    &:hover{
+      background-color: var(--input-color);
+    }
     .item-container {
       display: flex;
       align-items: center;
@@ -45,14 +48,21 @@ li.list-suggest--item.request {
         &.btn-accept {
           color: var(--success-color);
           background-color: var(--bg-success-color);
+          &:hover{
+            color: white;
+            background-color: var(--success-color);
+          }
         }
         &.btn-refuse {
           color: var(--accent-color);
           background-color: var(--bg-accent-color);
+          &:hover{
+            color: white;
+            background-color: var(--accent-color);
+          }
         }
-        &:hover{
-          opacity: 0.8;
-        }
+
+    
       }
     }
   }

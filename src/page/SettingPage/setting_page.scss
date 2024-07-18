@@ -5,7 +5,7 @@
   background-color: var(--bg-color);
   border-radius: 10px;
   box-shadow: 0 4px 12px var(--shadow-1);
-border: 1px solid var(--border-color);
+  border: 1px solid var(--border-color);
   h1 {
     text-align: center;
     color: var(--text-color);
@@ -15,12 +15,17 @@ border: 1px solid var(--border-color);
     text-transform: uppercase;
     letter-spacing: 1px;
   }
-
+  
   .setting-container {
     display: flex;
     flex-direction: column;
     gap: 20px;
-
+    
+    svg {
+      path {
+        color: white;
+      }
+    }
     .setting-option {
       display: flex;
       flex-direction: column;
@@ -61,13 +66,13 @@ border: 1px solid var(--border-color);
         padding: 12px 15px;
         border-radius: 6px;
         text-decoration: none;
-        color: var(--text-color);
-        background-color: var(--hover-color);
+        color: white;
+        background-color: var(--primary-color);
         font-weight: 500;
         transition: background-color 0.3s;
 
         &:hover {
-          background-color: var(--primary-color);
+          opacity: 0.8;
         }
       }
 
@@ -85,7 +90,7 @@ border: 1px solid var(--border-color);
 
         &.btn-danger {
           background-color: var(--accent-color);
-          color: var(--text-black-color);
+          color: white;
 
           &:hover {
             background-color: var(--accent-color);
@@ -93,11 +98,11 @@ border: 1px solid var(--border-color);
         }
 
         &.btn-primary {
-          background-color: var(--hover-color);
-          color: var(--text-color);
+          background-color: var(--primary-color);
+          color: white;
 
           &:hover {
-            background-color: var(--primary-color);
+            opacity: 0.8;
           }
         }
 
@@ -112,10 +117,10 @@ border: 1px solid var(--border-color);
 
         &.btn-save {
           background-color: var(--success-color);
-          color: var(--text-color);
+          color: white;
 
           &:hover {
-            background-color: var(--success-color);
+            opacity: 0.8;
           }
         }
       }

@@ -135,7 +135,9 @@ function NavigativeBar() {
                                             </span>
                                         </Link>
                                     </li>
-                                    <li className="dark-mode--setting">
+                                    <li className="dark-mode--setting" onClick={() => {
+                                        setDarkOn(!darkOn);
+                                    }}>
                                         <span>
                                             <MdDarkMode />
                                             <p>
@@ -144,10 +146,6 @@ function NavigativeBar() {
                                         </span>
                                         <ToggleButton
                                             value={darkOn}
-                                            onToggle={() => {
-                                                setDarkOn(!darkOn);
-
-                                            }}
                                             activeLabel="Bật"
                                             inactiveLabel="Tắt"
                                         />

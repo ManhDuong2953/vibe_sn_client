@@ -14,7 +14,7 @@
       if (waveformRef.current) {
         wavesurferRef.current = WaveSurfer.create({
           barWidth: 2,
-          barRadius: 1,
+          barRadius: 2,
           barGap: 3,
           barMinHeight: 10,
           cursorWidth: 1,

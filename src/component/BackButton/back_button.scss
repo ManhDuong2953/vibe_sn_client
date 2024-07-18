@@ -13,7 +13,12 @@
     transition: background-color 0.3s;
     
     &:hover {
-        background-color: var(--primary-color);
+        background-color: var(--active-color);
+        color: white;
+        path{
+        color: white;
+
+        }
     }
   
     svg {

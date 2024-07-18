@@ -16,7 +16,9 @@
       display: flex;
       .form-group {
         margin-bottom: 15px;
-
+        & > label {
+          color: var(--text-color);
+        }
         label {
           margin-bottom: 5px;
           display: block;
@@ -45,9 +47,10 @@
       .side-right {
         padding: 10px;
         flex: 2;
-        label,
-        span {
-          color: var(--text-black-color);
+
+        span,
+        .filepond--drop-label > label {
+          color: black;
         }
       }
     }
@@ -62,7 +65,7 @@
         border-radius: 5px;
         cursor: pointer;
         transition: background-color 0.3s;
-font-size: 14px;
+        font-size: 14px;
         &:hover {
           background-color: var(--active-color) !important;
         }

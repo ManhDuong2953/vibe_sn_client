@@ -161,11 +161,12 @@
             border: 1px solid var(--text-blur-color);
           }
 
-          &:has(img, video, audio) {
+          &:has(img, video) {
             padding: 6px;
           }
           &:has(audio) {
-            width: 50%;
+            width: 30%;
+            padding: 0;
           }
 
           & > * {

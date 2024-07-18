@@ -84,7 +84,8 @@
 
   .right-panel {
     flex: 3;
-    padding: 20px 100px 0;
+    padding: 0 100px 20px;
+
     background-color: var(--bg-color);
     box-shadow: 0 2px 4px var(--shadow-1);
     height: calc(100vh - 56px - 10px);
@@ -94,10 +95,11 @@
       padding: 10px 0;
     }
     .results {
+      padding: 20px;
+      border-radius: 10px;
       i {
         color: var(--active-color);
       }
-      background-color: var(--bg-color);
       #group-container {
         li.list-suggest--item {
           .avt-suggest img {
