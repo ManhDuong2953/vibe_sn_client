@@ -18,6 +18,11 @@
       }
       .stories-present {
         padding: 20px;
+        /* Máy tính bảng loại to, hiển thị chiều ngang */
+        @media (max-width: 1024px) {
+          padding-left: 0;
+        }
+
         flex: 1;
         height: 100%;
         background-color: var(--text-black-color);
@@ -57,6 +62,10 @@
       .content-story--main {
         flex: 3;
         height: 100%;
+        /* Máy tính bảng loại to, hiển thị chiều ngang */
+        @media (max-width: 1024px) {
+          flex: 1;
+        }
 
         .content-story--container {
           position: relative;
@@ -123,12 +132,12 @@
                   display: flex;
                   justify-content: space-between;
                   align-items: center;
-                  svg{
+                  svg {
                     font-size: 20px;
-                    path{
+                    path {
                       color: var(--accent-color);
                     }
-                    &:hover{
+                    &:hover {
                       cursor: pointer;
                       opacity: 0.8;
                     }

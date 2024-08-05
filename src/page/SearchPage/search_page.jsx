@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import './search_page.scss';
 import NavigativeBar from '../../layout/NavigativeBar/navigative_bar';
 import ListSuggest from '../../layout/SideBarRight/Suggest/list_suggest';
@@ -7,7 +7,10 @@ import PostItem from '../../layout/ListPosts/PostItem/post_item';
 import SuggestItem from '../../layout/SideBarRight/Suggest/SuggestItem/suggest_item';
 import { useLocation, useNavigate } from 'react-router-dom';
 
-const SearchPage = () => {
+const SearchPage =({ titlePage })=> {
+    useEffect(() => {
+        document.title = titlePage;
+    }, [titlePage]);
     const navigate = useNavigate();
     const location = useLocation();
     const query = new URLSearchParams(location.search);

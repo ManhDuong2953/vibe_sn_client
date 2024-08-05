@@ -1,23 +1,55 @@
+[data-theme="dark"] {
+  --bg-list-chat: url("https://getwallpapers.com/wallpaper/full/f/8/5/250440.jpg");
+}
+
+[data-theme="light"] {
+  --bg-list-chat: url("https://img.freepik.com/premium-photo/simple-abstract-geometric-pattern-background-color-background-website-design-decoration_86390-7410.jpg");
+}
+
 .chat-messenger {
   display: flex;
   height: calc(100vh - 56px);
   margin-top: 56px;
   font-family: Arial, sans-serif;
   color: var(--text-color);
-
+  .react-draggable {
+    display: none;
+    @media (max-width: 800px) {
+      position: fixed;
+      display: flex;
+      z-index: 100;
+      top: 50%;
+      left: 0;
+      svg {
+        font-size: 40px;
+        padding: 5px;
+        border-radius: 10px;
+        background-color: var(--border-color);
+      }
+    }
+  }
   .sidebar {
     width: 300px;
-    background-color: var(--bg-color);
+    background: var(--bg-sidebar-left);
     display: flex;
     flex-direction: column;
     border-right: 1px solid var(--border-color);
+    @media (max-width: 800px) {
+      position: fixed;
+      height: inherit;
+      z-index: 10;
+      left: -100%;
+      transition: all 0.1s;
+      &.active {
+        left: 0;
+      }
+    }
     .sidebar-header {
       display: flex;
       justify-content: space-between;
       align-items: center;
       padding: 16px;
       font-weight: 700;
-      background-color: var(--bg-color);
     }
 
     .search-bar {
@@ -46,7 +78,7 @@
     display: flex;
     flex-direction: column;
     background-color: var(--bg-color);
-
+    width: -webkit-fill-available;
     .chat-header {
       display: flex;
       justify-content: space-between;
@@ -126,12 +158,27 @@
       flex: 1;
       padding: 16px;
       overflow-y: auto;
-
+      background: var(--bg-list-chat) center / cover;
       li.message {
         display: flex;
         flex-direction: column;
         align-items: flex-start;
+        .file-container {
+          display: flex;
+          align-items: center;
+          svg {
+            font-size: 15px;
+          }
+          a {
+            font-size: 13px;
+          }
+        }
+        a {
+          text-decoration: underline;
+          font-weight: 500;
+        }
         i.writting {
+          margin-top: 10px;
           font-size: 10px;
         }
         .message-time {
@@ -148,6 +195,16 @@
           border-radius: 8px;
           margin-top: 8px;
           font-size: 14px;
+
+          &.reply {
+            background-color: #630b0b !important;
+            margin-bottom: -14px;
+            color: var(--text-color);
+            & > * {
+              font-size: 0.8rem;
+              opacity: 0.6;
+            }
+          }
           img {
             width: 200px;
             max-height: 400px;
@@ -155,9 +212,8 @@
             border: 1px solid var(--text-blur-color);
           }
           video {
+            max-width: 100%;
             width: 400px;
-            max-height: 400px;
-            object-fit: contain;
             border: 1px solid var(--text-blur-color);
           }
 
@@ -178,6 +234,12 @@
 
           .message-content {
             background-color: var(--active-color);
+
+            a,
+            p,
+            path {
+              color: white;
+            }
             & > * {
               color: white;
             }

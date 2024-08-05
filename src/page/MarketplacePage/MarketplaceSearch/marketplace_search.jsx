@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Link } from "react-router-dom";
 import "./marketplace_search.scss";
 import NavigativeBar from "../../../layout/NavigativeBar/navigative_bar";
@@ -6,7 +6,10 @@ import { IoMdAddCircle } from "react-icons/io";
 import Pagination from "../../../layout/Pagination/pagination";
 import { FaLocationCrosshairs } from "react-icons/fa6";
 
-function MarketplaceSearchPage() {
+function MarketplaceSearchPage({ titlePage }) {
+    useEffect(() => {
+        document.title = titlePage;
+    }, [titlePage]);
     return (
         <React.Fragment>
             <NavigativeBar />
@@ -52,25 +55,28 @@ function MarketplaceSearchPage() {
                 </div>
                 <div className="side-right">
                     <h3 className="product-list-title">Danh sách sản phẩm</h3>
-                    <div className="product-list">
+                    <ul className="product-list">
                         {/* Sản phẩm mẫu */}
                         {Array.from({ length: 20 }).map((_, index) => (
                             <Link to={`/marketplace/product/detail/${index}`} key={index} className="product-item">
-                                <img src={`https://giaycaosmartmen.com/wp-content/uploads/2020/12/cach-chup-giay-dep-6.jpg`} alt="Product" />
-                                <div className="product-info">
-                                    <h4 className="product-name">Giày Tây Nam {index + 1}</h4>
-                                    <p className="product-description">Giày tây nam chính hãng làm bằng 100% da thật.</p>
-                                    <p className="product-price">Giá: <b>100.000 VNĐ</b></p>
-                                    <p className="product-location">Vị trí: <b>Hà Nội</b></p>
-                                </div>
+                                <li>
+
+                                    <img src={`https://giaycaosmartmen.com/wp-content/uploads/2020/12/cach-chup-giay-dep-6.jpg`} alt="Product" />
+                                    <div className="product-info">
+                                        <h4 className="product-name">Giày Tây Nam {index + 1}</h4>
+                                        <p className="product-description">Giày tây nam chính hãng làm bằng 100% da thật.</p>
+                                        <p className="product-price">Giá: <b>100.000 VNĐ</b></p>
+                                        <p className="product-location">Vị trí: <b>Hà Nội</b></p>
+                                    </div>
+                                </li>
                             </Link>
                         ))}
                         <Pagination totalPages={10}
                             currentPage={4} />
-                    </div>
+                    </ul>
                 </div>
             </div>
-        </React.Fragment>
+        </React.Fragment >
     );
 }
 

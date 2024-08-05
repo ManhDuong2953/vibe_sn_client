@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useRef, useState } from "react";
 import "./comment_item.scss";
 import { FaCamera, FaHeart } from "react-icons/fa6";
 import { ImReply } from "react-icons/im";
@@ -6,28 +6,44 @@ import { IoSendSharp } from "react-icons/io5";
 import SubCommentItem from "./SubCommentItem/sub_comment_item";
 import { LiaReplySolid } from "react-icons/lia";
 import PopupInfoShort from "../../../../../component/PopupInfoShort/popup_info_short";
+import { IoMdMore } from "react-icons/io";
+import { MdDelete } from "react-icons/md";
+import { CiEdit } from "react-icons/ci";
 
 function CommentItem() {
     const [showInputComment, setShowInputComment] = useState(false);
     const [showSubComment, setShowSubComment] = useState(false);
-    const [idReply, setIdReply] = useState();
-    const [textRawReply, setTextRawRepLy] = useState(`Trả lời ${"default"}: `);
-    const [textReply, setTextRepLy] = useState(" ");
+    const [idReply, setIdReply] = useState(null);
+    const [textRawReply, setTextRawReply] = useState("Trả lời default: ");
+    const [textReply, setTextReply] = useState("");
+    const [isActive, setIsActive] = useState(false);
+
     const getSupplyID = useCallback((id) => {
         setIdReply(id);
-        setTextRepLy(`Trả lời ${id}: `)
-        setTextRawRepLy(`<a href="http://"> ${idReply} </a><p>${textReply}</p>`);
-    }, [idReply, textReply])
+        setTextReply(`Trả lời ${id}: `);
+        setTextRawReply(`<a href="http://">${id}</a><p>${textReply}</p>`);
+    }, [idReply, textReply]);
 
     const handleChangeReply = (e) => {
-        setTextRepLy(e);
+        setTextReply(e);
         console.log(textRawReply);
-    }
+    };
+
+    const handleToggle = () => {
+        setIsActive(!isActive);
+    };
+
     return (
         <React.Fragment>
-
             <li className="container-item">
-                <div className="container-item-main">
+                <div className="container-item-main active">
+                    <div className={`action-container ${isActive ? 'active' : ''}`}>
+                        <IoMdMore className="icon-more" onClick={handleToggle} />
+                        <div className="action-func">
+                            <div className="row"><CiEdit />Chỉnh sửa</div>
+                            <div className="row"><MdDelete />Xóa</div>
+                        </div>
+                    </div>
                     <div className="avt-img">
                         <PopupInfoShort />
                         <img src="https://cdn.24h.com.vn/upload/1-2023/images/2023-01-04/Ve-dep-dien-dao-chung-sinh-cua-co-gai-sinh-nam-1999-lot-top-guong-mat-dep-nhat-the-gioi-57068584_2351143488502839_871658938696715268_n-1672812988-819-width1080height1080.jpg" alt="" />
@@ -47,15 +63,14 @@ function CommentItem() {
                             <div className="comment-action--reply">
                                 <div className="action">
                                     <div className="heart"><FaHeart /><b>Yêu thích</b></div>
-                                    <div className="reply" onClick={() => {setShowInputComment(!showInputComment);setShowSubComment(true)}}><ImReply /><b>Phản hồi</b></div>
+                                    <div className="reply" onClick={() => { setShowInputComment(!showInputComment); setShowSubComment(true) }}><ImReply /><b>Phản hồi</b></div>
                                 </div>
                                 <p className="time">7 giờ trước</p>
                             </div>
                             {!showSubComment && (
-                                <div className="see-more--subcomment" onClick={() => {setShowInputComment(!showInputComment);setShowSubComment(true)}}><p>Xem thêm 5 phản hồi với Dasha Taran </p><LiaReplySolid /></div>
+                                <div className="see-more--subcomment" onClick={() => { setShowInputComment(!showInputComment); setShowSubComment(true) }}><p>Xem thêm 5 phản hồi với Dasha Taran</p><LiaReplySolid /></div>
                             )}
                         </div>
-
                     </div>
                 </div>
                 {showSubComment && (
@@ -81,12 +96,10 @@ function CommentItem() {
                                 </div>
                             </div>
                         </div>
-                        <button type="submit" ><IoSendSharp />
-                        </button>
+                        <button type="submit"><IoSendSharp /></button>
                     </div>
                 )}
             </li>
-
         </React.Fragment>
     );
 }

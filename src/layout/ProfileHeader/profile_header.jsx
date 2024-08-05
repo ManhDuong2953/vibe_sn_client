@@ -6,11 +6,17 @@ import { FaUserCheck } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import { FaFacebookMessenger } from "react-icons/fa6";
 import QRCodePopup from "../../component/QRCode/qr_code";
-function ProfileHeader({ classNameActive }) {
+import DevtoCard from "../../skeleton/dev_to_card";
+function ProfileHeader({ classNameActive, data }) {
     const [isHearted, setIsHearted] = useState(false);
     const [isFriend, setIsFriend] = useState(false);
     const [showQRCodePopup, setShowQRCodePopup] = useState(false);
-
+    const [loading, setLoading] = useState(false);
+    useEffect(() => {
+        if (data?.user_id) {
+            setLoading(true)
+        }
+    }, [data]);
     const handleQRCodeClick = () => {
         setShowQRCodePopup(true);
     };
@@ -32,40 +38,48 @@ function ProfileHeader({ classNameActive }) {
     return (
         <React.Fragment>
             <div className="profile-header--container">
-                <div className="profile-header">
-                    <div className="profile-cover--img">
-                        <img src="https://c4.wallpaperflare.com/wallpaper/243/676/950/dasha-taran-photoshopped-lips-face-women-hd-wallpaper-preview.jpg" alt="" />
-                    </div>
-                    <div className="profile-avatar--img">
-                        <img src="https://pbs.twimg.com/profile_images/1415999849888055300/8zvKC-eE_400x400.jpg" alt="" />
-                        <div className="header-container">
-                            <div className="info-analyst">
-                                <h1 className="name">Dasha Taran</h1>
-                                <p className="nickname">@dashataran1223</p>
-                                <div className="analyst">
-                                    <p className="quantity-friend">1002 bạn bè</p>
-                                    <i>•</i>
-                                    <p className="quantity-like">1002 lượt thích</p>
-                                    <i>•</i>
-                                    <p className="quantity-same--fr">1002 bạn chung</p>
-                                </div>
+                {
+                    loading ? (
+
+                        <div className="profile-header">
+                            <div className="profile-cover--img">
+                                <img src={data && data?.media?.cover[0]?.media_link} alt="" />
                             </div>
-                            <div className="btn-action">
-                                <IoQrCodeOutline onClick={handleQRCodeClick} className="code-qr" />
-                                <QRCodePopup show={showQRCodePopup} url={currentURL} onClose={handleClosePopup} />
-                                <Link>
-                                    <div className="btn btn-messenger" >
-                                        <FaFacebookMessenger /> Nhắn tin
+                            <div className="profile-avatar--img">
+                                <img src={data && data?.media?.avatar[0]?.media_link} alt="" />
+                                <div className="header-container">
+                                    <div className="info-analyst">
+                                        <h1 className="name">{data && data?.user_name}</h1>
+                                        <p className="nickname">@{data && data?.user_nickname}</p>
+                                        <div className="analyst">
+                                            <p className="quantity-friend">1002 bạn bè</p>
+                                            <i>•</i>
+                                            <p className="quantity-like">1002 lượt thích</p>
+                                            <i>•</i>
+                                            <p className="quantity-same--fr">1002 bạn chung</p>
+                                        </div>
                                     </div>
-                                </Link>
-                                <div className={`btn btn-like ${isHearted ? "active" : ""}`} onClick={() => setIsHearted(!isHearted)}><IoHeartCircle /> {isHearted ? "Đã thích" : "Thích"}</div>
-                                <div className={`btn btn-add--friend ${isFriend ? "active" : ""}`} onClick={() => setIsFriend(!isFriend)}>
-                                    {isFriend ? (<><FaUserCheck /> Bạn bè</>) : (<><IoIosPersonAdd /> Thêm bạn bè</>)}
+                                    <div className="btn-action">
+                                        <IoQrCodeOutline onClick={handleQRCodeClick} className="code-qr" />
+                                        <QRCodePopup show={showQRCodePopup} url={currentURL} onClose={handleClosePopup} />
+                                        <Link>
+                                            <div className="btn btn-messenger" >
+                                                <FaFacebookMessenger /> Nhắn tin
+                                            </div>
+                                        </Link>
+                                        <div className={`btn btn-like ${isHearted ? "active" : ""}`} onClick={() => setIsHearted(!isHearted)}><IoHeartCircle /> {isHearted ? "Đã thích" : "Thích"}</div>
+                                        <div className={`btn btn-add--friend ${isFriend ? "active" : ""}`} onClick={() => setIsFriend(!isFriend)}>
+                                            {isFriend ? (<><FaUserCheck /> Bạn bè</>) : (<><IoIosPersonAdd /> Thêm bạn bè</>)}
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                </div>
+                    ) : (
+                        <div className="loading-skeleton">
+                            <DevtoCard />
+                        </div>
+                    )}
                 <ul className="profile-navigation">
                     <Link to="/profile/123">
                         <li className="profile-navigation--item post active">Bài viết</li>

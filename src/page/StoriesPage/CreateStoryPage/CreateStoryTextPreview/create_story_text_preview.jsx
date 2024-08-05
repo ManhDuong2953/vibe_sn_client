@@ -12,6 +12,7 @@ import Img7 from "../../../../www/bgImgStory/7.jpg";
 import Img8 from "../../../../www/bgImgStory/8.jpg";
 import Img9 from "../../../../www/bgImgStory/9.jpg";
 import Img10 from "../../../../www/bgImgStory/10.jpg";
+import BackButton from "../../../../component/BackButton/back_button";
 function CreateStoryTextPreview({ titlePage }) {
     const [text, setText] = useState("");
     const [color, setColor] = useState("#ffffff");
@@ -60,8 +61,11 @@ function CreateStoryTextPreview({ titlePage }) {
                 <div className="container">
                     <div className="story-container-preview--wrapper">
                         <div className="side-left">
-                            <h1>Tạo tin</h1>
+                            <div className="title">
+                                <BackButton />
 
+                                <h1>Tạo tin</h1>
+                            </div>
                             <div className="controls-text">
                                 <h3>Chỉnh sửa văn bản</h3>
                                 <div className="control-group">

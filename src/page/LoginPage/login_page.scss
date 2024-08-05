@@ -10,10 +10,20 @@
     color: #000;
     font-size: 12px;
     padding: 0 0 5px;
+    &.forgot-password {
+      color: #0422f9;
+      padding: 5px 0 10px;
+      margin-top: -15px;
+      text-align: left;
+      &:hover{
+        text-decoration: underline;
+        cursor: pointer;
+      }
+    }
   }
   .login-container {
     width: 80%;
-    height: 80%;
+    height: 90%;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -35,12 +45,30 @@
 
       .logo {
         width: 100px;
-        margin-bottom: 20px;
       }
 
       h2 {
         margin-bottom: 20px;
         color: #333;
+      }
+      
+      svg.icon-face{
+        font-size: 42px;
+        margin: 0 0 10px;
+        padding: 5px;
+        border: 1px solid;
+        border-radius: 5px;
+        background-color: #fcfcfc;
+        path{
+          color: #0422f9;
+        }
+        &:hover{
+          cursor: pointer;
+          background-color: #0422f9;
+          path{
+            color: white;
+          }
+        }
       }
 
       .input-group {

@@ -1,4 +1,4 @@
-const API_KEY_OPENWEATHER_APP = "c2242b51c0bf43e3667126de3b967366"
+const API_KEY_OPENWEATHER_APP = "ccf99001b512200f05cd7e7d4b1b5e84"
 export const API_WEATHER_FORECAST = (lat, lon) => `https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&appid=${API_KEY_OPENWEATHER_APP}&units=metric&lang=vi`
 export const API_WEATHER_CURRENT = (lat, lon) => `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${API_KEY_OPENWEATHER_APP}&units=metric&lang=vi`
 

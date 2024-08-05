@@ -8,7 +8,10 @@ import NavigativeBar from "../../../layout/NavigativeBar/navigative_bar";
 
 
 
-export default function EditPost() {
+export default function EditPost({ titlePage }) {
+    useEffect(() => {
+        document.title = titlePage;
+    }, [titlePage]);
     const navigate = useNavigate();
     const { id } = useParams();
     const [showEmotion, setShowEmotion] = useState(false);

@@ -2,7 +2,10 @@ import React, { useRef, useState, useEffect } from 'react';
 import './video_call.scss';
 import { FaVideoSlash, FaVideo, FaMicrophoneSlash, FaMicrophone, FaPhoneAlt } from 'react-icons/fa';
 
-const VideoCall = ({ isVideoCall }) => {
+const VideoCall = ({ isVideoCall, titlePage }) => {
+    useEffect(() => {
+        document.title = titlePage;
+    }, [titlePage]);
     const userVideo = useRef();
     const partnerVideo = useRef();
     const [stream, setStream] = useState(null);

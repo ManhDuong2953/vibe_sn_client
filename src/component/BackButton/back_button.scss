@@ -1,28 +1,22 @@
 .back-button {
-    display: flex;
-    align-items: center;
-    align-self: flex-start;
-    background-color: var(--hover-color);
-    justify-content: flex-start;
-    color: var(--text-color);
-    border: none;
-    padding: 10px 15px;
-    margin-bottom: 4px;
-    font-size: 14px;
-    cursor: pointer;
-    transition: background-color 0.3s;
-    
-    &:hover {
-        background-color: var(--active-color);
-        color: white;
-        path{
-        color: white;
-
-        }
-    }
-  
-    svg {
-      margin-right: 8px;
-    }
+  display: flex;
+  align-items: center;
+  background-color: #0049ff;
+  justify-content: flex-start;
+  color: var(--text-color);
+  border: none;
+  padding: 7px;
+  height: 28px;
+  margin-bottom: 4px;
+  margin-right: 10px;
+  font-size: 13px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  align-self: flex-start;
+  svg {
+    font-size: 18px;
   }
-  
+  &:hover {
+    opacity: 0.8;
+  }
+}

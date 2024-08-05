@@ -20,6 +20,10 @@
     .side-container {
       display: flex;
       margin: 0 -10px;
+      @media (max-width: 800px) {
+        flex-direction: column;
+      }
+
       .form-group {
         margin-bottom: 15px;
 

@@ -1,9 +1,22 @@
+[data-theme="dark"] {
+  --bg-sidebar-left: url("https://i.pinimg.com/474x/3d/36/80/3d368095a93193859279a20cd306d59c.jpg");
+}
+[data-theme="light"] {
+  --bg-sidebar-left: #FFFFFF;
+}
+
 #sidebar-left--container {
+  background: var(--bg-sidebar-left);
   flex: 8;
   height: 100%;
   overflow-y: auto;
   overflow-x: hidden;
-  // background: var(--bg-temp-color);
+  padding: 0 25px;
+  /* Máy tính bảng loại to, hiển thị chiều ngang */
+  @media (max-width: 1024px) {
+    display: none;
+  }
+  
   &::-webkit-scrollbar {
     display: none !important;
   }
@@ -13,9 +26,8 @@
   h3 {
     font-size: 12px !important;
   }
-
+  
   span.sidebar-left--span {
-    background: url("https://the-weather-forecasting.netlify.app/static/media/bg.e0d46b6d28d5c7baa29c.png");
     display: block;
     width: 100%;
     .template-container {
@@ -27,9 +39,10 @@
         filter: drop-shadow(0px 1px 1px black);
       }
       .template-wrap {
+        background: rgba(255,255,255,0.06);
         width: 100%;
         height: 100%;
-        padding: 10px;
+        padding: 20px;
         border-radius: 10px;
         box-shadow: rgba(200, 200, 200, 0.3) 0px 1px 2px 0px,
           rgba(200, 200, 200, 0.15) 0px 1px 3px 1px;
@@ -151,10 +164,14 @@
             color: var(--primary-color);
           }
           ul.list-forecast {
+            overflow-x: auto;
             height: 100px;
             display: flex;
             align-items: center;
             justify-content: center;
+            &::-webkit-scrollbar{
+              display: none;
+            }
             li.forecast-item {
               flex: 1;
               display: flex;

@@ -1,8 +1,13 @@
 import React, { useEffect, useRef, useState } from 'react';
 import * as faceapi from 'face-api.js';
 import './login_face_recognition.scss';
+import BackButton from '../../../component/BackButton/back_button';
 
-const LoginFaceRecognition = () => {
+const LoginFaceRecognition = ({ titlePage }) => {
+  useEffect(() => {
+    document.title = titlePage;
+  }, [titlePage]);
+
   const videoRef = useRef(null);
   const canvasRef = useRef(null);
   const [loading, setLoading] = useState(false);
@@ -69,23 +74,43 @@ const LoginFaceRecognition = () => {
     };
 
     const startFaceDetection = async () => {
-      const canvas = canvasRef.current; // Use canvasRef here
+      const video = videoRef.current;
+      const canvas = canvasRef.current;
+
+      if (!video || !canvas) {
+        console.error('Video or canvas element is not defined');
+        return;
+      }
+
       faceapi.matchDimensions(canvas, {
-        width: videoRef.current.videoWidth,
-        height: videoRef.current.videoHeight
+        width: video.videoWidth,
+        height: video.videoHeight
       });
 
       setInterval(async () => {
-        const detections = await faceapi.detectAllFaces(videoRef.current, new faceapi.TinyFaceDetectorOptions())
+        if (video.videoWidth === 0 || video.videoHeight === 0) {
+          console.warn('Video dimensions are not valid');
+          return;
+        }
+
+        const detections = await faceapi.detectAllFaces(video, new faceapi.TinyFaceDetectorOptions())
           .withFaceLandmarks().withFaceDescriptors();
+
         const resizedDetections = faceapi.resizeResults(detections, {
-          width: videoRef.current.videoWidth,
-          height: videoRef.current.videoHeight
+          width: video.videoWidth,
+          height: video.videoHeight
         });
-        canvas.getContext('2d').clearRect(0, 0, canvas.width, canvas.height);
+
+        const context = canvas.getContext('2d');
+        if (context) {
+          context.clearRect(0, 0, canvas.width, canvas.height);
+        }
+
         resizedDetections.forEach(detect => {
           const bestMatch = findBestMatch(detect.descriptor);
-          faceapi.draw.drawFaceLandmarks(canvas, detect);
+          if (context) {
+            faceapi.draw.drawFaceLandmarks(canvas, detect);
+          }
           if (bestMatch) {
             const text = bestMatch.toString();
             setNameUser(text);
@@ -97,11 +122,12 @@ const LoginFaceRecognition = () => {
       }, 200);
     };
 
+
     const findBestMatch = (descriptor) => {
       if (labeledFaceDescriptors.length === 0) return null;
       const faceMatcher = new faceapi.FaceMatcher(labeledFaceDescriptors);
       const bestMatch = faceMatcher.findBestMatch(descriptor);
-      return bestMatch._label === 'unknown' ? null : bestMatch; // Return null if no best match
+      return bestMatch._label === 'Chưa thể xác nhận' ? null : bestMatch; // Return null if no best match
     };
 
 
@@ -111,20 +137,24 @@ const LoginFaceRecognition = () => {
   return (
     <div className="login-face-recognition">
       <div className="login-face-recognition-container">
+        <BackButton />
 
         <h3>Nhận Diện Khuôn Mặt để Đăng Nhập</h3>
-        {!loading && (
+        {!loading ? (
           <div className="loading text-danger">Đang tải mô hình nhận diện...</div>
-        )}
-        <div className="video-container">
-          <div className="line"></div>
-          <video ref={videoRef} autoPlay muted></video>
-          <canvas ref={canvasRef} className="overlay"></canvas>
-        </div>
-        {nameUser === '' ? (
-          <h6 className="text-danger">Đang kiểm tra dữ liệu khuôn mặt {'.'.repeat(dots)}</h6>
         ) : (
-          <h4>{nameUser}</h4>
+          <>
+            <div className="video-container">
+              <div className="line"></div>
+              <video ref={videoRef} autoPlay muted></video>
+              <canvas ref={canvasRef} className="overlay"></canvas>
+            </div>
+            {nameUser === '' ? (
+              <h6 className="text-danger">Đang kiểm tra dữ liệu khuôn mặt {'.'.repeat(dots)}</h6>
+            ) : (
+              <h4>{nameUser}</h4>
+            )}
+          </>
         )}
       </div>
     </div>

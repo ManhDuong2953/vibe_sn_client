@@ -39,6 +39,9 @@
         display: flex;
         align-items: center;
         justify-content: space-between;
+        h1.name{
+          margin-bottom: 5px;
+        }
         .info-analyst {
           padding-left: 10px;
           .analyst {

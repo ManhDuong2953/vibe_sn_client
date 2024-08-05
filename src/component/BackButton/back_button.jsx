@@ -13,7 +13,6 @@ const BackButton = () => {
   return (
     <button className="back-button" onClick={handleBack}>
       <FaAngleLeft />
-      Trở về
     </button>
   );
 };

@@ -4,7 +4,7 @@ import { FaWarehouse } from "react-icons/fa";
 import { Link, useNavigate } from "react-router-dom";
 import { IoText } from "react-icons/io5";
 import { FaImage } from "react-icons/fa6";
-import { ImageContext } from "../../../Provider/ImageContext";
+import { ImageContext } from "../../../provider/image_context";
 import NavigativeBar from "../../../layout/NavigativeBar/navigative_bar";
 
 function CreateStoryPage({ titlePage }) {

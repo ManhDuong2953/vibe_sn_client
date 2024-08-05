@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { FaUserCircle, FaFacebookMessenger, FaVideo, FaPhoneAlt, FaEllipsisV, FaStop, FaMicrophone, FaUserLock } from 'react-icons/fa';
+import { FaUserCircle, FaFacebookMessenger, FaVideo, FaPhoneAlt, FaEllipsisV, FaStop, FaMicrophone, FaUserLock, FaFileDownload } from 'react-icons/fa';
 import { AiOutlineSearch } from 'react-icons/ai';
 import './chat_page.scss';
 import NavigativeBar from '../../layout/NavigativeBar/navigative_bar';
@@ -13,8 +13,14 @@ import { RiChatVoiceFill } from 'react-icons/ri';
 import { IoSend } from 'react-icons/io5';
 import WaveSurfer from "wavesurfer.js";
 import Waveform from '../../component/WaveSurfer/wave_surfer';
+import { FaSignalMessenger } from 'react-icons/fa6';
+import Draggable from 'react-draggable';
 
-function ChatMessengerPage() {
+function ChatMessengerPage({titlePage}) {
+  useEffect(() => {
+    document.title = titlePage;
+}, [titlePage]);
+
   const [message, setMessage] = useState('');
   const [files, setFiles] = useState([]);
   const [showFilePond, setShowFilePond] = useState(false);
@@ -66,32 +72,41 @@ function ChatMessengerPage() {
 
   const handleSend = () => {
     const newMessages = [...messages];
+    const urlRegex = /(https?:\/\/[^\s]+)/g;
+
     if (message.trim()) {
-      newMessages.push({ type: 'text', content: message });
+      if (urlRegex.test(message)) {
+        const formattedMessage = message.replace(urlRegex, (url) => `<a href="${url}" target="_blank" rel="noopener noreferrer">${url}</a>`);
+        newMessages.push({ type: 'link', content: formattedMessage });
+      } else {
+        newMessages.push({ type: 'text', content: message });
+      }
     }
+
     files.forEach(file => {
       const url = URL.createObjectURL(file.file);
-      const fileType = file["file"].type; // Lấy loại tệp
+      const fileType = file.file.type;
       let messageType;
-      
+
       if (fileType.startsWith('image/')) {
-          messageType = 'image';
+        messageType = 'image';
       } else if (fileType.startsWith('video/')) {
-          messageType = 'video';
+        messageType = 'video';
+      } else if (fileType.startsWith('audio/')) {
+        messageType = 'audio';
       } else {
-          console.error("Unsupported file type");
-          return; // Hoặc xử lý tệp không hợp lệ theo cách bạn muốn
+        messageType = 'other';
       }
-      
-      console.log(file["file"]);
-      newMessages.push({ type: messageType, content: url });
-      
+
+      newMessages.push({ type: messageType, content: url, name: file.file.name });
     });
+
     setMessages(newMessages);
     setMessage('');
     setFiles([]);
     setShowFilePond(false);
   };
+
 
   const handleSendAudio = (audioUrl) => {
     const newMessages = [...messages, { type: 'audio', content: audioUrl }];
@@ -105,10 +120,34 @@ function ChatMessengerPage() {
     }
   }, [messages]);
 
+  useEffect(() => {
+    const icon = document.querySelector('.icon-list-chat');
+    const sidebar = document.querySelector('.sidebar');
+
+    const handleToggle = () => {
+      sidebar.classList.toggle('active');
+    }
+
+    if (icon) {
+      icon.addEventListener('click', handleToggle);
+    }
+
+    return () => {
+      if (icon) {
+        icon.removeEventListener('click', handleToggle);
+      }
+    };
+  }, []);
+
   return (
     <React.Fragment>
       <NavigativeBar />
       <div className="chat-messenger">
+        <Draggable>
+          <div>
+            <FaSignalMessenger className='icon-list-chat' style={{ fontSize: '2rem', cursor: 'pointer' }} />
+          </div>
+        </Draggable>
         <div className="sidebar">
           <div className="sidebar-header">
             <FaFacebookMessenger size={28} /> Nhắn tin
@@ -143,16 +182,44 @@ function ChatMessengerPage() {
             </div>
           </div>
           <ul className="chat-messages">
+            <li className="message sender">
+              <div className="message-content">
+                <p>Chào bạn</p>
+              </div>
+            </li>
+            <li className="message">
+              <div className="message-content">
+                <p>Chào Mạnh</p>
+              </div>
+            </li>
+            <li className="message sender">
+              <div className="message-content reply">
+                <p>Chào Mạnh</p>
+              </div>
+            </li>
+            <li className="message sender">
+              <div className="message-content">
+                <p>Bạn ăn cơm chưa ?</p>
+              </div>
+            </li>
             {messages.map((msg, index) => (
               <li key={index} className="message sender">
                 <div className="message-content">
                   {msg.type === 'text' && <p>{msg.content}</p>}
+                  {msg.type === 'link' && <p dangerouslySetInnerHTML={{ __html: msg.content }}></p>}
                   {msg.type === 'image' && <img src={msg.content} alt="content" />}
                   {msg.type === 'video' && <video controls muted src={msg.content} alt="content" />}
                   {msg.type === 'audio' && <Waveform audioUrl={msg.content} />}
+                  {msg.type === 'other' && (
+                    <div className="file-container">
+                      <FaFileDownload />
+                      <a href={msg.content} download={msg.name}>{msg.name}</a>
+                    </div>
+                  )}
                 </div>
               </li>
             ))}
+
             <li className="message">
               <i className='writting'>Dasha Taran đang nhắn ...</i>
             </li>

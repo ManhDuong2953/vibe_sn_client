@@ -1,6 +1,6 @@
 import React, { useContext, useRef, useState, useCallback, useEffect } from "react";
 import "./create_story_image_preview.scss";
-import { ImageContext } from "../../../../Provider/ImageContext";
+import { ImageContext } from "../../../../provider/image_context";
 import ClassicPostLoader from "../../../../skeleton/classic_post_loader";
 import Cropper from 'react-easy-crop';
 import Draggable from "react-draggable";
@@ -9,9 +9,10 @@ import domtoimage from 'dom-to-image';
 import NavigativeBar from "../../../../layout/NavigativeBar/navigative_bar";
 import { FaCropSimple } from "react-icons/fa6";
 import { IoText } from "react-icons/io5";
+import BackButton from "../../../../component/BackButton/back_button";
 
-function CreateStoryImagePreview({titlePage}) {
-    
+function CreateStoryImagePreview({ titlePage }) {
+
     useEffect(() => {
         document.title = titlePage;
     }, [titlePage]);
@@ -82,7 +83,11 @@ function CreateStoryImagePreview({titlePage}) {
                     <div className="container">
                         <div className="story-container-preview--wrapper">
                             <div className="side-left">
+                                <div className="title">
+                                <BackButton />
+
                                 <h1>Tạo tin</h1>
+                                </div>
                                 {showTextEditor && (
                                     <div className="controls-text">
                                         <h3>Chỉnh sửa văn bản</h3>
@@ -163,9 +168,10 @@ function CreateStoryImagePreview({titlePage}) {
                                             <button className="btn-func upload" onClick={handleUploadImage}>
                                                 Đăng tin ngay
                                             </button>
+
                                         </div>
                                     ) : (<button className="btn-func crop" onClick={generateCroppedImage} disabled={!croppedAreaPixels}>
-                                        <FaCropSimple /> Cắt ảnh
+                                            <FaCropSimple /> Cắt ảnh
                                     </button>
                                     )}
                                 </div>

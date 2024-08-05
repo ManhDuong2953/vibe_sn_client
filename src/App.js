@@ -1,37 +1,99 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import routes from './router/router';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import "./global/style.css";
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import { useSelector } from 'react-redux';
-import { ImageProvider } from './Provider/ImageContext';
+import { ImageProvider } from './provider/image_context';
+import { MdSignalWifiStatusbar4Bar, MdSignalWifiStatusbarConnectedNoInternet } from 'react-icons/md';
+import PrivateRoute from './component/PrivateRouter/PrivateRouter';
+import OwnDataProvider from './provider/own_data';
+
 function App() {
-  const theme = useSelector((state) => state.themeUI.theme)
+  const theme = useSelector((state) => state.themeUI.theme);
   const root = document.querySelector(':root');
-  if (theme === 'dark') {
-    root.setAttribute('data-theme', 'dark');
+  
+  useEffect(() => {
+    const handleOnline = () => {
+      toast.success('Trình duyệt đã trực tuyến', {
+        duration: 10000,
+        icon: <MdSignalWifiStatusbar4Bar />,
+        position: "bottom-left",
+      });
+    };
+
+    const handleOffline = () => {
+      toast.error('Trình duyệt đang ngoại tuyến', {
+        duration: 10000,
+        icon: <MdSignalWifiStatusbarConnectedNoInternet />,
+        position: "bottom-left",
+      });
+    };
+
+    window.addEventListener('online', handleOnline);
+    window.addEventListener('offline', handleOffline);
+
+    return () => {
+      window.removeEventListener('online', handleOnline);
+      window.removeEventListener('offline', handleOffline);
+    };
+  }, []);
+
+  useEffect(() => {
+    if (theme === 'dark') {
+      root.setAttribute('data-theme', 'dark');
+    } else {
+      root.setAttribute('data-theme', 'light');
+    }
     root.style.transition = "all .5s ease";
-  } else {
-    root.setAttribute('data-theme', 'light');
-    root.style.transition = "all .5s ease";
-  }
+  }, [theme, root]);
+
   return (
     <div className="App">
-      <ImageProvider>
-        <Router>
-          <Routes>
-            {
-              routes.map((route, index) => (
-                <Route
-                  key={index}
-                  path={route.path}
-                  exact={route.exact}
-                  element={route.component}
-                />
-              ))
+      <ToastContainer
+        position="top-right"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme={theme}
+      />
+      <Router>
+        <Routes>
+          {routes.map((route, index) => {
+            if (route.requireAuth) {
+              return (
+                <Route key={index} element={<PrivateRoute />}>
+                  <Route
+                    path={route.path}
+                    exact={route.exact}
+                    element={
+                      <OwnDataProvider>
+                        <ImageProvider>
+                          {route.component}
+                        </ImageProvider>
+                      </OwnDataProvider>
+                    }
+                  />
+                </Route>
+              );
             }
-          </Routes>
-        </Router>
-      </ImageProvider>
+            return (
+              <Route
+                key={index}
+                path={route.path}
+                exact={route.exact}
+                element={route.component}
+              />
+            );
+          })}
+        </Routes>
+      </Router>
       <div id="overlay"></div>
     </div>
   );

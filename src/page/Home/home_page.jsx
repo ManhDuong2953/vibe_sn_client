@@ -4,6 +4,7 @@ import NavigativeBar from "../../layout/NavigativeBar/navigative_bar";
 import SideBarLeft from "../../layout/SideBarLeft/side_bar_left";
 import ListPosts from "../../layout/ListPosts/list_posts";
 import SideBarRight from "../../layout/SideBarRight/side_bar_right";
+import getToken from "../../ultils/getToken/get_token";
 
 function HomePage({ titlePage }) {
 
@@ -11,14 +12,13 @@ function HomePage({ titlePage }) {
     useEffect(() => {
         document.title = titlePage;
     }, [titlePage]);
-
     return (
         <React.Fragment>
             <NavigativeBar />
             <div id="content">
-                <div className="content-container container">
+                <div className="content-container">
                     <SideBarLeft />
-                    <ListPosts/>
+                    <ListPosts />
                     <SideBarRight />
                 </div>
             </div>

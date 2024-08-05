@@ -12,7 +12,7 @@
     --always-dark-overlay: rgba(0, 0, 0, 0.7);
     --shadow-1: rgba(0, 0, 0, 0.3);
     --input-color: #e7e7e7;
-
+    --font-size: 16px;
 }
 
 [data-theme="dark"] {
@@ -54,6 +54,22 @@
     padding: 0;
     box-sizing: border-box;
     color: var(--text-color);
+
+}
+
+p,
+a,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+i,
+b {
+    word-break: break-word;
+    overflow-wrap: break-word;
+    /* white-space: pre-wrap; */
 }
 
 html {
@@ -76,13 +92,18 @@ button[type="submit"] {
     background-color: transparent !important;
 }
 
+button[type="submit"]:hover {
+    cursor: pointer;
+    opacity: 0.8;
+}
+
 .avt-img img {
     border-radius: 50%;
     aspect-ratio: 1;
     object-fit: cover;
 }
 
-input:focus{
+input:focus {
     outline: unset !important;
 }
 
@@ -145,7 +166,8 @@ a {
     padding: 0 30px;
     height: 100%;
 }
-a.filepond--credits{
+
+a.filepond--credits {
     display: none;
 }
 
@@ -178,74 +200,32 @@ a.filepond--credits{
     margin: auto;
 }
 
-.roboto-thin {
-    font-family: "Roboto", sans-serif;
-    font-weight: 100;
-    font-style: normal;
+/* Điện thoại di động, hiển thị chiều dọc */
+@media (max-width: 320px) {
+    svg {
+        font-size: 0.9;
+    }
 }
 
-.roboto-light {
-    font-family: "Roboto", sans-serif;
-    font-weight: 300;
-    font-style: normal;
+/* Điện thoại di động, hiển thị chiều ngang */
+@media (max-width: 480px) {}
+
+/* Máy tính bảng, hiển thị chiều dọc */
+@media (max-width: 600px) {}
+
+/* Máy tính bảng, hiển thị chiều ngang */
+@media (max-width: 800px) {
+    .container {
+        width: calc(100vw - 5px) !important;
+        margin: auto;
+    }
 }
 
-.roboto-regular {
-    font-family: "Roboto", sans-serif;
-    font-weight: 400;
-    font-style: normal;
-}
+/* Máy tính bảng loại to, hiển thị chiều dọc */
+@media (max-width: 768px) {}
 
-.roboto-medium {
-    font-family: "Roboto", sans-serif;
-    font-weight: 500;
-    font-style: normal;
-}
+/* Máy tính bảng loại to, hiển thị chiều ngang */
+@media (max-width: 1024px) {}
 
-.roboto-bold {
-    font-family: "Roboto", sans-serif;
-    font-weight: 700;
-    font-style: normal;
-}
-
-.roboto-black {
-    font-family: "Roboto", sans-serif;
-    font-weight: 900;
-    font-style: normal;
-}
-
-.roboto-thin-italic {
-    font-family: "Roboto", sans-serif;
-    font-weight: 100;
-    font-style: italic;
-}
-
-.roboto-light-italic {
-    font-family: "Roboto", sans-serif;
-    font-weight: 300;
-    font-style: italic;
-}
-
-.roboto-regular-italic {
-    font-family: "Roboto", sans-serif;
-    font-weight: 400;
-    font-style: italic;
-}
-
-.roboto-medium-italic {
-    font-family: "Roboto", sans-serif;
-    font-weight: 500;
-    font-style: italic;
-}
-
-.roboto-bold-italic {
-    font-family: "Roboto", sans-serif;
-    font-weight: 700;
-    font-style: italic;
-}
-
-.roboto-black-italic {
-    font-family: "Roboto", sans-serif;
-    font-weight: 900;
-    font-style: italic;
-}
+/* Desktop thông thường */
+@media (min-width: 1025px) {}

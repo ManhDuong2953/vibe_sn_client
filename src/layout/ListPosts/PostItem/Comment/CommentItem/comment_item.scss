@@ -3,6 +3,57 @@ li.container-item {
 
   .container-item-main {
     display: flex;
+    position: relative;
+    cursor: pointer;
+    border-radius: 10px;
+    padding: 12px 10px;
+    &:hover {
+      background-color: var(--border-color);
+    }
+    &.active {
+      .action-container {
+        display: none;
+      }
+      &:hover {
+        .action-container {
+          display: flex;
+          position: absolute;
+          right: 10px;
+          top: 10px;
+          flex-direction: column;
+          align-items: end;
+
+          svg.icon-more {
+            font-size: 30px;
+            padding: 5px;
+            border-radius: 50%;
+            background-color: var(--hover-color);
+            margin-bottom: 5px;
+          }
+          &.active {
+            .action-func {
+              display: block;
+            }
+          }
+          .action-func {
+            display: none;
+            padding: 5px;
+            background-color: var(--hover-color);
+            .row {
+              padding: 5px;
+              font-size: 12px;
+              svg {
+                font-size: 20px;
+              }
+              &:hover {
+                background-color: var(--primary-color);
+              }
+            }
+          }
+        }
+      }
+    }
+
     .comment-content--wrapper {
       .comment-content {
         position: relative;
@@ -76,7 +127,7 @@ li.container-item {
     }
   }
   .container-item-main.sub-comment {
-    padding-left: 70px;
+    padding: 10px 0 0 70px;
   }
   .input-container.sub-comment {
     padding-left: 70px;

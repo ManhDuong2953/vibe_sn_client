@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { FilePond, registerPlugin } from "react-filepond";
 import "filepond/dist/filepond.min.css";
@@ -17,7 +17,10 @@ registerPlugin(
     FilePondPluginImagePreview
 );
 
-function CreateProductPage() {
+function CreateProductPage({ titlePage }) {
+    useEffect(() => {
+        document.title = titlePage;
+    }, [titlePage]);
     const [files, setFiles] = useState([]);
 
     const handleSubmit = (e) => {

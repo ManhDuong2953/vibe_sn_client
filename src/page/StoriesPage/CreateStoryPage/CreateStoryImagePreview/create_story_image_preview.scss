@@ -13,7 +13,10 @@ body {
   padding: 20px;
   border-radius: 10px;
   overflow: hidden;
-
+.title{
+  display: flex;
+  justify-content: flex-start;
+}
   .container {
     height: calc(100vh - 56px - 40px);
     width: 100%;

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import "./navigative_bar.scss";
 import logo from "../../www/logo_sm.png";
 import { AiFillHome } from "react-icons/ai";
@@ -13,16 +13,19 @@ import { Link, useNavigate } from "react-router-dom";
 import imgError from "../../www/error_image.png";
 import NoticeItem from "../../component/NoticeItem/notice_item";
 import ToggleButton from 'react-toggle-button'
-import useToggleListener from "../../ultils/animation/ToggleActive";
+import useToggleListener from "../../ultils/animation/toggle_active";
 import { useDispatch, useSelector } from "react-redux";
 import { darkHandle, lightHandle } from "../../redux/Reducer/reducer";
-import { IoSettingsSharp } from "react-icons/io5";
+import { IoListOutline, IoSettingsSharp } from "react-icons/io5";
+// import { OwnDataContext } from "../../provider/own_data";
 
 function NavigativeBar() {
     const navigate = useNavigate();
     const theme = useSelector((state) => state.themeUI.theme)
     const [darkOn, setDarkOn] = useState(theme === "dark" ? true : false);
     const [searchString, setSearchString] = useState("");
+    // const ownerData = useContext(OwnDataContext)
+    // console.log(ownerData);
     const handleInput = (e) => {
         setSearchString(e);
     }
@@ -55,6 +58,15 @@ function NavigativeBar() {
                 link.classList.add("active");
             }
         });
+        const iconToggleNavbar = document.querySelector(".toggle-navbar");
+        const navBar = document.querySelector(".navbar-side--middle");
+        const handleToggle = () => {
+            navBar.classList.toggle("active");
+        }
+        iconToggleNavbar.addEventListener("click", handleToggle);
+        return () => {
+            iconToggleNavbar.removeEventListener("click", handleToggle);
+        }
     }, []);
 
     return (
@@ -68,31 +80,36 @@ function NavigativeBar() {
                             </Link>
                         </div>
                         <form method="get" onSubmit={e => e.preventDefault()}>
-                            <IoMdSearch />
+                            <Link to="/search">
+                                <IoMdSearch />
+                            </Link>
                             <input type="text" onKeyDown={e => handleSubmit(e.key)} onChange={e => handleInput(e.target.value)} placeholder="Tìm kiếm theo bài viết..." value={searchString} name="searchString" />
                         </form>
+                        <IoListOutline className="toggle-navbar" />
                         <div className="temp"></div>
                     </div>
                     <ul className="navbar-side--middle">
+                        <li><img src={logo} className="logo" onError={(e) => { e.target.src = imgError }} alt="" /></li>
                         <Link to="/" className="active" title="Trang chủ">
-                            <li><AiFillHome /></li>
+                            <li><AiFillHome /><b>Trang chủ</b></li>
                         </Link>
                         <Link to="/marketplace" title="Cửa hàng">
-                            <li><FaShop /></li>
+                            <li><FaShop /><b>Marketplace</b></li>
                         </Link>
                         <Link to="/messenger" title="Nhắn tin">
                             <li>
                                 <div className="messenger-icon--container">
                                     <BiLogoMessenger />
                                     <p>9</p>
+                                    <b>Nhắn tin</b>
                                 </div>
                             </li>
                         </Link>
                         <Link to="/group" title="Nhóm">
-                            <li><HiMiniUserGroup /></li>
+                            <li><HiMiniUserGroup /><b>Nhóm</b></li>
                         </Link>
                         <Link to="/setting" title="Cài đặt">
-                            <li><IoMdSettings /></li>
+                            <li><IoMdSettings /><b>Cài đặt</b></li>
                         </Link>
                     </ul>
                     <div className="navbar-side--right">
@@ -162,7 +179,7 @@ function NavigativeBar() {
                                         </Link>
                                     </li>
                                     <li className="function-direct logout">
-                                        <Link>
+                                        <Link to="/logout">
                                             <span>
                                                 <MdLogout />
                                                 <p>

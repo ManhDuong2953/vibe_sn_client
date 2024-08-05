@@ -1,10 +1,13 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import "./marketplace_edit.scss";
 import NavigativeBar from "../../../layout/NavigativeBar/navigative_bar";
 
 
-function EditProductPage() {
+function EditProductPage({ titlePage }) {
+    useEffect(() => {
+        document.title = titlePage;
+    }, [titlePage]);
 
     const handleSubmit = (e) => {
         e.preventDefault();

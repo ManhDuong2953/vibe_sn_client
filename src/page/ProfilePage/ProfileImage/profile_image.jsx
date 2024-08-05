@@ -1,10 +1,13 @@
-import React from "react";
+import React, { useEffect } from "react";
 import "./profile_image.scss";
 
 import NavigativeBar from "../../../layout/NavigativeBar/navigative_bar";
 import ProfileHeader from "../../../layout/ProfileHeader/profile_header";
 import { Link } from "react-router-dom";
-function ProfileImage() {
+function ProfileImage({ titlePage }) {
+    useEffect(() => {
+        document.title = titlePage;
+    }, [titlePage]);
     return (
         <React.Fragment>
             <NavigativeBar />

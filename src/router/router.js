@@ -13,6 +13,7 @@ import GroupMemberPage from "../page/GroupPage/GroupMember/group_member";
 import ListPostGroupPage from "../page/GroupPage/ListPostGroup/list_post_group";
 import HomePage from "../page/Home/home_page";
 import LoginPage from "../page/LoginPage/login_page";
+import Logout from "../page/Logout/log_out";
 import CreateProductPage from "../page/MarketplacePage/MarketplaceCreate/marketplace_create";
 import MarketplaceDetail from "../page/MarketplacePage/MarketplaceDetail/marketplace_detail";
 import EditProductPage from "../page/MarketplacePage/MarketplaceEdit/marketplace_edit";
@@ -41,6 +42,7 @@ const routes = [
   {
     path: '/',
     exact: true,
+    requireAuth: true,
     component: <HomePage titlePage="Vibe" />,
   },
 
@@ -49,21 +51,25 @@ const routes = [
   {
     path: '/story/create',
     exact: true,
+    requireAuth: true,
     component: <CreateStoryPage titlePage="Tạo tin | Vibe" />,
   },
   {
     path: '/story/create/preview/image',
     exact: true,
+    requireAuth: true,
     component: <CreateStoryImagePreview titlePage="Xem trước tin | Vibe" />,
   },
   {
     path: '/story/create/preview/text',
     exact: true,
+    requireAuth: true,
     component: <CreateStoryTextPreview titlePage="Xem trước tin | Vibe" />,
   },
   {
     path: '/story/:story_id',
     exact: true,
+    requireAuth: true,
     component: <StoriesPage titlePage="Tin | Vibe" />,
   },
 
@@ -71,11 +77,13 @@ const routes = [
   {
     path: '/post/:post_id',
     exact: true,
+    requireAuth: true,
     component: <PostDetail titlePage="Bài viết | Vibe" />,
   },
   {
     path: '/post/:post_id/edit',
     exact: true,
+    requireAuth: true,
     component: <EditPost titlePage="Bài viết | Vibe" />,
   },
 
@@ -83,41 +91,49 @@ const routes = [
   {
     path: '/profile/:user_id',
     exact: true,
+    requireAuth: true,
     component: <ProfilePage titlePage="Trang cá nhân | Vibe" />,
   },
   {
     path: '/profile/:user_id/image',
     exact: true,
+    requireAuth: true,
     component: <ProfileImage titlePage="Trang cá nhân | Vibe" />,
   },
   {
     path: '/profile/:user_id/friends',
     exact: true,
+    requireAuth: true,
     component: <ProfileFriend titlePage="Trang cá nhân | Vibe" />,
   },
   {
     path: '/profile/:user_id/group',
     exact: true,
+    requireAuth: true,
     component: <ProfileGroup titlePage="Trang cá nhân | Vibe" />,
   },
   {
     path: '/profile/:user_id/liked',
     exact: true,
+    requireAuth: true,
     component: <ProfileLiked titlePage="Trang cá nhân | Vibe" />,
   },
   {
     path: '/profile/:user_id/request-add--fr',
     exact: true,
+    requireAuth: true,
     component: <ProfileRequest titlePage="Trang cá nhân | Vibe" />,
   },
   {
     path: '/profile/:user_id/edit',
     exact: true,
+    requireAuth: true,
     component: <ProfileEditor titlePage="Trang cá nhân | Vibe" />,
   },
   {
     path: '/profile/:user_id/store-story',
     exact: true,
+    requireAuth: true,
     component: <ProfileStoreStory titlePage="Trang cá nhân | Vibe" />,
   },
 
@@ -125,107 +141,134 @@ const routes = [
   {
     path: '/group/',
     exact: true,
+    requireAuth: true,
     component: <ListPostGroupPage titlePage="Nhóm | Vibe" />,
   },
   {
     path: '/group/create',
     exact: true,
+    requireAuth: true,
     component: <CreateGroupPage titlePage="Nhóm | Vibe" />,
   },
   {
     path: '/group/:group_id',
     exact: true,
+    requireAuth: true,
     component: <GroupHomePage titlePage="Nhóm | Vibe" />,
   },
   {
     path: '/group/:group_id/members',
     exact: true,
+    requireAuth: true,
     component: <GroupMemberPage titlePage="Nhóm | Vibe" />,
   },
   {
     path: '/group/:group_id/admin',
     exact: true,
+    requireAuth: true,
     component: <GroupAdminPage titlePage="Nhóm | Vibe" />,
   },
   {
     path: '/group/:group_id/admin/member',
     exact: true,
+    requireAuth: true,
     component: <GroupAdminMemberPage titlePage="Nhóm | Vibe" />,
   },
   {
     path: '/group/:group_id/admin/edit',
     exact: true,
+    requireAuth: true,
     component: <EditInfoGroupPage titlePage="Nhóm | Vibe" />,
   },
 
   {
     path: '/marketplace',
     exact: true,
+    requireAuth: true,
     component: <MarketplaceSearchPage titlePage="Chợ | Vibe" />,
   },
   {
     path: '/marketplace/create',
     exact: true,
+    requireAuth: true,
     component: <CreateProductPage titlePage="Chợ | Vibe" />,
   },
   {
     path: '/marketplace/product/detail/:id_product',
     exact: true,
+    requireAuth: true,
     component: <MarketplaceDetail titlePage="Chợ | Vibe" />,
   },
   {
     path: '/marketplace/product/detail/:id_product/edit',
     exact: true,
+    requireAuth: true,
     component: <EditProductPage titlePage="Chợ | Vibe" />,
   },
   {
     path: '/setting',
     exact: true,
+    requireAuth: true,
     component: <SettingPage titlePage="Chợ | Vibe" />,
   },
   {
     path: '/login/face-recognition/',
     exact: true,
+    requireAuth: false,
     component: <LoginFaceRecognitionPage titlePage="Chợ | Vibe" />,
   },
   {
     path: '/login',
     exact: true,
-    component: <LoginPage titlePage="Chợ | Vibe" />,
+    requireAuth: false,
+    component: <LoginPage titlePage="Đăng nhập | Vibe" />,
+  },
+  {
+    path: '/logout',
+    exact: true,
+    requireAuth: true,
+    component: <Logout titlePage="Đăng xuất | Vibe" />,
   },
   {
     path: '/login/forgot-password',
     exact: true,
+    requireAuth: false,
     component: <ForgotPasswordPage titlePage="Chợ | Vibe" />,
   },
   {
     path: '/signup',
     exact: true,
+    requireAuth: false,
     component: <SignupPage titlePage="Chợ | Vibe" />,
   },
   {
     path: '/face-recognition/create',
     exact: true,
+    requireAuth: true,
     component: <CreateFaceRecognitionPage titlePage="Chợ | Vibe" />,
   },
   {
     path: '/messenger',
     exact: true,
+    requireAuth: true,
     component: <ChatMessengerPage titlePage="Chợ | Vibe" />,
   },
   {
     path: '/messenger/video-call',
     exact: true,
+    requireAuth: true,
     component: <VideoCall titlePage="Chợ | Vibe" />,
   },
   {
     path: '/messenger/audio-call',
     exact: true,
+    requireAuth: true,
     component: <VideoCall isVideoCall={false} titlePage="Chợ | Vibe" />,
   },
   {
     path: '/search',
     exact: true,
+    requireAuth: true,
     component: <SearchPage titlePage="Chợ | Vibe" />,
   }
 

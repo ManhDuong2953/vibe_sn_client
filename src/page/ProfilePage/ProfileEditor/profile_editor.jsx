@@ -1,11 +1,14 @@
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import "./profile_editor.scss";
 import NavigativeBar from "../../../layout/NavigativeBar/navigative_bar";
 import BackButton from "../../../component/BackButton/back_button";
 import getCroppedImg from "../../../ultils/cropImage/get_crop_image";
 import Cropper from "react-easy-crop";
 
-function ProfileEditor() {
+function ProfileEditor({ titlePage }) {
+    useEffect(() => {
+        document.title = titlePage;
+    }, [titlePage]);
     const [formData, setFormData] = useState({
         fullName: '',
         nickName: '',

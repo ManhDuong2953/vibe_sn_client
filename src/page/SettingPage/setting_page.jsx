@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { FaEdit, FaEye, FaEyeSlash, FaTrash, FaUserPlus, FaSave } from 'react-icons/fa';
 import './setting_page.scss';
@@ -6,7 +6,10 @@ import { FaFaceGrinWide } from 'react-icons/fa6';
 import NavigativeBar from '../../layout/NavigativeBar/navigative_bar';
 import BackButton from '../../component/BackButton/back_button';
 
-const SettingPage = () => {
+const SettingPage = ({ titlePage }) => {
+    useEffect(() => {
+        document.title = titlePage;
+    }, [titlePage]);
     const [privacyPost, setPrivacyPost] = useState('everyone');
     const [privacyStory, setPrivacyStory] = useState('everyone');
     const [hasFaceRecognition, setHasFaceRecognition] = useState(false);

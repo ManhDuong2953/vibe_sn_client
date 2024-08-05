@@ -1,10 +1,13 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "./profile_request.scss";
 
 import NavigativeBar from "../../../layout/NavigativeBar/navigative_bar";
 import ProfileHeader from "../../../layout/ProfileHeader/profile_header";
 import ProfileRequestItem from "./ProfileRequestItem/profile_request_item";
-function ProfileRequest() {
+function ProfileRequest({ titlePage }) {
+    useEffect(() => {
+        document.title = titlePage;
+    }, [titlePage]);
     return (
         <React.Fragment>
             <NavigativeBar />
