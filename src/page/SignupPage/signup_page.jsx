@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 import bgAuthentication from '../../www/bgAuthen.jpg';
 import { FaUser } from 'react-icons/fa';
 import { PiGenderMaleFill } from "react-icons/pi";
-import { MdEmail } from 'react-icons/md';
+import { MdDateRange, MdEmail } from 'react-icons/md';
 import { RiLockPasswordFill } from 'react-icons/ri';
 import './signup_page.scss';
 import logo from '../../www/logo.png';
@@ -42,6 +42,8 @@ const SignupPage = ({ titlePage }) => {
 
     const handleOtpVerifySuccess = async () => {
         setShowOtpPopup(false);
+        console.log(payloadSignup);
+        
         const responseSignup = await postData(API_SIGNUP_POST, payloadSignup);
         if (responseSignup?.status) {
             navigate("/login");
@@ -117,6 +119,14 @@ const SignupPage = ({ titlePage }) => {
                                 />
                                 <label htmlFor="gender_other">Khác</label>
                             </span>
+                        </div>
+                        <div className="input-group">
+                            <MdDateRange className="icon" />
+                            <input
+                                type="date"
+                                id="dob"
+                                name="date_of_birth"
+                            />
                         </div>
                         <div className="input-group">
                             <RiLockPasswordFill className="icon" />

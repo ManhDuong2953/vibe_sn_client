@@ -5,7 +5,8 @@ import getCroppedImg from "../../../ultils/cropImage/get_crop_image";
 import NavigativeBar from "../../../layout/NavigativeBar/navigative_bar";
 import Cropper from "react-easy-crop";
 import BackButton from "../../../component/BackButton/back_button";
-
+import tempAvt from "../../../www/imgavtupload.jpg";
+import tempCover from "../../../www/imgcoverupload.jpg";
 function EditInfoGroupPage({ titlePage }) {
     useEffect(() => {
         document.title = titlePage;
@@ -103,14 +104,14 @@ function EditInfoGroupPage({ titlePage }) {
                             <div className="form-group">
                                 <label htmlFor="avatar">
                                     <h3>Ảnh đại diện nhóm:</h3>
-                                    <img src={croppedAvatar ?? "https://t4.ftcdn.net/jpg/02/17/88/73/360_F_217887350_mDfLv2ootQNeffWXT57VQr8OX7IvZKvB.jpg"} alt="Cropped Avatar" className="cropped-image avatar" />
+                                    <img src={croppedAvatar ?? tempAvt} alt="Cropped Avatar" className="cropped-image avatar" />
                                 </label>
                                 <input id="avatar" type="file" hidden accept="image/*" onChange={handleAvatarChange} />
                             </div>
                             <div className="form-group">
                                 <label htmlFor="cover">
                                     <h3>Ảnh bìa nhóm:</h3>
-                                    <img src={croppedCover ?? "https://www.allwebtuts.com/wp-content/uploads/2017/01/awts-ghimg3.jpg"} alt="Cropped Cover" className="cropped-image cover" />
+                                    <img src={croppedCover ?? tempCover} alt="Cropped Cover" className="cropped-image cover" />
                                 </label>
                                 <input id="cover" type="file" hidden accept="image/*" onChange={handleCoverChange} />
                             </div>

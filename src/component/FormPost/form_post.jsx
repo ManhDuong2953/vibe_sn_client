@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import ReactDOM from "react-dom";
 import "./form_post.scss";
 import { Link } from "react-router-dom";
@@ -15,6 +15,7 @@ import FilePondPluginFileEncode from 'filepond-plugin-file-encode';
 import FilePondPluginFileValidateSize from 'filepond-plugin-file-validate-size';
 import FilePondPluginImageExifOrientation from 'filepond-plugin-image-exif-orientation';
 import TextEditor from "../../ultils/textEditor/react_draft_wysiwyg";
+import { OwnDataContext } from "../../provider/own_data";
 
 FilePond.registerPlugin(
     FilePondPluginFileEncode,
@@ -48,6 +49,7 @@ export default function FormPost() {
     const [showEmotion, setShowEmotion] = useState(false);
     const [showImage, setShowImage] = useState(false);
     const [showPopup, setShowPopup] = useState(false);
+    const dataOwner = useContext(OwnDataContext);
 
     useEffect(() => {
         const overlay = document.querySelector("#overlay");
@@ -100,11 +102,11 @@ export default function FormPost() {
             <div className="form-post--popup--wrapper">
                 <div className="privacy-main">
                     <div className="avt-img">
-                        <img src="https://cdn.24h.com.vn/upload/1-2023/images/2023-01-04/Ve-dep-dien-dao-chung-sinh-cua-co-gai-sinh-nam-1999-lot-top-guong-mat-dep-nhat-the-gioi-57068584_2351143488502839_871658938696715268_n-1672812988-819-width1080height1080.jpg" alt="avatar" />
+                        <img src={dataOwner && dataOwner?.avatar} alt="avatar" />
                     </div>
                     <div className="privacy-container">
                         <p className="name">
-                            <b>Dasha Taran {" "}</b>
+                            <b>{dataOwner && dataOwner?.user_name} {" "}</b>
                             {showEmotion && (
                                 <>
                                     đang cảm thấy <select name="react" id="react-select">
@@ -178,10 +180,10 @@ export default function FormPost() {
                 <div className="form-post--container">
                     <div className="row input-func">
                         <div className="avt-img">
-                            <img src="https://cdn.24h.com.vn/upload/1-2023/images/2023-01-04/Ve-dep-dien-dao-chung-sinh-cua-co-gai-sinh-nam-1999-lot-top-guong-mat-dep-nhat-the-gioi-57068584_2351143488502839_871658938696715268_n-1672812988-819-width1080height1080.jpg" alt="avatar" />
+                            <img src={dataOwner && dataOwner?.avatar} alt="avatar" />
                         </div>
                         <div onClick={() => { setShowPopup(true); setShowImage(false); setShowEmotion(false) }} className="btn-input">
-                            Mạnh ơi, bạn đang nghĩ gì thế?
+                            {dataOwner && dataOwner?.user_name} ơi, bạn đang nghĩ gì thế?
                         </div>
                     </div>
                     <div className="row row-func">

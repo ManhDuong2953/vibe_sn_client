@@ -1,13 +1,14 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState , useContext} from "react";
 import StoryItem from "./StoryItem/story_item";
 import "./list_stories.scss";
 import { Link } from "react-router-dom";
 import { FaPlus } from "react-icons/fa6";
 import { FaCircleChevronLeft, FaCircleChevronRight } from "react-icons/fa6";
+import { OwnDataContext } from "../../provider/own_data";
 
 function ListStories() {
     const [indexItemStart, setIndexItemStart] = useState(0);
-
+    const dataOwner = useContext(OwnDataContext);
     useEffect(() => {
         const btnPrev = document.querySelector(".btn.btn-prev");
         const btnNext = document.querySelector(".btn.btn-next");
@@ -54,7 +55,7 @@ function ListStories() {
                 <ul className="list-stories">
                     <li className="story-item add-story--icon">
                         <Link to="/story/create">
-                            <img className="avt-logo" src="https://gaixinhbikini.com/wp-content/uploads/2022/08/Hinh-anh-gai-Nga-dep-luvvn-51.jpg" alt="" />
+                            <img className="avt-logo" src={dataOwner && dataOwner?.avatar} alt="" />
                             <div className="icon-container">
                                 <FaPlus />
                                 <p>Tạo tin</p>

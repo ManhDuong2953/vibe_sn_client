@@ -17,6 +17,8 @@ const API_GET_INFO_OWNER_PROFILE_BY_ID = `${API_HOST}/users/info-profile/`;
 
 //Token
 const API_LOGOUT = API_HOST + '/token/delete';
+const API_ROTATION_TOKEN = API_HOST + '/token/create';
+const API_DECODE_TOKEN = API_HOST + '/token/decode-refresh-token';
 
 
 // OTP API endpoints
@@ -30,6 +32,8 @@ export {
     API_SIGNUP_SOCIALNETWORK_POST,
     API_LOGIN_POST,
     API_LOGOUT,
+    API_ROTATION_TOKEN,
+    API_DECODE_TOKEN,
     API_GET_ALL_USERS,
     API_GET_USER_BY_ID,
     API_GET_INFO_USER_PROFILE_BY_ID,

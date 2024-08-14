@@ -23,7 +23,8 @@ async function ShowPopupLoginWithFacebook() {
             media: {
                 media_type: 'avatar',
                 media_link: user.providerData[0].photoURL
-            }
+            },
+            type_account: 'facebook'
         };
         
     } catch (error) {

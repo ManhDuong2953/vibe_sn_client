@@ -18,6 +18,8 @@ const Logout = () => {
 
           // Xóa token từ cookie
           Cookies.remove('accessToken');
+          Cookies.remove('key_refresh_token_encode');
+          Cookies.remove('refreshToken')
 
           // Redirect đến trang đăng nhập
           navigate('/login');

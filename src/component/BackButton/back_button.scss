@@ -15,6 +15,9 @@
   align-self: flex-start;
   svg {
     font-size: 18px;
+    path{
+      color: white !important;
+    }
   }
   &:hover {
     opacity: 0.8;

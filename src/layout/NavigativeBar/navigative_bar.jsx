@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import "./navigative_bar.scss";
 import logo from "../../www/logo_sm.png";
 import { AiFillHome } from "react-icons/ai";
@@ -17,15 +17,15 @@ import useToggleListener from "../../ultils/animation/toggle_active";
 import { useDispatch, useSelector } from "react-redux";
 import { darkHandle, lightHandle } from "../../redux/Reducer/reducer";
 import { IoListOutline, IoSettingsSharp } from "react-icons/io5";
-// import { OwnDataContext } from "../../provider/own_data";
+import { OwnDataContext } from "../../provider/own_data";
 
 function NavigativeBar() {
     const navigate = useNavigate();
     const theme = useSelector((state) => state.themeUI.theme)
     const [darkOn, setDarkOn] = useState(theme === "dark" ? true : false);
     const [searchString, setSearchString] = useState("");
-    // const ownerData = useContext(OwnDataContext)
-    // console.log(ownerData);
+    const dataOwner = useContext(OwnDataContext);
+
     const handleInput = (e) => {
         setSearchString(e);
     }
@@ -140,14 +140,14 @@ function NavigativeBar() {
                             </ul>
                         </div>
                         <div className="personal-icon">
-                            <img className="avt-navbar" src="https://cdn.24h.com.vn/upload/1-2023/images/2023-01-04/Ve-dep-dien-dao-chung-sinh-cua-co-gai-sinh-nam-1999-lot-top-guong-mat-dep-nhat-the-gioi-57068584_2351143488502839_871658938696715268_n-1672812988-819-width1080height1080.jpg" alt="" />
+                            <img className="avt-navbar" src={dataOwner && dataOwner?.avatar} alt="" />
                             <div className="box-personal">
                                 <ul className="list-personal--options">
                                     <li className="personal-direct--profile">
-                                        <Link>
-                                            <img className="avt-direct--profile" src="https://cdn.24h.com.vn/upload/1-2023/images/2023-01-04/Ve-dep-dien-dao-chung-sinh-cua-co-gai-sinh-nam-1999-lot-top-guong-mat-dep-nhat-the-gioi-57068584_2351143488502839_871658938696715268_n-1672812988-819-width1080height1080.jpg" alt="" />
+                                        <Link to={`/profile/${dataOwner && dataOwner?.user_id}`}>
+                                            <img className="avt-direct--profile" src={dataOwner && dataOwner?.avatar} alt="" />
                                             <span>
-                                                <h4>Dasha Taran</h4>
+                                                <h4>{dataOwner && dataOwner?.user_name}</h4>
                                                 <p>Nhấn để vào trang cá nhân</p>
                                             </span>
                                         </Link>

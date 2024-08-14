@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import "./profile_page.scss";
 import NavigativeBar from "../../../layout/NavigativeBar/navigative_bar";
 import ProfileHeader from "../../../layout/ProfileHeader/profile_header";
@@ -10,28 +10,16 @@ import { MdDateRange, MdEditNote } from "react-icons/md";
 import FormPost from "../../../component/FormPost/form_post";
 import { getData } from "../../../ultils/fetchAPI/fetch_API";
 import { API_GET_INFO_USER_PROFILE_BY_ID } from "../../../API/api_server";
+import { OwnDataContext } from "../../../provider/own_data";
 
 function ProfilePage({ titlePage }) {
     useEffect(() => {
         document.title = titlePage;
     }, [titlePage]);
-
-    const { user_id } = useParams();
+    const dataOwner = useContext(OwnDataContext);
     const [loading, setLoading] = useState(false);
-    const [data, setData] = useState();
-    
-    useEffect(() => {
-        try {
-            const fetchData = async () => {
-                const response = await getData(API_GET_INFO_USER_PROFILE_BY_ID(user_id));
-                setData(response?.data);
-                return response?.status
-            }
-            setLoading(fetchData());
-        } catch (error) {
-            console.log(error.message);
-        }
-    }, [user_id]);
+    const { user_id } = useParams();
+
 
 
     return (
@@ -39,7 +27,7 @@ function ProfilePage({ titlePage }) {
             <NavigativeBar />
             <div className="profile">
                 <div className="profile-container">
-                    <ProfileHeader data={data ?? null} classNameActive={"post"} />
+                    <ProfileHeader userId={user_id ?? null} classNameActive={"post"} />
                     <div className="profile-main">
                         <div className="profile-left">
                             <div className="title-intro box">
@@ -51,7 +39,7 @@ function ProfilePage({ titlePage }) {
                                 <div className="info-short--item info-address"><IoHome />Đang sống tại <b>Moscow</b></div>
                                 <div className="info-short--item info-school"><MdDateRange />Tạo ngày: <b>29/05/2024</b></div>
 
-                                <Link to="/profile/123/edit">
+                                <Link to={`/profile/${dataOwner && dataOwner?.user_id}/edit`}>
                                     <div className="edit-btn"> <MdEditNote /><p>Sửa thông tin</p></div>
                                 </Link>
                             </div>

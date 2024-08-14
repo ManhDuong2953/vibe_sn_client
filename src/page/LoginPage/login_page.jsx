@@ -34,7 +34,7 @@ const LoginPage = ({ titlePage }) => {
         e.preventDefault();
         const data = getDataForm(".form-login");
         const response = await postData(API_LOGIN_POST, data);
-        if (response.status) {
+        if (response?.status) {
             navigate("/");
         }
     };
@@ -43,12 +43,12 @@ const LoginPage = ({ titlePage }) => {
         try {
             const response = await getData(API_CHECK_EXIST_USER(`uid_${payload?.user_id}`));
             console.log("check", response);
-            if (response.status) {
+            if (response?.status) {
                 const responseLogin = await postData(API_LOGIN_POST, {
                     user_email: payload?.user_email,
                     user_password: payload?.user_password
                 });
-                if (responseLogin.status) {
+                if (responseLogin?.status) {
                     navigate("/");
                 } else {
                     toast.error("Lỗi đăng nhập, vui lòng thử lại hoặc dùng phương thức đăng nhập khác")

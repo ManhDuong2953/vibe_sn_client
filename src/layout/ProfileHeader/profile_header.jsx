@@ -7,16 +7,27 @@ import { Link } from "react-router-dom";
 import { FaFacebookMessenger } from "react-icons/fa6";
 import QRCodePopup from "../../component/QRCode/qr_code";
 import DevtoCard from "../../skeleton/dev_to_card";
-function ProfileHeader({ classNameActive, data }) {
+import { API_GET_INFO_USER_PROFILE_BY_ID } from "../../API/api_server";
+import { getData } from "../../ultils/fetchAPI/fetch_API";
+function ProfileHeader({ classNameActive, userId }) {
     const [isHearted, setIsHearted] = useState(false);
     const [isFriend, setIsFriend] = useState(false);
     const [showQRCodePopup, setShowQRCodePopup] = useState(false);
     const [loading, setLoading] = useState(false);
+    const [data, setData] = useState();
+
     useEffect(() => {
-        if (data?.user_id) {
-            setLoading(true)
+        try {
+            const fetchData = async () => {
+                const response = await getData(API_GET_INFO_USER_PROFILE_BY_ID(userId));
+                setData(response?.data);
+                return response?.status
+            }
+            setLoading(fetchData());
+        } catch (error) {
+            console.log(error.message);
         }
-    }, [data]);
+    }, [userId]);
     const handleQRCodeClick = () => {
         setShowQRCodePopup(true);
     };
@@ -43,10 +54,10 @@ function ProfileHeader({ classNameActive, data }) {
 
                         <div className="profile-header">
                             <div className="profile-cover--img">
-                                <img src={data && data?.media?.cover[0]?.media_link} alt="" />
+                                <img src={data && data?.cover} alt="" />
                             </div>
                             <div className="profile-avatar--img">
-                                <img src={data && data?.media?.avatar[0]?.media_link} alt="" />
+                                <img src={data && data?.avatar} alt="" />
                                 <div className="header-container">
                                     <div className="info-analyst">
                                         <h1 className="name">{data && data?.user_name}</h1>

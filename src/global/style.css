@@ -86,6 +86,11 @@ svg {
     }
 }
 
+input:disabled, button:disabled, select:disabled, textarea:disabled{
+    cursor: not-allowed;
+    filter: brightness(0.8);
+}
+
 button[type="submit"] {
     border: none;
     outline: unset;
