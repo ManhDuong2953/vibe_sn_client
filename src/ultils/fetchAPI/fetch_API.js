@@ -51,7 +51,7 @@ const fetchData = async (url, options = {}) => {
 };
 
 
-export const getData = async (url_endpoint, headers = {}) => {
+export const getData = async (url_endpoint, headers = {}, isJsonStringify = true) => {
   const url = url_endpoint;
   const options = {
     method: 'GET',
@@ -63,7 +63,7 @@ export const getData = async (url_endpoint, headers = {}) => {
   return await fetchData(url, options);
 };
 
-export const postData = async (url_endpoint, payload, headers = {}) => {
+export const postData = async (url_endpoint, payload, headers = {}, isJsonStringify = true) => {
   const url = url_endpoint;
   const options = {
     method: 'POST',
@@ -71,21 +71,23 @@ export const postData = async (url_endpoint, payload, headers = {}) => {
       ...headers,
       'Content-Type': 'application/json',
     },
-    body: JSON.stringify(payload),
+    body: isJsonStringify ? JSON.stringify(payload) : payload,
   };
   return await fetchData(url, options);
 };
 
-export const putData = async (url_endpoint, payload, headers = {}) => {
+export const putData = async (url_endpoint, payload, headers = {}, isJsonStringify = true) => {
   const url = url_endpoint;
   const options = {
     method: 'PUT',
     headers: {
       ...headers,
-      'Content-Type': 'application/json',
+      // 'Content-Type': 'application/json',
     },
-    body: JSON.stringify(payload),
+    body: isJsonStringify ? JSON.stringify(payload) : payload,
   };
+  console.log(options);
+  
   return await fetchData(url, options);
 };
 

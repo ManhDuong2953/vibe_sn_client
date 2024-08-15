@@ -29,14 +29,13 @@ function ProfileEditor({ titlePage }) {
 
     const [loading, setLoading] = useState(false);
     const [isShowCropContainer, setIsShowCropContainer] = useState(false);
-    const [avatarImage, setAvatarImage] = useState(null);
-    const [coverImage, setCoverImage] = useState(null);
-    const [croppedAvatar, setCroppedAvatar] = useState(null);
-    const [croppedCover, setCroppedCover] = useState(null);
+    const [imageToCrop, setImageToCrop] = useState(null);
+    const [croppedImages, setCroppedImages] = useState({ avatar: null, cover: null });
     const [crop, setCrop] = useState({ x: 0, y: 0 });
     const [zoom, setZoom] = useState(1);
     const [croppedAreaPixels, setCroppedAreaPixels] = useState(null);
     const { user_id } = useParams();
+    console.log(croppedAreaPixels);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -44,13 +43,9 @@ function ProfileEditor({ titlePage }) {
                 const response = await getData(API_GET_INFO_USER_PROFILE_BY_ID(user_id));
                 if (response?.status) {
                     const userData = response.data;
-                    setFormData(userData); // Gán toàn bộ dữ liệu vào state
-                    if (userData?.avatar) {
-                        setAvatarImage(userData.avatar);
-                    }
-                    if (userData?.cover) {
-                        setCoverImage(userData.cover);
-                    }
+                    setFormData(userData);
+                    if (userData?.avatar) setImageToCrop(userData.avatar);
+                    if (userData?.cover) setImageToCrop(userData.cover);
                 }
             } catch (error) {
                 console.log(error.message);
@@ -63,43 +58,32 @@ function ProfileEditor({ titlePage }) {
         setCroppedAreaPixels(croppedAreaPixels);
     }, []);
 
-    const generateCroppedImage = useCallback(async (image, setCroppedImage) => {
+    const generateCroppedImage = useCallback(async (image, fieldName) => {
         if (image && croppedAreaPixels) {
             try {
                 const croppedImage = await getCroppedImg(image, croppedAreaPixels);
-                setCroppedImage(croppedImage);
+                setCroppedImages(prevState => ({ ...prevState, [fieldName]: croppedImage }));
                 setIsShowCropContainer(false);
             } catch (e) {
-                console.error(e);
+                console.error("Error generating cropped image:", e);
             }
         }
     }, [croppedAreaPixels]);
 
-    const handleAvatarChange = (e) => {
+    const handleImageChange = (e, fieldName) => {
         setIsShowCropContainer(true);
         if (e.target.files && e.target.files.length > 0) {
             const file = e.target.files[0];
             const imageUrl = URL.createObjectURL(file);
-            setAvatarImage(imageUrl);
             setFormData(formData => ({
-                ...formData, avatar: imageUrl
-            }))
-            setCroppedAvatar(null);
+                ...formData,
+                [fieldName]: imageUrl
+            }));
+            setImageToCrop(imageUrl);
+            setCroppedImages(prevState => ({ ...prevState, [fieldName]: null }));
         }
     };
 
-    const handleCoverChange = (e) => {
-        setIsShowCropContainer(true);
-        if (e.target.files && e.target.files.length > 0) {
-            const file = e.target.files[0];
-            const imageUrl = URL.createObjectURL(file);
-            setCoverImage(imageUrl);
-            setFormData(formData => ({
-                ...formData, cover: imageUrl
-            }))
-            setCroppedCover(null);
-        }
-    };
     const handleChange = (e) => {
         const { name, value } = e.target;
         setFormData(prevState => ({
@@ -118,42 +102,45 @@ function ProfileEditor({ titlePage }) {
         }
 
         const appendImage = async (imageUrl, fieldName) => {
-            const response = await fetch(imageUrl);
-            const blob = await response.blob();
-            payload.append(fieldName, blob, `${fieldName}.jpg`);
+            try {
+                const response = await fetch(imageUrl);
+                const blob = await response.blob();
+                payload.append(fieldName, blob, `${fieldName}.jpg`);
+            } catch (error) {
+                console.error("Error appending image:", error);
+            }
         };
 
-        if (croppedAvatar) {
-            await appendImage(croppedAvatar, 'avatar');
-        } else if (avatarImage) {
-            await appendImage(avatarImage, 'avatar');
+        if (croppedImages.avatar) {
+            await appendImage(croppedImages.avatar, 'avatar');
+        } else if (formData.avatar) {
+            await appendImage(formData.avatar, 'avatar');
         }
 
-        if (croppedCover) {
-            await appendImage(croppedCover, 'cover');
-        } else if (coverImage) {
-            await appendImage(coverImage, 'cover');
+        if (croppedImages.cover) {
+            await appendImage(croppedImages.cover, 'cover');
+        } else if (formData.cover) {
+            await appendImage(formData.cover, 'cover');
         }
 
         try {
             setLoading(true);
-            payload.forEach(e=>console.log(e));
-            
-            const res = await putData(API_UPDATE_USER(user_id), payload);
+            await putData(API_UPDATE_USER(user_id), payload, {}, false);
+            // Optionally notify user of success
         } catch (error) {
             console.error('Error:', error);
+            // Optionally notify user of error
         } finally {
             setLoading(false);
         }
     };
-
 
     return (
         <React.Fragment>
             <NavigativeBar />
             <div className="personal-info-editor">
                 <BackButton />
-                <form className="form-edit">
+                <form className="form-edit" encType="multipart/form-data">
                     <div className="side-left">
                         <h2 className="form-title form-group full-width">Chỉnh sửa thông tin cá nhân</h2>
                         <div className="form-group full-width">
@@ -216,7 +203,15 @@ function ProfileEditor({ titlePage }) {
                                 onChange={handleChange}
                             />
                         </div>
-                        <div className="form-group full-width">
+                        <div className="form-group">
+                            <label htmlFor="gender">Giới tính:</label>
+                            <select name="gender" id="gender">
+                                <option value="other">Khác</option>
+                                <option value="male">Nam</option>
+                                <option value="female">Nữ</option>
+                            </select>
+                        </div>
+                        <div className="form-group">
                             <label htmlFor="user_email">Email:</label>
                             <input
                                 disabled
@@ -227,25 +222,37 @@ function ProfileEditor({ titlePage }) {
                             />
                         </div>
                         <Link to="/login/forgot-password">
-                            <p className="change-pw">
-                                Đổi mật khẩu?
-                            </p>
+                            <p className="change-pw">Đổi mật khẩu?</p>
                         </Link>
                     </div>
                     <div className="side-left">
                         <div className="form-group full-width">
                             <label htmlFor="avatar">
                                 Ảnh đại diện: <br />
-                                <img src={croppedAvatar ?? avatarImage ?? tempAvt} className="preview avt" alt="" />
+                                <img src={croppedImages.avatar ?? formData.avatar ?? tempAvt} className="preview avt" alt="" />
                             </label>
-                            <input id="avatar" name="avatar" type="file" hidden accept="image/*" onChange={handleAvatarChange} />
+                            <input
+                                id="avatar"
+                                name="avatar"
+                                type="file"
+                                hidden
+                                accept="image/*"
+                                onChange={(e) => handleImageChange(e, 'avatar')}
+                            />
                         </div>
                         <div className="form-group full-width">
                             <label htmlFor="cover">
                                 Ảnh bìa: <br />
-                                <img src={croppedCover ?? coverImage ?? tempCover} className="preview cover" alt="" />
+                                <img src={croppedImages.cover ?? formData.cover ?? tempCover} className="preview cover" alt="" />
                             </label>
-                            <input id="cover" name="cover" type="file" hidden accept="image/*" onChange={handleCoverChange} />
+                            <input
+                                id="cover"
+                                name="cover"
+                                type="file"
+                                hidden
+                                accept="image/*"
+                                onChange={(e) => handleImageChange(e, 'cover')}
+                            />
                         </div>
                     </div>
                     <div className="form-group full-width">
@@ -257,13 +264,13 @@ function ProfileEditor({ titlePage }) {
 
                 {isShowCropContainer && (
                     <div className="crop-img-container">
-                        {avatarImage && !croppedAvatar && (
+                        {formData.avatar && !croppedImages.avatar && (
                             <div className="crop-container">
                                 <Cropper
-                                    image={avatarImage}
+                                    image={formData.avatar}
                                     crop={crop}
                                     zoom={zoom}
-                                    aspect={1}
+                                    aspect={1} // For square crop
                                     onCropChange={setCrop}
                                     onZoomChange={setZoom}
                                     onCropComplete={onCropComplete}
@@ -271,19 +278,19 @@ function ProfileEditor({ titlePage }) {
                                 <button
                                     type="button"
                                     className="btn-func crop"
-                                    onClick={() => generateCroppedImage(avatarImage, setCroppedAvatar)}
+                                    onClick={() => generateCroppedImage(formData.avatar, 'avatar')}
                                 >
                                     Cắt ảnh đại diện
                                 </button>
                             </div>
                         )}
-                        {coverImage && !croppedCover && (
+                        {formData.cover && !croppedImages.cover && (
                             <div className="crop-container">
                                 <Cropper
-                                    image={coverImage}
+                                    image={formData.cover}
                                     crop={crop}
                                     zoom={zoom}
-                                    aspect={2.5}
+                                    aspect={2.5} // For rectangular crop
                                     onCropChange={setCrop}
                                     onZoomChange={setZoom}
                                     onCropComplete={onCropComplete}
@@ -291,7 +298,7 @@ function ProfileEditor({ titlePage }) {
                                 <button
                                     type="button"
                                     className="btn-func crop"
-                                    onClick={() => generateCroppedImage(coverImage, setCroppedCover)}
+                                    onClick={() => generateCroppedImage(formData.cover, 'cover')}
                                 >
                                     Cắt ảnh bìa
                                 </button>
@@ -302,7 +309,6 @@ function ProfileEditor({ titlePage }) {
             </div>
         </React.Fragment>
     );
-
 }
 
 export default ProfileEditor;
