@@ -2,18 +2,22 @@ import React, { useEffect, useRef, useState } from 'react';
 import * as faceapi from 'face-api.js';
 import './login_face_recognition.scss';
 import BackButton from '../../../component/BackButton/back_button';
+import { getData, postData } from '../../../ultils/fetchAPI/fetch_API';
+import { API_ALL_FACE_RECOGNITION, API_LOGIN_FACE_RECOGNITION } from '../../../API/api_server';
+import { useNavigate } from 'react-router-dom';
 
 const LoginFaceRecognition = ({ titlePage }) => {
-  useEffect(() => {
-    document.title = titlePage;
-  }, [titlePage]);
-
+  const navigate = useNavigate();
   const videoRef = useRef(null);
   const canvasRef = useRef(null);
   const [loading, setLoading] = useState(false);
   const [dots, setDots] = useState(0);
   const [nameUser, setNameUser] = useState('');
   let labeledFaceDescriptors = []; // Store labeled face descriptors
+
+  useEffect(() => {
+    document.title = titlePage;
+  }, [titlePage]);
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -38,17 +42,18 @@ const LoginFaceRecognition = ({ titlePage }) => {
 
     const loadLabeledImages = async () => {
       try {
-        const response = await fetch('http://localhost:8080/images');
-        const data = await response.json();
+        const response = await getData(API_ALL_FACE_RECOGNITION);
+        const data = response.data;
+        console.log(data);
 
         const descriptors = [];
         for (const record of data) {
-          const img = await faceapi.fetchImage(record.image_path);
+          const img = await faceapi.fetchImage(record.media_link);
           const detections = await faceapi.detectSingleFace(img).withFaceLandmarks().withFaceDescriptor();
           if (detections) {
-            descriptors.push(new faceapi.LabeledFaceDescriptors(record.user_name, [detections.descriptor]));
+            descriptors.push(new faceapi.LabeledFaceDescriptors(record.user_id_encode, [detections.descriptor]));
           } else {
-            console.log(`Không thể phát hiện khuôn mặt trong ảnh: ${record.image_path}`);
+            console.log(`Không thể phát hiện khuôn mặt trong ảnh: ${record.media_link}`);
           }
         }
         return descriptors;
@@ -76,6 +81,7 @@ const LoginFaceRecognition = ({ titlePage }) => {
     const startFaceDetection = async () => {
       const video = videoRef.current;
       const canvas = canvasRef.current;
+      let lastDetectedUserId = null; // Lưu trữ user_id_encode của khuôn mặt trước đó
 
       if (!video || !canvas) {
         console.error('Video or canvas element is not defined');
@@ -87,7 +93,7 @@ const LoginFaceRecognition = ({ titlePage }) => {
         height: video.videoHeight
       });
 
-      setInterval(async () => {
+      const detectionInterval = setInterval(async () => {
         if (video.videoWidth === 0 || video.videoHeight === 0) {
           console.warn('Video dimensions are not valid');
           return;
@@ -112,16 +118,31 @@ const LoginFaceRecognition = ({ titlePage }) => {
             faceapi.draw.drawFaceLandmarks(canvas, detect);
           }
           if (bestMatch) {
-            const text = bestMatch.toString();
-            setNameUser(text);
-            console.log("Đã đăng nhập: " + text);
+            const user_id_encode = bestMatch.label;
+
+            if (user_id_encode !== lastDetectedUserId) {
+              setNameUser(user_id_encode);
+              console.log("Đã phát hiện khuôn mặt mới: " + user_id_encode);
+              await loginWithFaceRecognition(user_id_encode); // Fetch API vào login khi phát hiện khuôn mặt mới
+              lastDetectedUserId = user_id_encode; // Cập nhật khuôn mặt đã nhận diện
+            }
           } else {
             setNameUser('');
           }
         });
       }, 200);
-    };
 
+      // Cleanup function to stop detection and camera stream
+      return () => {
+        clearInterval(detectionInterval);
+        if (videoRef.current) {
+          const stream = videoRef.current.srcObject;
+          if (stream) {
+            stream.getTracks().forEach(track => track.stop());
+          }
+        }
+      };
+    };
 
     const findBestMatch = (descriptor) => {
       if (labeledFaceDescriptors.length === 0) return null;
@@ -130,9 +151,32 @@ const LoginFaceRecognition = ({ titlePage }) => {
       return bestMatch._label === 'Chưa thể xác nhận' ? null : bestMatch; // Return null if no best match
     };
 
+    const loginWithFaceRecognition = async (user_id_encode) => {
+      try {
+        const response = await postData(API_LOGIN_FACE_RECOGNITION, { user_id_encode });
+        if (response.status) {
+          console.log('Đăng nhập thành công:', response.data);
+          navigate("/");
+        } else {
+          console.error('Đăng nhập thất bại:', response.message);
+        }
+      } catch (error) {
+        console.error('Lỗi khi gửi yêu cầu đăng nhập:', error);
+      }
+    };
 
     loadFaceAPI().then(getCameraStream);
-  }, []);
+
+    return () => {
+      // Cleanup function to stop camera stream
+      if (videoRef.current) {
+        const stream = videoRef.current.srcObject;
+        if (stream) {
+          stream.getTracks().forEach(track => track.stop());
+        }
+      }
+    };
+  }, [navigate, titlePage]);
 
   return (
     <div className="login-face-recognition">
@@ -159,7 +203,6 @@ const LoginFaceRecognition = ({ titlePage }) => {
       </div>
     </div>
   );
-
 };
 
 export default LoginFaceRecognition;

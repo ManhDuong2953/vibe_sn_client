@@ -51,7 +51,7 @@ const fetchData = async (url, options = {}) => {
 };
 
 
-export const getData = async (url_endpoint, headers = {}, isJsonStringify = true) => {
+export const getData = async (url_endpoint, headers = {}) => {
   const url = url_endpoint;
   const options = {
     method: 'GET',
@@ -62,32 +62,35 @@ export const getData = async (url_endpoint, headers = {}, isJsonStringify = true
 
   return await fetchData(url, options);
 };
-
-export const postData = async (url_endpoint, payload, headers = {}, isJsonStringify = true) => {
+export const postData = async (url_endpoint, payload, headers = {}) => {
   const url = url_endpoint;
+  const isFormData = payload instanceof FormData;
+
   const options = {
     method: 'POST',
     headers: {
       ...headers,
-      'Content-Type': 'application/json',
+      ...(isFormData ? {} : { 'Content-Type': 'application/json' }), // Xóa Content-Type nếu payload là FormData
     },
-    body: isJsonStringify ? JSON.stringify(payload) : payload,
+    body: isFormData ? payload : JSON.stringify(payload), // Không sử dụng JSON.stringify nếu payload là FormData
   };
+  
   return await fetchData(url, options);
 };
 
-export const putData = async (url_endpoint, payload, headers = {}, isJsonStringify = true) => {
+export const putData = async (url_endpoint, payload, headers = {}) => {
   const url = url_endpoint;
+  const isFormData = payload instanceof FormData;
+
   const options = {
     method: 'PUT',
     headers: {
       ...headers,
-      // 'Content-Type': 'application/json',
+      ...(isFormData ? {} : { 'Content-Type': 'application/json' }), // Xóa Content-Type nếu payload là FormData
     },
-    body: isJsonStringify ? JSON.stringify(payload) : payload,
+    body: isFormData ? payload : JSON.stringify(payload), // Không sử dụng JSON.stringify nếu payload là FormData
   };
-  console.log(options);
-  
+
   return await fetchData(url, options);
 };
 

@@ -6,7 +6,7 @@ import getCroppedImg from "../../../ultils/cropImage/get_crop_image";
 import Cropper from "react-easy-crop";
 import tempAvt from "../../../www/imgavtupload.jpg";
 import tempCover from "../../../www/imgcoverupload.jpg";
-import { Link, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { API_GET_INFO_USER_PROFILE_BY_ID, API_UPDATE_USER } from "../../../API/api_server";
 import { getData, putData } from "../../../ultils/fetchAPI/fetch_API";
 
@@ -15,27 +15,30 @@ function ProfileEditor({ titlePage }) {
         document.title = titlePage;
     }, [titlePage]);
 
+    const navigate = useNavigate();
+
+
+    //đặt state cho các giá trị 
     const [formData, setFormData] = useState({
         user_name: '',
         user_nickname: '',
         user_email: '',
-        avatar: '',
+        user_gender: '',
         date_of_birth: '',
-        cover: '',
-        slogan: '',
-        education: '',
-        location: ''
+        user_slogan: '',
+        user_school: '',
+        user_address: ''
     });
 
     const [loading, setLoading] = useState(false);
-    const [isShowCropContainer, setIsShowCropContainer] = useState(false);
-    const [imageToCrop, setImageToCrop] = useState(null);
-    const [croppedImages, setCroppedImages] = useState({ avatar: null, cover: null });
+    const [isCropVisible, setIsCropVisible] = useState(false); // trạng thái có hiện layout crop không
+    const [currentImageToCrop, setCurrentImageToCrop] = useState(null); // trạng thái cho tên ảnh đang crop
+    const [imageToCrop, setImageToCrop] = useState(null); // trạng thái cho link ảnh đang crop
+    const [croppedImages, setCroppedImages] = useState({ avatar: null, cover: null }); // lưu link ảnh avt hoặc cover
     const [crop, setCrop] = useState({ x: 0, y: 0 });
     const [zoom, setZoom] = useState(1);
-    const [croppedAreaPixels, setCroppedAreaPixels] = useState(null);
+    const [croppedAreaPixels, setCroppedAreaPixels] = useState(null); 
     const { user_id } = useParams();
-    console.log(croppedAreaPixels);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -43,9 +46,10 @@ function ProfileEditor({ titlePage }) {
                 const response = await getData(API_GET_INFO_USER_PROFILE_BY_ID(user_id));
                 if (response?.status) {
                     const userData = response.data;
-                    setFormData(userData);
-                    if (userData?.avatar) setImageToCrop(userData.avatar);
-                    if (userData?.cover) setImageToCrop(userData.cover);
+                    setFormData(prevState => ({
+                        ...prevState,
+                        ...userData
+                    }));
                 }
             } catch (error) {
                 console.log(error.message);
@@ -58,29 +62,33 @@ function ProfileEditor({ titlePage }) {
         setCroppedAreaPixels(croppedAreaPixels);
     }, []);
 
-    const generateCroppedImage = useCallback(async (image, fieldName) => {
-        if (image && croppedAreaPixels) {
+    const generateCroppedImage = useCallback(async () => {
+        if (imageToCrop && croppedAreaPixels) {
             try {
-                const croppedImage = await getCroppedImg(image, croppedAreaPixels);
-                setCroppedImages(prevState => ({ ...prevState, [fieldName]: croppedImage }));
-                setIsShowCropContainer(false);
+                const croppedImage = await getCroppedImg(imageToCrop, croppedAreaPixels);
+                setCroppedImages(prevState => ({ ...prevState, [currentImageToCrop]: croppedImage }));
+                setIsCropVisible(false);
+                setCurrentImageToCrop(null);
+                setImageToCrop(null);
             } catch (e) {
                 console.error("Error generating cropped image:", e);
             }
         }
-    }, [croppedAreaPixels]);
+    }, [imageToCrop, croppedAreaPixels, currentImageToCrop]);
+
+    const cancelCrop = () => {
+        setIsCropVisible(false);
+        setImageToCrop(null);
+        setCurrentImageToCrop(null);
+    };
 
     const handleImageChange = (e, fieldName) => {
-        setIsShowCropContainer(true);
+        setCurrentImageToCrop(fieldName);
         if (e.target.files && e.target.files.length > 0) {
             const file = e.target.files[0];
             const imageUrl = URL.createObjectURL(file);
-            setFormData(formData => ({
-                ...formData,
-                [fieldName]: imageUrl
-            }));
             setImageToCrop(imageUrl);
-            setCroppedImages(prevState => ({ ...prevState, [fieldName]: null }));
+            setIsCropVisible(true);
         }
     };
 
@@ -95,12 +103,14 @@ function ProfileEditor({ titlePage }) {
     const handleSave = async () => {
         const payload = new FormData();
 
+        // Append all other form data except images
         for (const key in formData) {
-            if (formData.hasOwnProperty(key)) {
+            if (formData.hasOwnProperty(key) && key !== 'avatar' && key !== 'cover') {
                 payload.append(key, formData[key]);
             }
         }
 
+        // Append cropped images to the payload
         const appendImage = async (imageUrl, fieldName) => {
             try {
                 const response = await fetch(imageUrl);
@@ -113,20 +123,19 @@ function ProfileEditor({ titlePage }) {
 
         if (croppedImages.avatar) {
             await appendImage(croppedImages.avatar, 'avatar');
-        } else if (formData.avatar) {
-            await appendImage(formData.avatar, 'avatar');
         }
 
         if (croppedImages.cover) {
             await appendImage(croppedImages.cover, 'cover');
-        } else if (formData.cover) {
-            await appendImage(formData.cover, 'cover');
         }
 
         try {
             setLoading(true);
-            await putData(API_UPDATE_USER(user_id), payload, {}, false);
+            const responseUpdate = await putData(API_UPDATE_USER(user_id), payload);
             // Optionally notify user of success
+            if (responseUpdate.status) {
+                navigate("/profile/" + user_id)
+            }
         } catch (error) {
             console.error('Error:', error);
             // Optionally notify user of error
@@ -134,6 +143,7 @@ function ProfileEditor({ titlePage }) {
             setLoading(false);
         }
     };
+
 
     return (
         <React.Fragment>
@@ -174,38 +184,43 @@ function ProfileEditor({ titlePage }) {
                             />
                         </div>
                         <div className="form-group full-width">
-                            <label htmlFor="slogan">Giới thiệu:</label>
+                            <label htmlFor="user_slogan">Giới thiệu:</label>
                             <input
                                 type="text"
-                                id="slogan"
-                                name="slogan"
-                                value={formData?.slogan}
+                                id="user_slogan"
+                                name="user_slogan"
+                                value={formData?.user_slogan}
                                 onChange={handleChange}
                             />
                         </div>
                         <div className="form-group">
-                            <label htmlFor="education">Từng học tại:</label>
+                            <label htmlFor="user_school">Từng học tại:</label>
                             <input
                                 type="text"
-                                id="education"
-                                name="education"
-                                value={formData?.education}
+                                id="user_school"
+                                name="user_school"
+                                value={formData?.user_school}
                                 onChange={handleChange}
                             />
                         </div>
                         <div className="form-group">
-                            <label htmlFor="location">Đang sống:</label>
+                            <label htmlFor="user_address">Đang sống:</label>
                             <input
                                 type="text"
-                                id="location"
-                                name="location"
-                                value={formData?.location}
+                                id="user_address"
+                                name="user_address"
+                                value={formData?.user_address}
                                 onChange={handleChange}
                             />
                         </div>
                         <div className="form-group">
-                            <label htmlFor="gender">Giới tính:</label>
-                            <select name="gender" id="gender">
+                            <label htmlFor="user_gender">Giới tính:</label>
+                            <select
+                                name="user_gender"
+                                id="user_gender"
+                                value={formData?.user_gender || 'other'}
+                                onChange={handleChange}
+                            >
                                 <option value="other">Khác</option>
                                 <option value="male">Nam</option>
                                 <option value="female">Nữ</option>
@@ -254,56 +269,43 @@ function ProfileEditor({ titlePage }) {
                                 onChange={(e) => handleImageChange(e, 'cover')}
                             />
                         </div>
-                    </div>
-                    <div className="form-group full-width">
-                        <button type="button" onClick={handleSave} disabled={loading}>
-                            {loading ? 'Đang lưu...' : 'Lưu'}
-                        </button>
+                        <div className="form-group full-width">
+                            <button type="button" onClick={handleSave} disabled={loading}>
+                                {loading ? 'Đang lưu...' : 'Lưu'}
+                            </button>
+                        </div>
                     </div>
                 </form>
 
-                {isShowCropContainer && (
+                {isCropVisible && currentImageToCrop && (
                     <div className="crop-img-container">
-                        {formData.avatar && !croppedImages.avatar && (
-                            <div className="crop-container">
-                                <Cropper
-                                    image={formData.avatar}
-                                    crop={crop}
-                                    zoom={zoom}
-                                    aspect={1} // For square crop
-                                    onCropChange={setCrop}
-                                    onZoomChange={setZoom}
-                                    onCropComplete={onCropComplete}
-                                />
+                        <div className="crop-container">
+                            <Cropper
+                                image={imageToCrop}
+                                crop={crop}
+                                zoom={zoom}
+                                aspect={currentImageToCrop === 'avatar' ? 1 : 2.5}
+                                onCropChange={setCrop}
+                                onZoomChange={setZoom}
+                                onCropComplete={onCropComplete}
+                            />
+                            <div className="crop-controls">
                                 <button
                                     type="button"
                                     className="btn-func crop"
-                                    onClick={() => generateCroppedImage(formData.avatar, 'avatar')}
+                                    onClick={generateCroppedImage}
                                 >
-                                    Cắt ảnh đại diện
+                                    Cắt ảnh {currentImageToCrop === 'avatar' ? 'đại diện' : 'bìa'}
                                 </button>
-                            </div>
-                        )}
-                        {formData.cover && !croppedImages.cover && (
-                            <div className="crop-container">
-                                <Cropper
-                                    image={formData.cover}
-                                    crop={crop}
-                                    zoom={zoom}
-                                    aspect={2.5} // For rectangular crop
-                                    onCropChange={setCrop}
-                                    onZoomChange={setZoom}
-                                    onCropComplete={onCropComplete}
-                                />
                                 <button
                                     type="button"
-                                    className="btn-func crop"
-                                    onClick={() => generateCroppedImage(formData.cover, 'cover')}
+                                    className="btn-func cancel"
+                                    onClick={cancelCrop}
                                 >
-                                    Cắt ảnh bìa
+                                    Hủy
                                 </button>
                             </div>
-                        )}
+                        </div>
                     </div>
                 )}
             </div>

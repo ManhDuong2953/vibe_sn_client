@@ -1,13 +1,12 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Navigate, Outlet } from 'react-router-dom';
 import Cookies from 'js-cookie';
-import { OwnDataContext } from '../../provider/own_data';
 import { postData } from '../../ultils/fetchAPI/fetch_API';
 import { API_DECODE_TOKEN, API_ROTATION_TOKEN } from '../../API/api_server';
 import Spinner from '../Spinner/spinner';
 
+
 const PrivateRoute = () => {
-    const dataOwner = useContext(OwnDataContext);
     const [isAuthenticated, setIsAuthenticated] = useState(null);
     const [checked, setChecked] = useState(false);
 
@@ -23,7 +22,7 @@ const PrivateRoute = () => {
                     setChecked(true);
                     return;
                 }
-
+                
                 if (accessToken) {
                     setIsAuthenticated(true);
                     setChecked(true);
@@ -33,7 +32,7 @@ const PrivateRoute = () => {
                             key_refresh_token_encode: keyRefreshTokenEncode,
                             refresh_token: refreshToken,
                         });
-
+                        
                         if (responseDecodeToken?.status) {
                             const { user_id } = responseDecodeToken?.data || {};
                             if (!user_id) {
@@ -67,10 +66,10 @@ const PrivateRoute = () => {
 
             checkAuthentication();
         }
-    }, [checked, dataOwner]);
+    }, [checked]);
 
     if (!checked) {
-        return <Spinner/>;
+        return <Spinner />;
     }
 
     return isAuthenticated ? <Outlet /> : <Navigate to="/login" />;

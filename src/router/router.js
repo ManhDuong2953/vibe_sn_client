@@ -206,7 +206,7 @@ const routes = [
     component: <EditProductPage titlePage="Chợ | Vibe" />,
   },
   {
-    path: '/setting',
+    path: '/setting/:id',
     exact: true,
     requireAuth: true,
     component: <SettingPage titlePage="Chợ | Vibe" />,

@@ -8,10 +8,17 @@ export function formatDate(dateString, format) {
     if (format === "yy/mm/dd") {
         return `${year}-${month}-${day}`;
     } else if (format === "dd/mm/yy") {
-        return `${day}-${month}-${year}`;
+        return `${day}/${month}/${year}`;
     } else {
         throw new Error("Invalid format");
     }
+}
+export function formatDateVN(dateString) {
+    // Tách chuỗi ngày tháng năm
+    const [year, month, day] = dateString.split('-');
+    
+    // Định dạng ngày theo định dạng DD/MM/YYYY
+    return `${day}/${month}/${year}`;
 }
 
 

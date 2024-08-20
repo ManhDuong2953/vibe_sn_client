@@ -1,13 +1,19 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useContext, useEffect, useRef, useState } from 'react';
 import * as faceapi from 'face-api.js';
 import "./create_face_recognition.scss";
 import BackButton from '../../../component/BackButton/back_button';
+import { postData } from '../../../ultils/fetchAPI/fetch_API';
+import { API_CREATE_FACE_RECOGNITION_BY_ID } from '../../../API/api_server';
+import { OwnDataContext } from '../../../provider/own_data';
+import { dataURLtoBlob } from '../../../ultils/dataURLtoBLOB/dataURL_to_BLOB';
+import { useNavigate } from 'react-router-dom';
 
 const CreateFaceRecognitionPage = ({ titlePage }) => {
+  const dataOwner = useContext(OwnDataContext);
   useEffect(() => {
     document.title = titlePage;
   }, [titlePage]);
-
+  const navigate = useNavigate();
   const videoRef = useRef(null);
   const canvasRef = useRef(null);
   const [loading, setLoading] = useState(false);
@@ -73,7 +79,7 @@ const CreateFaceRecognitionPage = ({ titlePage }) => {
         if (resizedDetections.length > 0 && capturedImages.length < 10) {
           await captureImage(videoRef.current);
         }
-      }, 2000);
+      }, 500);
 
       return () => clearInterval(captureInterval);
     };
@@ -92,7 +98,14 @@ const CreateFaceRecognitionPage = ({ titlePage }) => {
         if (prevImages.length < 10) {
           return [...prevImages, imageData];
         } else {
+          // Stop the video stream
+          const stream = video.srcObject;
+          if (stream) {
+            stream.getTracks().forEach(track => track.stop());
+          }
+          // Hide the video container
           document.querySelector('.video-container')?.remove();
+          // Set uploading state to true
           setUpLoading(true);
         }
         return prevImages;
@@ -112,6 +125,23 @@ const CreateFaceRecognitionPage = ({ titlePage }) => {
       }
     };
   }, []);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const formData = new FormData();
+      capturedImages.forEach((image, index) => {
+        const blob = dataURLtoBlob(image);
+        formData.append('images_face_recognition', blob, `image_${index}.jpg`);
+      });
+      const response = await postData(API_CREATE_FACE_RECOGNITION_BY_ID(dataOwner && dataOwner?.user_id), formData);
+      if (response.status) {
+        navigate(-1);
+      }
+    };
+    if (uploading) {
+      fetchData();
+    }
+  }, [capturedImages, dataOwner, navigate, uploading]);
 
   return (
     <React.Fragment>

@@ -1,42 +1,77 @@
 import React, { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import { FaEdit, FaEye, FaEyeSlash, FaTrash, FaUserPlus, FaSave } from 'react-icons/fa';
 import './setting_page.scss';
 import { FaFaceGrinWide } from 'react-icons/fa6';
 import NavigativeBar from '../../layout/NavigativeBar/navigative_bar';
 import BackButton from '../../component/BackButton/back_button';
+import { deleteData, getData, putData } from '../../ultils/fetchAPI/fetch_API';
+import { API_DELETE_FACE_RECOGNITION_BY_ID, API_GET_FACE_RECOGNITION_BY_ID, API_GET_USER_SETTING, API_UPDATE_USER_SETTING } from '../../API/api_server';
 
 const SettingPage = ({ titlePage }) => {
     useEffect(() => {
         document.title = titlePage;
     }, [titlePage]);
-    const [privacyPost, setPrivacyPost] = useState('everyone');
-    const [privacyStory, setPrivacyStory] = useState('everyone');
-    const [hasFaceRecognition, setHasFaceRecognition] = useState(false);
+    const { id } = useParams();
+    const [dataSetting, setDataSetting] = useState({});
+    const [dataFace, setDataFace] = useState([]);
+    const [loading, setLoading] = useState(true); // Trạng thái tải dữ liệu
     const [showFaceImages, setShowFaceImages] = useState(false);
+    useEffect(() => {
+        const fetchDataSetting = async () => {
 
-    const handlePrivacyPostChange = (e) => {
-        setPrivacyPost(e.target.value);
-    };
+            const [response, responses] = await Promise.all([
+                getData(API_GET_USER_SETTING(id)),
+                getData(API_GET_FACE_RECOGNITION_BY_ID(id))
+            ]);
 
-    const handlePrivacyStoryChange = (e) => {
-        setPrivacyStory(e.target.value);
-    };
+            setDataSetting(response?.data);
+            setDataFace(responses?.data);
+            setLoading(true); // Bắt đầu tải dữ liệu
 
-    const handleDeleteFace = () => {
-        setHasFaceRecognition(false);
-    };
+        };
 
-    const handleCreateFace = () => {
-        setHasFaceRecognition(true);
+        fetchDataSetting();
+    }, [id]);
+
+
+
+    const handleDeleteFace = async () => {
+        try {
+            const response = await deleteData(API_DELETE_FACE_RECOGNITION_BY_ID(id));
+            if (response.status) {
+                window.location.reload();
+            }
+        } catch (error) {
+            console.log(error.message);
+
+        }
     };
 
     const toggleFaceImages = () => {
         setShowFaceImages(!showFaceImages);
     };
 
-    const handleSaveSettings = () => {
-        alert('Cài đặt đã được lưu');
+
+    const handleChange = (e) => {
+        const { name, value } = e.target;
+        setDataSetting(prevState => ({
+            ...prevState,
+            [name]: value
+        }));
+    };
+
+    const handleSaveSettings = async () => {
+        try {
+            const response = await putData(API_UPDATE_USER_SETTING(id), dataSetting, {
+                'Content-Type': 'application/json',
+            });
+            if (response.status) {
+                window.location.reload();
+            }
+        } catch (error) {
+            console.log(error.message);
+        }
     };
 
     return (
@@ -49,72 +84,77 @@ const SettingPage = ({ titlePage }) => {
                 <h1>Cài đặt</h1>
                 <div className="setting-container">
                     <div className="setting-option">
-                        <Link to="/edit-profile" className="setting-link">
+                        <Link to={"/profile/" + id + "/edit"} className="setting-link">
                             <FaEdit className="icon" />
                             Chỉnh sửa thông tin cá nhân
                         </Link>
                     </div>
-                    <div className="setting-option">
-                        <label>Quyền riêng tư mặc định cho bài viết</label>
-                        <select value={privacyPost} onChange={handlePrivacyPostChange}>
-                            <option value="everyone">&#x1F310; Mọi người</option>
-                            <option value="onlyMe">&#x1F512; Chỉ mình tôi</option>
-                        </select>
-                    </div>
-                    <div className="setting-option">
-                        <label>Quyền riêng tư mặc định cho tin</label>
-                        <select value={privacyStory} onChange={handlePrivacyStoryChange}>
-                            <option value="everyone">&#x1F310; Mọi người</option>
-                            <option value="onlyMe">&#x1F512; Chỉ mình tôi</option>
-                        </select>
-                    </div>
-                    <div className="setting-option face-recognition-option">
-                        {hasFaceRecognition ? (
-                            <>
-                                <button className="btn btn-primary" onClick={handleCreateFace}>
-                                    <FaFaceGrinWide className="icon" />
-                                    Thay đổi khuôn mặt
-                                </button>
-                                <button className="btn btn-danger" onClick={handleDeleteFace}>
-                                    <FaTrash className="icon" />
-                                    Xóa khuôn mặt
-                                </button>
-                                <button className="btn btn-secondary" onClick={toggleFaceImages}>
-                                    {showFaceImages ? (
-                                        <>
-                                            <FaEyeSlash className="icon" />
-                                            Ẩn danh sách khuôn mặt
-                                        </>
-                                    ) : (
-                                        <>
-                                            <FaEye className="icon" />
-                                            Hiện danh sách khuôn mặt
-                                        </>
+                    {loading && (<>
+                        <div className="setting-option">
+                            <label>Quyền riêng tư mặc định cho bài viết</label>
+                            <select value={dataSetting && dataSetting?.post_privacy} name="post_privacy" onChange={handleChange}>
+                                <option value={1}>&#x1F310; Mọi người</option>
+                                <option value={0}>&#x1F512; Chỉ mình tôi</option>
+                            </select>
+                        </div>
+                        <div className="setting-option">
+                            <label>Quyền riêng tư mặc định cho tin</label>
+                            <select value={dataSetting && dataSetting?.story_privacy} name='story_privacy' onChange={handleChange}>
+                                <option value={1}>&#x1F310; Mọi người</option>
+                                <option value={0}>&#x1F512; Chỉ mình tôi</option>
+                            </select>
+                        </div>
+                        <div className="setting-option">
+                            <label>Chế độ chủ đề</label>
+                            <select value={dataSetting && dataSetting?.dark_theme} name='dark_theme' onChange={handleChange}>
+                                <option value="1">&#127769; Tối</option>
+                                <option value={0}>&#127774; Sáng</option>
+                            </select>
+                        </div>
+                        <div className="setting-option face-recognition-option">
+                            {dataFace?.length > 0 ? (
+                                <>
+                                    <button className="btn btn-danger" onClick={handleDeleteFace}>
+                                        <FaTrash className="icon" />
+                                        Xóa khuôn mặt
+                                    </button>
+                                    <button className="btn btn-secondary" onClick={toggleFaceImages}>
+                                        {showFaceImages ? (
+                                            <>
+                                                <FaEyeSlash className="icon" />
+                                                Ẩn danh sách khuôn mặt
+                                            </>
+                                        ) : (
+                                            <>
+                                                <FaEye className="icon" />
+                                                Hiện danh sách khuôn mặt
+                                            </>
+                                        )}
+                                    </button>
+                                    {showFaceImages && (
+                                        <div className="face-images">
+                                            {dataFace && dataFace.map((face, index) => (
+                                                <img key={index} src={face?.media_link} alt='' />
+                                            ))}
+                                        </div>
                                     )}
-                                </button>
-                                {showFaceImages && (
-                                    <div className="face-images">
-                                        {Array.from({ length: 10 }).map((_, index) => (
-                                            <img key={index} src={`https://cdn.24h.com.vn/upload/4-2021/images/2021-12-26/Mau-nu-dep-1-1640493153-233-width1080height1350.jpg`} alt={`Face ${index + 1}`} />
-                                        ))}
-                                    </div>
-                                )}
-                            </>
-                        ) : (
-                            <Link to="/face-recognition/create">
-                                <button className="btn btn-primary" onClick={handleCreateFace}>
-                                    <FaFaceGrinWide className="icon" />
-                                    Tạo khuôn mặt
-                                </button>
-                            </Link>
-                        )}
-                    </div>
-                    <div className="setting-option">
-                        <button className="btn btn-save" onClick={handleSaveSettings}>
-                            <FaSave className="icon" />
-                            Lưu cài đặt
-                        </button>
-                    </div>
+                                </>
+                            ) : (
+                                <Link to="/face-recognition/create">
+                                    <button className="btn btn-primary">
+                                        <FaFaceGrinWide className="icon" />
+                                        Tạo khuôn mặt
+                                    </button>
+                                </Link>
+                            )}
+                        </div>
+                        <div className="setting-option">
+                            <button className="btn btn-save" onClick={handleSaveSettings}>
+                                <FaSave className="icon" />
+                                Lưu cài đặt
+                            </button>
+                        </div>
+                    </>)}
                 </div>
             </div>
         </React.Fragment>

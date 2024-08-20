@@ -11,15 +11,29 @@ import FormPost from "../../../component/FormPost/form_post";
 import { getData } from "../../../ultils/fetchAPI/fetch_API";
 import { API_GET_INFO_USER_PROFILE_BY_ID } from "../../../API/api_server";
 import { OwnDataContext } from "../../../provider/own_data";
+import { formatDateVN } from "../../../ultils/formatDate/format_date";
 
 function ProfilePage({ titlePage }) {
     useEffect(() => {
         document.title = titlePage;
     }, [titlePage]);
     const dataOwner = useContext(OwnDataContext);
-    const [loading, setLoading] = useState(false);
     const { user_id } = useParams();
+    const [loading, setLoading] = useState(false);
+    const [data, setData] = useState();
 
+    useEffect(() => {
+        try {
+            const fetchData = async () => {
+                const response = await getData(API_GET_INFO_USER_PROFILE_BY_ID(user_id));
+                setData(response?.data);
+                return response?.status
+            }
+            setLoading(fetchData());
+        } catch (error) {
+            console.log(error.message);
+        }
+    }, [user_id]);
 
 
     return (
@@ -34,10 +48,10 @@ function ProfilePage({ titlePage }) {
                                 <h3>
                                     Giới thiệu
                                 </h3>
-                                <div className="slogan">Tuyền Văn Hóa - Vlogger với những góc nhìn độc đáo về bóng đá trong nước & Quốc tế</div>
-                                <div className="info-short--item info-school"><FaSchoolCircleCheck />Từng học tại <b>Trường đại học Mát-cơ-va</b></div>
-                                <div className="info-short--item info-address"><IoHome />Đang sống tại <b>Moscow</b></div>
-                                <div className="info-short--item info-school"><MdDateRange />Tạo ngày: <b>29/05/2024</b></div>
+                                <div className="slogan">{data && data?.user_slogan}</div>
+                                <div className="info-short--item info-school"><FaSchoolCircleCheck /><p>Từng học tại <b>{data && data?.user_school}</b></p></div>
+                                <div className="info-short--item info-address"><IoHome /><p>Đang sống tại <b>{data && data?.user_address}</b></p></div>
+                                <div className="info-short--item info-school"><MdDateRange /><p>Tạo ngày: <b>{data && formatDateVN(data?.date_of_birth) }</b></p></div>
 
                                 <Link to={`/profile/${dataOwner && dataOwner?.user_id}/edit`}>
                                     <div className="edit-btn"> <MdEditNote /><p>Sửa thông tin</p></div>

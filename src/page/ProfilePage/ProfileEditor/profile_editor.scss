@@ -1,5 +1,5 @@
 .personal-info-editor {
-  margin: 70px auto 70px;
+  margin: 70px auto;
   max-width: 1200px;
 
   form {
@@ -11,6 +11,7 @@
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 1rem;
+
     .form-title {
       text-align: center;
       margin-bottom: 10px;
@@ -21,6 +22,7 @@
     .side-left {
       display: grid;
       grid-template-columns: 1fr 1fr;
+
       p.change-pw {
         color: rgb(0, 155, 186);
         font-size: 14px;
@@ -30,14 +32,17 @@
           text-decoration: underline;
         }
       }
+
       .form-group {
         display: flex;
         flex-direction: column;
         padding: 10px;
+
         label {
           margin-bottom: 0.5rem;
           font-weight: bold;
           color: var(--text-color);
+
           img.avt {
             height: 200px;
             width: 200px;
@@ -45,12 +50,13 @@
             overflow: hidden;
             border-radius: 50%;
             margin: 10px 0;
-            border: 2px solid red;
+            border: 2px dotted red;
           }
+
           img.cover {
+            border: 2px dotted red;
             width: 100%;
             margin: 10px 0;
-            border: 2px dotted red;
           }
         }
 
@@ -68,6 +74,7 @@
             border-color: var(--active-color);
           }
         }
+
         option {
           padding: 5px 2px;
         }
@@ -100,45 +107,52 @@
   }
 
   .crop-img-container {
-    margin-bottom: 15px;
     position: fixed;
-    height: 100vh;
-    width: 100vw;
     top: 0;
     left: 0;
+    right: 0;
     bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5); // Add a semi-transparent background
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+
     .crop-container {
       position: relative;
-      width: 100%;
-      height: 100%;
+      width: 80%;
+      height: 80%;
       background-color: var(--bg-temp-color);
-      margin-bottom: 10px;
+      border-radius: 8px;
+      overflow: hidden;
+      .crop-controls {
+        position: absolute;
+        bottom: 20px;
+        left: 20px;
+        display: flex;
+      }
       img {
         max-width: 100%;
         max-height: 100%;
       }
-    }
 
-    .cropped-image {
-      width: 100%;
-      margin-bottom: 10px;
-    }
-
-    .btn-func {
-      position: absolute;
-      bottom: 0;
-      left: 0;
-      padding: 10px 15px;
-      border: none;
-      border-radius: 4px;
-      background-color: var(--active-color) !important;
-      color: white;
-      font-size: 16px;
-      cursor: pointer;
-      transition: background-color 0.3s ease;
-
-      &:hover {
-        background-color: var(--success-color) !important;
+      .btn-func {
+        padding: 10px 15px;
+        border: none;
+        border-radius: 4px;
+        background-color: var(--active-color) !important;
+        color: white;
+        font-size: 16px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+        &.cancel {
+          margin-left: 5px;
+          color: red;
+          background-color: white !important; 
+        }
+        &:hover {
+          background-color: var(--success-color) !important;
+        }
       }
     }
   }

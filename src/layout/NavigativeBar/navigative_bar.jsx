@@ -14,17 +14,21 @@ import imgError from "../../www/error_image.png";
 import NoticeItem from "../../component/NoticeItem/notice_item";
 import ToggleButton from 'react-toggle-button'
 import useToggleListener from "../../ultils/animation/toggle_active";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { darkHandle, lightHandle } from "../../redux/Reducer/reducer";
 import { IoListOutline, IoSettingsSharp } from "react-icons/io5";
 import { OwnDataContext } from "../../provider/own_data";
 
 function NavigativeBar() {
     const navigate = useNavigate();
-    const theme = useSelector((state) => state.themeUI.theme)
-    const [darkOn, setDarkOn] = useState(theme === "dark" ? true : false);
     const [searchString, setSearchString] = useState("");
     const dataOwner = useContext(OwnDataContext);
+    const [darkOn, setDarkOn] = useState(dataOwner?.dark_theme === 1);
+
+    // Cập nhật lại state darkOn khi dataOwner thay đổi
+    useEffect(() => {
+        setDarkOn(dataOwner?.dark_theme === 1);
+    }, [dataOwner]);
 
     const handleInput = (e) => {
         setSearchString(e);
@@ -108,7 +112,7 @@ function NavigativeBar() {
                         <Link to="/group" title="Nhóm">
                             <li><HiMiniUserGroup /><b>Nhóm</b></li>
                         </Link>
-                        <Link to="/setting" title="Cài đặt">
+                        <Link to={"/setting/" + (dataOwner && dataOwner?.user_id)} title="Cài đặt">
                             <li><IoMdSettings /><b>Cài đặt</b></li>
                         </Link>
                     </ul>

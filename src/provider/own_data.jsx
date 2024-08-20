@@ -1,12 +1,22 @@
 import React, { createContext, useEffect, useState } from "react";
 import { API_GET_INFO_OWNER_PROFILE_BY_ID } from "../API/api_server";
 import { getData } from "../ultils/fetchAPI/fetch_API";
+import { useDispatch } from "react-redux";
+import { setThemeFromContext } from "../redux/Reducer/reducer";
 
 export const OwnDataContext = createContext(null);
 
 function OwnDataProvider({ children }) {
     const [data, setData] = useState(null);
-
+    const dispatch = useDispatch();
+  
+    useEffect(() => {
+      if (data && data?.dark_theme) {
+        dispatch(setThemeFromContext('dark'));
+      } else {
+        dispatch(setThemeFromContext('light'));
+      }
+    }, [data, dispatch]);
     useEffect(() => {
         const fetchData = async () => {
             try {
