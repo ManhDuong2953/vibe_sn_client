@@ -6,14 +6,12 @@ import { postData } from '../../../ultils/fetchAPI/fetch_API';
 import { API_CREATE_FACE_RECOGNITION_BY_ID } from '../../../API/api_server';
 import { OwnDataContext } from '../../../provider/own_data';
 import { dataURLtoBlob } from '../../../ultils/dataURLtoBLOB/dataURL_to_BLOB';
-import { useNavigate } from 'react-router-dom';
 
 const CreateFaceRecognitionPage = ({ titlePage }) => {
   const dataOwner = useContext(OwnDataContext);
   useEffect(() => {
     document.title = titlePage;
   }, [titlePage]);
-  const navigate = useNavigate();
   const videoRef = useRef(null);
   const canvasRef = useRef(null);
   const [loading, setLoading] = useState(false);
@@ -135,13 +133,13 @@ const CreateFaceRecognitionPage = ({ titlePage }) => {
       });
       const response = await postData(API_CREATE_FACE_RECOGNITION_BY_ID(dataOwner && dataOwner?.user_id), formData);
       if (response.status) {
-        navigate(-1);
+        window.location.href = "/setting/" + dataOwner?.user_id;
       }
     };
     if (uploading) {
       fetchData();
     }
-  }, [capturedImages, dataOwner, navigate, uploading]);
+  }, [capturedImages, dataOwner, uploading]);
 
   return (
     <React.Fragment>

@@ -12,7 +12,6 @@ const SettingPage = ({ titlePage }) => {
     useEffect(() => {
         document.title = titlePage;
     }, [titlePage]);
-    const { id } = useParams();
     const [dataSetting, setDataSetting] = useState({});
     const [dataFace, setDataFace] = useState([]);
     const [loading, setLoading] = useState(true); // Trạng thái tải dữ liệu
@@ -21,8 +20,8 @@ const SettingPage = ({ titlePage }) => {
         const fetchDataSetting = async () => {
 
             const [response, responses] = await Promise.all([
-                getData(API_GET_USER_SETTING(id)),
-                getData(API_GET_FACE_RECOGNITION_BY_ID(id))
+                getData(API_GET_USER_SETTING),
+                getData(API_GET_FACE_RECOGNITION_BY_ID)
             ]);
 
             setDataSetting(response?.data);
@@ -32,15 +31,17 @@ const SettingPage = ({ titlePage }) => {
         };
 
         fetchDataSetting();
-    }, [id]);
+    }, []);
 
 
 
     const handleDeleteFace = async () => {
         try {
-            const response = await deleteData(API_DELETE_FACE_RECOGNITION_BY_ID(id));
-            if (response.status) {
-                window.location.reload();
+            if (window.confirm("Bạn chắc chắn muốn xóa dữ liệu khuôn mặt hiện có chứ")) {
+                const response = await deleteData(API_DELETE_FACE_RECOGNITION_BY_ID);
+                if (response.status) {
+                    window.location.reload();
+                }
             }
         } catch (error) {
             console.log(error.message);
@@ -63,7 +64,7 @@ const SettingPage = ({ titlePage }) => {
 
     const handleSaveSettings = async () => {
         try {
-            const response = await putData(API_UPDATE_USER_SETTING(id), dataSetting, {
+            const response = await putData(API_UPDATE_USER_SETTING, dataSetting, {
                 'Content-Type': 'application/json',
             });
             if (response.status) {
@@ -84,33 +85,13 @@ const SettingPage = ({ titlePage }) => {
                 <h1>Cài đặt</h1>
                 <div className="setting-container">
                     <div className="setting-option">
-                        <Link to={"/profile/" + id + "/edit"} className="setting-link">
+                        <Link to={"/profile/edit"} className="setting-link">
                             <FaEdit className="icon" />
                             Chỉnh sửa thông tin cá nhân
                         </Link>
                     </div>
                     {loading && (<>
-                        <div className="setting-option">
-                            <label>Quyền riêng tư mặc định cho bài viết</label>
-                            <select value={dataSetting && dataSetting?.post_privacy} name="post_privacy" onChange={handleChange}>
-                                <option value={1}>&#x1F310; Mọi người</option>
-                                <option value={0}>&#x1F512; Chỉ mình tôi</option>
-                            </select>
-                        </div>
-                        <div className="setting-option">
-                            <label>Quyền riêng tư mặc định cho tin</label>
-                            <select value={dataSetting && dataSetting?.story_privacy} name='story_privacy' onChange={handleChange}>
-                                <option value={1}>&#x1F310; Mọi người</option>
-                                <option value={0}>&#x1F512; Chỉ mình tôi</option>
-                            </select>
-                        </div>
-                        <div className="setting-option">
-                            <label>Chế độ chủ đề</label>
-                            <select value={dataSetting && dataSetting?.dark_theme} name='dark_theme' onChange={handleChange}>
-                                <option value="1">&#127769; Tối</option>
-                                <option value={0}>&#127774; Sáng</option>
-                            </select>
-                        </div>
+
                         <div className="setting-option face-recognition-option">
                             {dataFace?.length > 0 ? (
                                 <>
@@ -148,6 +129,28 @@ const SettingPage = ({ titlePage }) => {
                                 </Link>
                             )}
                         </div>
+                        <div className="setting-option">
+                            <label>Quyền riêng tư mặc định cho bài viết</label>
+                            <select value={dataSetting && dataSetting?.post_privacy} name="post_privacy" onChange={handleChange}>
+                                <option value={1}>&#x1F310; Mọi người</option>
+                                <option value={0}>&#x1F512; Chỉ mình tôi</option>
+                            </select>
+                        </div>
+                        <div className="setting-option">
+                            <label>Quyền riêng tư mặc định cho tin</label>
+                            <select value={dataSetting && dataSetting?.story_privacy} name='story_privacy' onChange={handleChange}>
+                                <option value={1}>&#x1F310; Mọi người</option>
+                                <option value={0}>&#x1F512; Chỉ mình tôi</option>
+                            </select>
+                        </div>
+                        <div className="setting-option">
+                            <label>Chế độ chủ đề</label>
+                            <select value={dataSetting && dataSetting?.dark_theme} name='dark_theme' onChange={handleChange}>
+                                <option value="1">&#127769; Tối</option>
+                                <option value={0}>&#127774; Sáng</option>
+                            </select>
+                        </div>
+                      
                         <div className="setting-option">
                             <button className="btn btn-save" onClick={handleSaveSettings}>
                                 <FaSave className="icon" />

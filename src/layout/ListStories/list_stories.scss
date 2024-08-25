@@ -1,6 +1,5 @@
 .list-stories--container {
-  overflow-y: hidden;
-  overflow-x: auto;
+  overflow: hidden;
   width: 100%;
   padding: 20px 0;
   scroll-snap-type: x mandatory;

@@ -4,10 +4,8 @@ import './login_face_recognition.scss';
 import BackButton from '../../../component/BackButton/back_button';
 import { getData, postData } from '../../../ultils/fetchAPI/fetch_API';
 import { API_ALL_FACE_RECOGNITION, API_LOGIN_FACE_RECOGNITION } from '../../../API/api_server';
-import { useNavigate } from 'react-router-dom';
 
 const LoginFaceRecognition = ({ titlePage }) => {
-  const navigate = useNavigate();
   const videoRef = useRef(null);
   const canvasRef = useRef(null);
   const [loading, setLoading] = useState(false);
@@ -112,7 +110,7 @@ const LoginFaceRecognition = ({ titlePage }) => {
           context.clearRect(0, 0, canvas.width, canvas.height);
         }
 
-        resizedDetections.forEach(detect => {
+        resizedDetections.forEach(async detect => {
           const bestMatch = findBestMatch(detect.descriptor);
           if (context) {
             faceapi.draw.drawFaceLandmarks(canvas, detect);
@@ -122,7 +120,6 @@ const LoginFaceRecognition = ({ titlePage }) => {
 
             if (user_id_encode !== lastDetectedUserId) {
               setNameUser(user_id_encode);
-              console.log("Đã phát hiện khuôn mặt mới: " + user_id_encode);
               await loginWithFaceRecognition(user_id_encode); // Fetch API vào login khi phát hiện khuôn mặt mới
               lastDetectedUserId = user_id_encode; // Cập nhật khuôn mặt đã nhận diện
             }
@@ -156,7 +153,7 @@ const LoginFaceRecognition = ({ titlePage }) => {
         const response = await postData(API_LOGIN_FACE_RECOGNITION, { user_id_encode });
         if (response.status) {
           console.log('Đăng nhập thành công:', response.data);
-          navigate("/");
+          window.location.href = "/";
         } else {
           console.error('Đăng nhập thất bại:', response.message);
         }
@@ -176,7 +173,7 @@ const LoginFaceRecognition = ({ titlePage }) => {
         }
       }
     };
-  }, [navigate, titlePage]);
+  }, [titlePage]);
 
   return (
     <div className="login-face-recognition">

@@ -15,7 +15,7 @@ export function formatDate(dateString, format) {
 }
 export function formatDateVN(dateString) {
     // Tách chuỗi ngày tháng năm
-    const [year, month, day] = dateString.split('-');
+    const [year, month, day] = dateString?.split('-');
     
     // Định dạng ngày theo định dạng DD/MM/YYYY
     return `${day}/${month}/${year}`;

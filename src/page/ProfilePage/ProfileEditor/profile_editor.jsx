@@ -7,7 +7,7 @@ import Cropper from "react-easy-crop";
 import tempAvt from "../../../www/imgavtupload.jpg";
 import tempCover from "../../../www/imgcoverupload.jpg";
 import { Link, useNavigate, useParams } from "react-router-dom";
-import { API_GET_INFO_USER_PROFILE_BY_ID, API_UPDATE_USER } from "../../../API/api_server";
+import { API_GET_INFO_OWNER_PROFILE_BY_ID, API_GET_INFO_USER_PROFILE_BY_ID, API_UPDATE_USER } from "../../../API/api_server";
 import { getData, putData } from "../../../ultils/fetchAPI/fetch_API";
 
 function ProfileEditor({ titlePage }) {
@@ -38,12 +38,11 @@ function ProfileEditor({ titlePage }) {
     const [crop, setCrop] = useState({ x: 0, y: 0 });
     const [zoom, setZoom] = useState(1);
     const [croppedAreaPixels, setCroppedAreaPixels] = useState(null); 
-    const { user_id } = useParams();
 
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await getData(API_GET_INFO_USER_PROFILE_BY_ID(user_id));
+                const response = await getData(API_GET_INFO_OWNER_PROFILE_BY_ID);
                 if (response?.status) {
                     const userData = response.data;
                     setFormData(prevState => ({
@@ -56,7 +55,7 @@ function ProfileEditor({ titlePage }) {
             }
         };
         fetchData();
-    }, [user_id]);
+    }, []);
 
     const onCropComplete = useCallback((croppedArea, croppedAreaPixels) => {
         setCroppedAreaPixels(croppedAreaPixels);
@@ -131,10 +130,10 @@ function ProfileEditor({ titlePage }) {
 
         try {
             setLoading(true);
-            const responseUpdate = await putData(API_UPDATE_USER(user_id), payload);
+            const responseUpdate = await putData(API_UPDATE_USER, payload);
             // Optionally notify user of success
             if (responseUpdate.status) {
-                navigate("/profile/" + user_id)
+                navigate(-1)
             }
         } catch (error) {
             console.error('Error:', error);

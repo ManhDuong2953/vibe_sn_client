@@ -44,18 +44,24 @@ function ProfilePage({ titlePage }) {
                     <ProfileHeader userId={user_id ?? null} classNameActive={"post"} />
                     <div className="profile-main">
                         <div className="profile-left">
-                            <div className="title-intro box">
-                                <h3>
-                                    Giới thiệu
-                                </h3>
-                                <div className="slogan">{data && data?.user_slogan}</div>
-                                <div className="info-short--item info-school"><FaSchoolCircleCheck /><p>Từng học tại <b>{data && data?.user_school}</b></p></div>
-                                <div className="info-short--item info-address"><IoHome /><p>Đang sống tại <b>{data && data?.user_address}</b></p></div>
-                                <div className="info-short--item info-school"><MdDateRange /><p>Tạo ngày: <b>{data && formatDateVN(data?.date_of_birth) }</b></p></div>
 
-                                <Link to={`/profile/${dataOwner && dataOwner?.user_id}/edit`}>
-                                    <div className="edit-btn"> <MdEditNote /><p>Sửa thông tin</p></div>
-                                </Link>
+                            <div className="title-intro box">
+                                {data && (
+                                    <>
+                                        <h3>
+                                            Giới thiệu
+                                        </h3>
+                                        {data && data?.user_slogan && (<div className="slogan">{data?.user_slogan}</div>)}
+                                        {data && data?.user_school && (<div className="info-short--item info-school"><FaSchoolCircleCheck /><p>Từng học tại <b>{data?.user_school}</b></p></div>)}
+                                        {data && data?.user_address && (<div className="info-short--item info-address"><IoHome /><p>Đang sống tại <b>{data?.user_address}</b></p></div>)}
+                                        {data && data?.date_of_birth && (<div className="info-short--item info-school"><MdDateRange /><p>Tạo ngày: <b>{formatDateVN(data?.date_of_birth)}</b></p></div>)}
+                                    </>
+                                )}
+                                {dataOwner && (dataOwner?.user_id === user_id) && (
+                                    <Link to={`/profile/edit`}>
+                                        <div className="edit-btn"> <MdEditNote /><p>Sửa thông tin</p></div>
+                                    </Link>
+                                )}
                             </div>
                             <div className="title-friend box">
                                 <h3>
@@ -80,8 +86,16 @@ function ProfilePage({ titlePage }) {
                             </div>
                         </div>
                         <div className="profile-right">
-                            <FormPost />
-                            <div className="title-content box">
+                            {dataOwner && (dataOwner?.user_id === user_id) && (
+                                <div style={{
+                                    marginBottom: '30px',
+                                }}>
+                                    <FormPost />
+                                </div>
+                            )}
+                            <div className="title-content box" style={{
+                                margin: 0
+                            }}>
                                 <h3>
                                     Bài viết
                                 </h3>

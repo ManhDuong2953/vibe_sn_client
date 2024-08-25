@@ -112,7 +112,7 @@ function NavigativeBar() {
                         <Link to="/group" title="Nhóm">
                             <li><HiMiniUserGroup /><b>Nhóm</b></li>
                         </Link>
-                        <Link to={"/setting/" + (dataOwner && dataOwner?.user_id)} title="Cài đặt">
+                        <Link to={"/setting/"} title="Cài đặt">
                             <li><IoMdSettings /><b>Cài đặt</b></li>
                         </Link>
                     </ul>
@@ -172,7 +172,7 @@ function NavigativeBar() {
                                         />
                                     </li>
                                     <li className="function-direct">
-                                        <Link>
+                                        <Link to={"/setting"}>
                                             <span>
                                                 <IoSettingsSharp />
                                                 <p>

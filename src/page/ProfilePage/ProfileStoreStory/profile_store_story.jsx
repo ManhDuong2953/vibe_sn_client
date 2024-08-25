@@ -3,17 +3,19 @@ import "./profile_store_story.scss";
 
 import NavigativeBar from "../../../layout/NavigativeBar/navigative_bar";
 import ProfileHeader from "../../../layout/ProfileHeader/profile_header";
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 function ProfileStoreStory({ titlePage }) {
     useEffect(() => {
         document.title = titlePage;
     }, [titlePage]);
+    const { user_id } = useParams();
+
     return (
         <React.Fragment>
             <NavigativeBar />
             <div className="profile">
                 <div className="profile-container">
-                    <ProfileHeader classNameActive="store-story" />
+                    <ProfileHeader userId={user_id} classNameActive="store-story" />
                     <div className="profile-story--container">
                         <h3 className="box">Kho lưu trữ tin</h3>
                         <ul className="post-image--list">

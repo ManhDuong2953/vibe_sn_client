@@ -125,7 +125,7 @@ const routes = [
     component: <ProfileRequest titlePage="Trang cá nhân | Vibe" />,
   },
   {
-    path: '/profile/:user_id/edit',
+    path: '/profile/edit',
     exact: true,
     requireAuth: true,
     component: <ProfileEditor titlePage="Trang cá nhân | Vibe" />,
@@ -206,7 +206,7 @@ const routes = [
     component: <EditProductPage titlePage="Chợ | Vibe" />,
   },
   {
-    path: '/setting/:id',
+    path: '/setting',
     exact: true,
     requireAuth: true,
     component: <SettingPage titlePage="Chợ | Vibe" />,
