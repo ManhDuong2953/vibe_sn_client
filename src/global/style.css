@@ -112,6 +112,10 @@ input:focus {
     outline: unset !important;
 }
 
+svg.icon-checked path{
+    color: #32C3F1;
+}
+
 h1,
 h2,
 h3,

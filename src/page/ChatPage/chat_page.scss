@@ -153,7 +153,20 @@
         }
       }
     }
-
+    .reply-context {
+      display: flex;
+      padding: 5px;
+      align-items: center;
+      justify-content: flex-end;
+      margin-top: 4px;
+      background-color: rgba(255, 255, 255, 0.212);
+      .messenger-reply {
+        padding: 10px;
+        margin: 1px 4px;
+        border-radius: 5px;
+        background-color: #3a3b3c;
+      }
+    }
     ul.chat-messages {
       flex: 1;
       padding: 16px;
@@ -195,7 +208,17 @@
           border-radius: 8px;
           margin-top: 8px;
           font-size: 14px;
-
+          position: relative;
+          svg.reply-icon {
+            position: absolute;
+            right: -35px;
+            top: 8px;
+            cursor: pointer;
+            font-size: 24px;
+            padding: 5px;
+            border-radius: 50%;
+            background: #c70b0bc2;
+          }
           &.reply {
             background-color: #630b0b !important;
             margin-bottom: -14px;
