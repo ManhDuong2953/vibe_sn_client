@@ -81,50 +81,50 @@ function ChatMessengerPage({ titlePage }) {
     setIsRecording(false);
   };
 
-  const handleSend = () => {
-    const newMessages = [...messages];
-    const urlRegex = /(https?:\/\/[^\s]+)/g;
+    const handleSend = () => {
+      const newMessages = [...messages];
+      const urlRegex = /(https?:\/\/[^\s]+)/g;
 
-    if (message.trim()) {
-      if (urlRegex.test(message)) {
-        const formattedMessage = message.replace(
-          urlRegex,
-          (url) =>
-            `<a href="${url}" target="_blank" rel="noopener noreferrer">${url}</a>`
-        );
-        newMessages.push({ type: "link", content: formattedMessage });
-      } else {
-        newMessages.push({ type: "text", content: message });
-      }
-    }
-
-    files.forEach((file) => {
-      const url = URL.createObjectURL(file.file);
-      const fileType = file.file.type;
-      let messageType;
-
-      if (fileType.startsWith("image/")) {
-        messageType = "image";
-      } else if (fileType.startsWith("video/")) {
-        messageType = "video";
-      } else if (fileType.startsWith("audio/")) {
-        messageType = "audio";
-      } else {
-        messageType = "other";
+      if (message.trim()) {
+        if (urlRegex.test(message)) {
+          const formattedMessage = message.replace(
+            urlRegex,
+            (url) =>
+              `<a href="${url}" target="_blank" rel="noopener noreferrer">${url}</a>`
+          );
+          newMessages.push({ type: "link", content: formattedMessage });
+        } else {
+          newMessages.push({ type: "text", content: message });
+        }
       }
 
-      newMessages.push({
-        type: messageType,
-        content: url,
-        name: file.file.name,
+      files.forEach((file) => {
+        const url = URL.createObjectURL(file.file);
+        const fileType = file.file.type;
+        let messageType;
+
+        if (fileType.startsWith("image/")) {
+          messageType = "image";
+        } else if (fileType.startsWith("video/")) {
+          messageType = "video";
+        } else if (fileType.startsWith("audio/")) {
+          messageType = "audio";
+        } else {
+          messageType = "other";
+        }
+
+        newMessages.push({
+          type: messageType,
+          content: url,
+          name: file.file.name,
+        });
       });
-    });
 
-    setMessages(newMessages);
-    setMessage("");
-    setFiles([]);
-    setShowFilePond(false);
-  };
+      setMessages(newMessages);
+      setMessage("");
+      setFiles([]);
+      setShowFilePond(false);
+    };
 
   const handleSendAudio = (audioUrl) => {
     const newMessages = [...messages, { type: "audio", content: audioUrl }];

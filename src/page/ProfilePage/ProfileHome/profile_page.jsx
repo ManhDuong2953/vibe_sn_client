@@ -96,7 +96,7 @@ function ProfilePage({ titlePage }) {
               </div>
               <div className="title-friend box">
                 <h3>Bạn bè</h3>
-                <Link to="/profile/123/image">
+                <Link to={`/profile/${user_id}/friends`}>
                   <ul className="list-fr">
                     {dataFriend &&
                       dataFriend?.map((dataFriendItem) => (
