@@ -10,13 +10,13 @@ function ContactItem({
   user_name,
   loading = false,
 }) {
-  console.log({
-    active,
-    user_id,
-    avatar_link,
-    user_name,
-    loading,
-  });
+  // console.log({
+  //   active,
+  //   user_id,
+  //   avatar_link,
+  //   user_name,
+  //   loading,
+  // });
 
   return (
     <React.Fragment>

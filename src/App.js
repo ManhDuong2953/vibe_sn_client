@@ -1,22 +1,26 @@
-import React, { useEffect } from 'react';
-import routes from './router/router';
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import React, { useEffect } from "react";
+import routes from "./router/router";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import "./global/style.css";
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-import { useSelector } from 'react-redux';
-import { ImageProvider } from './provider/image_context';
-import { MdSignalWifiStatusbar4Bar, MdSignalWifiStatusbarConnectedNoInternet } from 'react-icons/md';
-import PrivateRoute from './component/PrivateRouter/PrivateRouter';
-import OwnDataProvider from './provider/own_data';
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import { useSelector } from "react-redux";
+import { ImageProvider } from "./provider/image_context";
+import {
+  MdSignalWifiStatusbar4Bar,
+  MdSignalWifiStatusbarConnectedNoInternet,
+} from "react-icons/md";
+import PrivateRoute from "./component/PrivateRouter/PrivateRouter";
+import OwnDataProvider from "./provider/own_data";
+import { SocketProvider } from "./provider/socket_context";
 
 function App() {
   const theme = useSelector((state) => state.themeUI.theme);
-  const root = document.querySelector(':root');
+  const root = document.querySelector(":root");
 
   useEffect(() => {
     const handleOnline = () => {
-      toast.success('Trình duyệt đã trực tuyến', {
+      toast.success("Trình duyệt đã trực tuyến", {
         duration: 10000,
         icon: <MdSignalWifiStatusbar4Bar />,
         position: "bottom-left",
@@ -24,27 +28,27 @@ function App() {
     };
 
     const handleOffline = () => {
-      toast.error('Trình duyệt đang ngoại tuyến', {
+      toast.error("Trình duyệt đang ngoại tuyến", {
         duration: 10000,
         icon: <MdSignalWifiStatusbarConnectedNoInternet />,
         position: "bottom-left",
       });
     };
 
-    window.addEventListener('online', handleOnline);
-    window.addEventListener('offline', handleOffline);
+    window.addEventListener("online", handleOnline);
+    window.addEventListener("offline", handleOffline);
 
     return () => {
-      window.removeEventListener('online', handleOnline);
-      window.removeEventListener('offline', handleOffline);
+      window.removeEventListener("online", handleOnline);
+      window.removeEventListener("offline", handleOffline);
     };
   }, []);
 
   useEffect(() => {
-    if (theme === 'dark') {
-      root.setAttribute('data-theme', 'dark');
+    if (theme === "dark") {
+      root.setAttribute("data-theme", "dark");
     } else {
-      root.setAttribute('data-theme', 'light');
+      root.setAttribute("data-theme", "light");
     }
     root.style.transition = "all .5s ease";
   }, [theme, root]);
@@ -53,7 +57,7 @@ function App() {
     <div className="App">
       <ToastContainer
         position="top-right"
-        autoClose={1000}
+        autoClose={2000}
         hideProgressBar={false}
         newestOnTop={false}
         closeOnClick
@@ -74,9 +78,9 @@ function App() {
                     exact={route.exact}
                     element={
                       <OwnDataProvider>
-                        <ImageProvider>
-                          {route.component}
-                        </ImageProvider>
+                        <SocketProvider>
+                          <ImageProvider>{route.component}</ImageProvider>
+                        </SocketProvider>
                       </OwnDataProvider>
                     }
                   />

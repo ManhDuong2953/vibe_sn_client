@@ -20,6 +20,7 @@ const Logout = () => {
           Cookies.remove('accessToken');
           Cookies.remove('key_refresh_token_encode');
           Cookies.remove('refreshToken')
+          localStorage.clear();
 
           // Redirect đến trang đăng nhập
           navigate('/login');

@@ -131,9 +131,9 @@ const CreateFaceRecognitionPage = ({ titlePage }) => {
         const blob = dataURLtoBlob(image);
         formData.append('images_face_recognition', blob, `image_${index}.jpg`);
       });
-      const response = await postData(API_CREATE_FACE_RECOGNITION_BY_ID(dataOwner && dataOwner?.user_id), formData);
+      const response = await postData(API_CREATE_FACE_RECOGNITION_BY_ID, formData);
       if (response.status) {
-        window.location.href = "/setting/" + dataOwner?.user_id;
+        window.location.href = "/setting/";
       }
     };
     if (uploading) {

@@ -1,20 +1,18 @@
 import { toast } from "react-toastify";
 import getToken from "../getToken/get_token";
 
-
 const fetchData = async (url, options = {}) => {
   try {
     const token = getToken();
 
     const mergedOptions = {
       ...options,
-      credentials: 'include',
+      credentials: "include",
       headers: {
         ...options.headers,
-        ...(token && { 'Authorization': `Bearer ${token}` }),
+        ...(token && { Authorization: `Bearer ${token}` }),
       },
     };
-
 
     const response = await fetch(url, mergedOptions);
 
@@ -24,21 +22,22 @@ const fetchData = async (url, options = {}) => {
       try {
         errorResponse = await response.json();
       } catch (e) {
-        throw new Error(response.statusText);
+        toast.error(response.statusText);
       }
-      throw new Error(errorResponse?.message || 'An error occurred');
+      toast.error(errorResponse?.message || "An error occurred");
     }
 
     // Kiểm tra xem phản hồi có phải là JSON không
     let data;
+
     try {
       data = await response.json();
     } catch (e) {
       data = response;
     }
 
-    if (data?.status === false && data.data?.message) {
-      toast.error(data?.data?.message);
+    if (data?.status === false && data?.message) {
+      toast.error(data?.message);
     } else if (data?.message) {
       toast.success(data?.message);
     }
@@ -46,15 +45,13 @@ const fetchData = async (url, options = {}) => {
     return data;
   } catch (error) {
     console.log(error.message ?? error);
-    toast.error(error.message ?? error);
   }
 };
-
 
 export const getData = async (url_endpoint, headers = {}) => {
   const url = url_endpoint;
   const options = {
-    method: 'GET',
+    method: "GET",
     headers: {
       ...headers,
     },
@@ -67,14 +64,14 @@ export const postData = async (url_endpoint, payload, headers = {}) => {
   const isFormData = payload instanceof FormData;
 
   const options = {
-    method: 'POST',
+    method: "POST",
     headers: {
       ...headers,
-      ...(isFormData ? {} : { 'Content-Type': 'application/json' }), // Xóa Content-Type nếu payload là FormData
+      ...(isFormData ? {} : { "Content-Type": "application/json" }), // Xóa Content-Type nếu payload là FormData
     },
     body: isFormData ? payload : JSON.stringify(payload), // Không sử dụng JSON.stringify nếu payload là FormData
   };
-  
+
   return await fetchData(url, options);
 };
 
@@ -83,10 +80,10 @@ export const putData = async (url_endpoint, payload, headers = {}) => {
   const isFormData = payload instanceof FormData;
 
   const options = {
-    method: 'PUT',
+    method: "PUT",
     headers: {
       ...headers,
-      ...(isFormData ? {} : { 'Content-Type': 'application/json' }), // Xóa Content-Type nếu payload là FormData
+      ...(isFormData ? {} : { "Content-Type": "application/json" }), // Xóa Content-Type nếu payload là FormData
     },
     body: isFormData ? payload : JSON.stringify(payload), // Không sử dụng JSON.stringify nếu payload là FormData
   };
@@ -97,10 +94,10 @@ export const putData = async (url_endpoint, payload, headers = {}) => {
 export const deleteData = async (url_endpoint, headers = {}) => {
   const url = url_endpoint;
   const options = {
-    method: 'DELETE',
+    method: "DELETE",
     headers: {
       ...headers,
-      'Content-Type': 'application/json',
+      "Content-Type": "application/json",
     },
   };
   return await fetchData(url, options);
