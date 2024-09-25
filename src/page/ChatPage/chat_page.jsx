@@ -159,7 +159,7 @@ function ChatMessengerPage({ titlePage }) {
         const url = URL.createObjectURL(audioBlob);
         setAudioURL(url);
         audioChunks.current = [];
-        handleSendAudio(url); // Send audio when recording stops
+        handleSendAudio(audioBlob); // Send audio when recording stops
       };
     }
   }, [mediaRecorder]);
@@ -177,18 +177,42 @@ function ChatMessengerPage({ titlePage }) {
     setIsRecording(false);
   };
 
-  const handleSendAudio = (audioUrl) => {
-    const newMessages = [
-      ...messages,
-      {
-        content_type: "audio",
-        content_text: audioUrl,
-        sender_id: dataOwner && dataOwner?.user_id,
-        receiver_id: id_receiver,
-      },
-    ];
-    setMessages(newMessages);
+  const handleSendAudio = async (audioFile) => {
+    // Create FormData for the audio file
+    const formData = new FormData();
+    
+    // Create a temporary local URL for the audio file
+    const localAudioURL = URL.createObjectURL(audioFile);
+    
+    // Construct the new message object for UI update
+    const newMessage = {
+      content_type: "audio",
+      content_text: localAudioURL, // Use the temporary link
+      sender_id: dataOwner?.user_id,
+      receiver_id: id_receiver,
+      name_file: audioFile.name ?? "Unknown", // Default to 'Unknown' if no name
+    };
+    
+    formData.append("file", audioFile, audioFile.name); // Assuming audioFile contains the file object
+    formData.append("content_type", "audio");
+    formData.append("content_text", Date.now()); // Hoặc tên file nếu cần
+    formData.append("sender_id", dataOwner?.user_id);
+    formData.append("receiver_id", id_receiver);
+    // Try sending the audio file via API
+    try {
+      await postData(API_SEND_MESSAGE(id_receiver), formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
+  
+      // Update the UI with the new message
+      setMessages((prevMessages) => [...prevMessages, newMessage]);
+    } catch (error) {
+      console.log("Error sending audio message: ", error);
+    }
   };
+  
 
   useEffect(() => {
     const chatMessages = document.querySelector(".chat-messages");
@@ -523,10 +547,7 @@ function ChatMessengerPage({ titlePage }) {
                       </a>
                     )}
                     {msg.content_type === "audio" && (
-                      <a download href={msg.content_text}>
-                        {" "}
                         <Waveform audioUrl={msg.content_text} />
-                      </a>
                     )}
                     {msg.content_type === "other" && (
                       <div className="file-container">
