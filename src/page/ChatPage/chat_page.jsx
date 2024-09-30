@@ -73,6 +73,10 @@ function ChatMessengerPage({ titlePage }) {
   const private_key = localStorage.getItem("private_key");
   const [isOnline, setIsOnline] = useState(false);
   const [hoveredIndex, setHoveredIndex] = useState(null);
+  const [isTyping, setIsTyping] = useState(false);
+  const [receiverIsTyping, setReceiverIsTyping] = useState(false);
+  const [showReply, setShowReply] = useState(false);
+  const [contentReply, setContentReply] = useState(null);
 
   useEffect(() => {
     if (socket && dataOwner && id_receiver) {
@@ -98,6 +102,7 @@ function ChatMessengerPage({ titlePage }) {
 
       getAllMessages();
 
+      //lắng nghe tin nhắn gửi đến
       socket.on("receiveMessage", (data) => {
         setMessages((prevMessages) => [
           ...prevMessages,
@@ -107,6 +112,7 @@ function ChatMessengerPage({ titlePage }) {
             content_text: data?.content_text,
             content_type: data?.content_type,
             name_file: data?.name_file ?? "Không xác định",
+            reply_text: data?.reply_text,
           },
         ]);
         setMessage(""); // Reset input
@@ -120,7 +126,28 @@ function ChatMessengerPage({ titlePage }) {
       };
     }
   }, [socket, dataOwner, id_receiver]);
-  console.log("messages: ", messages);
+
+  //Sự kiện có đang nhắn?
+  useEffect(() => {
+    try {
+      //Gửi sự kiện mình đang nhắn
+      socket.emit("senderWritting", {
+        sender_id: dataOwner?.user_id,
+        receiver_id: id_receiver,
+        status: isTyping,
+      });
+      //Lắng nghe sự kiện đối phương nhắn tin
+      socket.on("receiverNotifiWritting", (data) => {
+        setReceiverIsTyping(data?.status);
+      });
+      //Lắng nghe sự kiện đối phương nhắn tin
+      socket.on("receiverNotifiWritting", (data) => {
+        setReceiverIsTyping(data?.status);
+      });
+    } catch (error) {
+      console.log("error", error);
+    }
+  }, [isTyping]);
 
   useEffect(() => {
     const getDataReceiver = async () => {
@@ -145,7 +172,6 @@ function ChatMessengerPage({ titlePage }) {
       const wavesurfer = WaveSurfer.create({
         container: waveformRef.current,
       });
-      console.log(wavesurfer);
     }
   }, []);
 
@@ -180,24 +206,29 @@ function ChatMessengerPage({ titlePage }) {
   const handleSendAudio = async (audioFile) => {
     // Create FormData for the audio file
     const formData = new FormData();
-    
+
     // Create a temporary local URL for the audio file
     const localAudioURL = URL.createObjectURL(audioFile);
-    
+
     // Construct the new message object for UI update
     const newMessage = {
       content_type: "audio",
-      content_text: localAudioURL, // Use the temporary link
+      content_text: localAudioURL,
       sender_id: dataOwner?.user_id,
       receiver_id: id_receiver,
-      name_file: audioFile.name ?? "Unknown", // Default to 'Unknown' if no name
+      name_file: audioFile.name ?? "Unknown",
+      reply_text: contentReply,
     };
-    
+
     formData.append("file", audioFile, audioFile.name); // Assuming audioFile contains the file object
     formData.append("content_type", "audio");
+    formData.append("name_file", audioFile.name);
     formData.append("content_text", Date.now()); // Hoặc tên file nếu cần
     formData.append("sender_id", dataOwner?.user_id);
     formData.append("receiver_id", id_receiver);
+    if (showReply) {
+      formData.append("reply_text", contentReply);
+    }
     // Try sending the audio file via API
     try {
       await postData(API_SEND_MESSAGE(id_receiver), formData, {
@@ -205,14 +236,20 @@ function ChatMessengerPage({ titlePage }) {
           "Content-Type": "multipart/form-data",
         },
       });
-  
+
       // Update the UI with the new message
       setMessages((prevMessages) => [...prevMessages, newMessage]);
     } catch (error) {
       console.log("Error sending audio message: ", error);
     }
+    // Reset lại input và tệp tin
+    setMessage(""); // Reset input
+    setFiles([]);
+    setShowFilePond(false);
+    setShowAudio(false);
+    setShowReply(false);
+    setContentReply("");
   };
-  
 
   useEffect(() => {
     const chatMessages = document.querySelector(".chat-messages");
@@ -314,7 +351,6 @@ function ChatMessengerPage({ titlePage }) {
       if (!isVerifiedCode) {
         // nếu chưa verify
         const response = await getData(API_IS_EXIST_KEYSPAIR);
-        console.log(response);
 
         if (response?.status) {
           setIsHasCode(true);
@@ -370,6 +406,7 @@ function ChatMessengerPage({ titlePage }) {
           content_text: formattedMessage,
           sender_id: dataOwner?.user_id,
           receiver_id: id_receiver,
+          reply_text: contentReply,
         };
       } else {
         newMessage = {
@@ -377,6 +414,7 @@ function ChatMessengerPage({ titlePage }) {
           content_text: message,
           sender_id: dataOwner?.user_id,
           receiver_id: id_receiver,
+          reply_text: contentReply,
         };
       }
 
@@ -387,6 +425,7 @@ function ChatMessengerPage({ titlePage }) {
           content_text: newMessage.content_text,
           sender_id: newMessage.sender_id,
           receiver_id: newMessage.receiver_id,
+          reply_text: newMessage.reply_text,
         });
       } catch (error) {
         console.log("Error sending text message: ", error);
@@ -420,8 +459,12 @@ function ChatMessengerPage({ titlePage }) {
         // Append các thông tin khác vào FormData
         formData.append("content_type", contentType);
         formData.append("content_text", file.file.name); // Hoặc tên file nếu cần
+        formData.append("name_file", file.file.name); // Hoặc tên file nếu cần
         formData.append("sender_id", dataOwner?.user_id);
         formData.append("receiver_id", id_receiver);
+        if (showReply) {
+          formData.append("reply_text", contentReply);
+        }
 
         // Gửi từng file qua API
         try {
@@ -438,6 +481,7 @@ function ChatMessengerPage({ titlePage }) {
             sender_id: dataOwner?.user_id,
             receiver_id: id_receiver,
             name_file: file.file.name ?? "Không xác định",
+            reply_text: contentReply,
           };
 
           setMessages((prevMessages) => [...prevMessages, fileMessage]);
@@ -454,8 +498,18 @@ function ChatMessengerPage({ titlePage }) {
     setMessage(""); // Reset input
     setFiles([]);
     setShowFilePond(false);
+    setShowAudio(false);
+    setShowReply(false);
+    setContentReply("");
   };
 
+  const inputRef = useRef(null);
+
+  useEffect(() => {
+    if (showReply && inputRef.current) {
+      inputRef.current.focus(); // Focus vào input khi showReply là true
+    }
+  }, [showReply]);
   return (
     <React.Fragment>
       <NavigativeBar />
@@ -498,14 +552,14 @@ function ChatMessengerPage({ titlePage }) {
               </div>
               <div className="chat-actions">
                 <Link
-                  to="/messenger/audio-call"
+                  to={`/messenger/audio-call?ROOM_ID=${id_receiver+dataOwner?.user_id}&sender_id=${dataOwner?.user_id}&receiver_id=${id_receiver}`}
                   target="_blank"
                   rel="noopener noreferrer"
                 >
                   <FaPhoneAlt />
                 </Link>
                 <Link
-                  to="/messenger/video-call"
+                  to={`/messenger/video-call?ROOM_ID=${id_receiver+dataOwner?.user_id}&sender_id=${dataOwner?.user_id}&receiver_id=${id_receiver}`}
                   target="_blank"
                   rel="noopener noreferrer"
                 >
@@ -515,70 +569,97 @@ function ChatMessengerPage({ titlePage }) {
               </div>
             </div>
             <ul className="chat-messages">
-              {messages.map((msg, index) => (
-                <li
-                  key={index}
-                  className={`message ${
-                    msg.sender_id === dataOwner?.user_id ? "sender" : ""
-                  }`}
-                  onMouseEnter={() => setHoveredIndex(index)}
-                  onMouseLeave={() => setHoveredIndex(null)}
-                >
-                  <div className="message-content">
-                    {msg.content_type === "text" && <p>{msg.content_text}</p>}
-                    {msg.content_type === "link" && (
-                      <p
-                        dangerouslySetInnerHTML={{ __html: msg.content_text }}
-                      ></p>
-                    )}
-                    {msg.content_type === "image" && (
-                      <a download href={msg.content_text}>
-                        <img src={msg.content_text} alt="content" />
-                      </a>
-                    )}
-                    {msg.content_type === "video" && (
-                      <a download href={msg.content_text}>
-                        <video
-                          controls
-                          muted
-                          src={msg.content_text}
-                          alt="content"
-                        />
-                      </a>
-                    )}
-                    {msg.content_type === "audio" && (
-                        <Waveform audioUrl={msg.content_text} />
-                    )}
-                    {msg.content_type === "other" && (
-                      <div className="file-container">
-                        <FaFileDownload />
-                        <a href={msg.content_text} download>
-                          {msg.name_file}
-                        </a>
+              {messages.map((msg, index) => {
+                if (msg && msg.content_text) {
+                  return (
+                    <li
+                      key={index}
+                      className={`message ${
+                        msg.sender_id === dataOwner?.user_id ? "sender" : ""
+                      }`}
+                      onMouseEnter={() => setHoveredIndex(index)}
+                      onMouseLeave={() => setHoveredIndex(null)}
+                    >
+                      <div className="message-container">
+                        {msg.reply_text && (
+                          <p className="message-reply">{msg.reply_text}</p>
+                        )}
+                        <span>
+                          <div className="message-content">
+                            {msg.content_type === "text" && (
+                              <p className="message-text">{msg.content_text}</p>
+                            )}
+                            {msg.content_type === "link" && (
+                              <p
+                                dangerouslySetInnerHTML={{
+                                  __html: msg.content_text,
+                                }}
+                              ></p>
+                            )}
+                            {msg.content_type === "image" && (
+                              <a download href={msg.content_text}>
+                                <img src={msg.content_text} alt="content" />
+                              </a>
+                            )}
+                            {msg.content_type === "video" && (
+                              <a download href={msg.content_text}>
+                                <video
+                                  controls
+                                  muted
+                                  src={msg.content_text}
+                                  alt="content"
+                                />
+                              </a>
+                            )}
+                            {msg.content_type === "audio" && (
+                              <Waveform audioUrl={msg.content_text} />
+                            )}
+                            {msg.content_type === "other" && (
+                              <div className="file-container">
+                                <FaFileDownload />
+                                <a href={msg.content_text} download>
+                                  {msg.name_file}
+                                </a>
+                              </div>
+                            )}
+                          </div>
+                          {hoveredIndex === index && (
+                            <div
+                              className="reply-icon-message"
+                              onClick={() => {
+                                setShowReply(true);
+                                setContentReply(msg.content_text);
+                              }}
+                            >
+                              <ImReply />
+                            </div>
+                          )}
+                        </span>
                       </div>
-                    )}
-                  </div>
-                  {hoveredIndex === index && (
-                    <div className="reply-icon-message">
-                      <ImReply />
-                    </div>
-                  )}
-                </li>
-              ))}
+                    </li>
+                  );
+                }
+              })}
             </ul>
-
-            <i style={{ fontSize: "12px" }} className="writting">
-              Dasha Taran đang nhắn ...
-            </i>
-            <div className="reply-context">
-              <IoMdCloseCircle className="close-reply-message" />
-              <div className="left-reply">
-                <div className="messenger-reply">
-                  <p>Chào bạn</p>
+            {receiverIsTyping && (
+              <i style={{ fontSize: "12px" }} className="writting">
+                {infoReceiver && infoReceiver?.user_name} đang nhắn ...
+              </i>
+            )}
+            {showReply && (
+              <div className="reply-context">
+                <IoMdCloseCircle
+                  className="close-reply-message"
+                  onClick={() => setShowReply(false)}
+                />
+                <div className="left-reply">
+                  <div className="messenger-reply">
+                    <p>{contentReply}</p>
+                  </div>
+                  <ImReply />
                 </div>
-                <ImReply />
               </div>
-            </div>
+            )}
             <div className="chat-input">
               {showFilePond && (
                 <FilePond
@@ -608,14 +689,20 @@ function ChatMessengerPage({ titlePage }) {
                 <RiChatVoiceFill onClick={() => setShowAudio(!showAudio)} />
                 <MdPermMedia onClick={() => setShowFilePond(!showFilePond)} />
                 <input
+                  autoFocus={true}
+                  ref={inputRef}
                   type="text"
                   placeholder="Aa"
+                  onFocus={() => setIsTyping(true)}
+                  onBlur={() => setIsTyping(false)}
                   value={message}
                   onChange={(e) => setMessage(e.target.value)}
                   onKeyDown={(e) => e.key === "Enter" && handleSend()}
                 />
                 <div className="btn-func">
-                  <IoSend className="send-btn" onClick={handleSend} />
+                  {(message !== "" || files.length > 0) && (
+                    <IoSend className="send-btn" onClick={handleSend} />
+                  )}
                 </div>
               </div>
             </div>

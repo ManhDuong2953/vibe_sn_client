@@ -37,7 +37,10 @@ const LoginPage = ({ titlePage }) => {
   const handleLogin = async (e) => {
     e.preventDefault();
     const data = getDataForm(".form-login");
-    const response = await postData(API_LOGIN_POST, data);
+    const response = await postData(API_LOGIN_POST, {
+      type_account: "register",
+      ...data,
+    });
     if (response?.status) {
       navigate("/");
     }
@@ -50,33 +53,30 @@ const LoginPage = ({ titlePage }) => {
       const response = await getData(
         API_CHECK_EXIST_USER(`uid_${payload?.user_id}`)
       );
-      console.log("Response: ", response);
-
-        if (response?.status === 200 || response?.status === true) {
-          console.log("lg");
-
-          const responseLogin = await postData(API_LOGIN_POST, {
-            user_id_login: `uid_${payload?.user_id}`,
-            user_password: payload?.user_password,
-          });
-          if (responseLogin?.status) {
-            navigate("/");
-          } else {
-            toast.error(
-              "Lỗi đăng nhập, vui lòng thử lại hoặc dùng phương thức đăng nhập khác"
-            );
-          }
+      if (response?.status === 200 || response?.status === true) {
+        const responseLogin = await postData(API_LOGIN_POST, {
+          user_id_login: `uid_${payload?.user_id}`,
+          user_password: payload?.user_password,
+          type_account: payload?.type_account,
+        });
+        if (responseLogin?.status) {
+          navigate("/");
         } else {
-          console.log("đăng ký");
-
-          const responseSignup = await postData(
-            API_SIGNUP_SOCIALNETWORK_POST,
-            payload
+          toast.error(
+            "Lỗi đăng nhập, vui lòng thử lại hoặc dùng phương thức đăng nhập khác"
           );
-          if (responseSignup) {
-            await handleLoginSocial(payload);
-          }
         }
+      } else {
+        console.log("đăng ký");
+
+        const responseSignup = await postData(
+          API_SIGNUP_SOCIALNETWORK_POST,
+          payload
+        );
+        if (responseSignup) {
+          await handleLoginSocial(payload);
+        }
+      }
     } catch (error) {
       console.log(error.message);
     }
