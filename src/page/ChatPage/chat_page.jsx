@@ -553,15 +553,11 @@ function ChatMessengerPage({ titlePage }) {
               <div className="chat-actions">
                 <Link
                   to={`/messenger/audio-call?ROOM_ID=${id_receiver+dataOwner?.user_id}&sender_id=${dataOwner?.user_id}&receiver_id=${id_receiver}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
                 >
                   <FaPhoneAlt />
                 </Link>
                 <Link
                   to={`/messenger/video-call?ROOM_ID=${id_receiver+dataOwner?.user_id}&sender_id=${dataOwner?.user_id}&receiver_id=${id_receiver}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
                 >
                   <FaVideo />
                 </Link>
