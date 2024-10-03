@@ -35,7 +35,6 @@ function ProfileHeader({ classNameActive, userId }) {
   const [data, setData] = useState();
   const [statusFr, setStatusFr] = useState();
   const dataOwner = useContext(OwnDataContext);
-  console.log(dataOwner);
   useEffect(() => {
     try {
       const fetchData = async () => {

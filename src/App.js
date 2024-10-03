@@ -17,7 +17,6 @@ import { SocketProvider } from "./provider/socket_context";
 function App() {
   const theme = useSelector((state) => state.themeUI.theme);
   const root = document.querySelector(":root");
-
   useEffect(() => {
     const handleOnline = () => {
       toast.success("Trình duyệt đã trực tuyến", {

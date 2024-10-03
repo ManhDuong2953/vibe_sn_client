@@ -103,6 +103,7 @@ const LoginPage = ({ titlePage }) => {
             <div className="input-group">
               <MdEmail className="icon" />
               <input
+                autoFocus
                 type="email"
                 placeholder="Email"
                 name="user_email"

@@ -77,7 +77,13 @@ function ChatMessengerPage({ titlePage }) {
   const [receiverIsTyping, setReceiverIsTyping] = useState(false);
   const [showReply, setShowReply] = useState(false);
   const [contentReply, setContentReply] = useState(null);
+  const endOfMessagesRef = useRef(null);
+  
 
+  useEffect(() => {
+    // Cuộn đến tin nhắn cuối cùng mỗi khi danh sách tin nhắn thay đổi
+    endOfMessagesRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [messages]);
   useEffect(() => {
     if (socket && dataOwner && id_receiver) {
       socket.emit("registerUser", { user_id: dataOwner?.user_id });
@@ -145,7 +151,7 @@ function ChatMessengerPage({ titlePage }) {
         setReceiverIsTyping(data?.status);
       });
     } catch (error) {
-      console.log("error", error);
+      // console.log("error", error);
     }
   }, [isTyping]);
 
@@ -368,11 +374,11 @@ function ChatMessengerPage({ titlePage }) {
 
   const handleChanglePIN = async () => {
     if (window.confirm("Dữ liệu tin nhắn trước đó của bạn sẽ mất vĩnh viễn?")) {
+      window.location.reload();
       try {
         const response = await deleteData(API_DELETE_KEYS_PAIR);
-        if (response?.status) {
+        if (response?.status === true) {
           localStorage.clear();
-          window.location.reload();
         }
       } catch (error) {
         console.log("Error: ", error);
@@ -552,12 +558,16 @@ function ChatMessengerPage({ titlePage }) {
               </div>
               <div className="chat-actions">
                 <Link
-                  to={`/messenger/audio-call?ROOM_ID=${id_receiver+dataOwner?.user_id}&sender_id=${dataOwner?.user_id}&receiver_id=${id_receiver}`}
+                  to={`/messenger/audio-call?ROOM_ID=${
+                    id_receiver + dataOwner?.user_id
+                  }&sender_id=${dataOwner?.user_id}&receiver_id=${id_receiver}`}
                 >
                   <FaPhoneAlt />
                 </Link>
                 <Link
-                  to={`/messenger/video-call?ROOM_ID=${id_receiver+dataOwner?.user_id}&sender_id=${dataOwner?.user_id}&receiver_id=${id_receiver}`}
+                  to={`/messenger/video-call?ROOM_ID=${
+                    id_receiver + dataOwner?.user_id
+                  }&sender_id=${dataOwner?.user_id}&receiver_id=${id_receiver}`}
                 >
                   <FaVideo />
                 </Link>
@@ -636,6 +646,7 @@ function ChatMessengerPage({ titlePage }) {
                   );
                 }
               })}
+              <li ref={endOfMessagesRef} className="last-msg"></li>
             </ul>
             {receiverIsTyping && (
               <i style={{ fontSize: "12px" }} className="writting">
