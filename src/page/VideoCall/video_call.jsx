@@ -32,13 +32,14 @@ const VideoCall = ({ isVideoCall, titlePage, userId }) => {
   const [isCallAccepted, setIsCallAccepted] = useState(false);
   const [isVideoMuted, setIsVideoMuted] = useState(isVideoCall !== false);
   const [isAudioMuted, setIsAudioMuted] = useState(false);
-  const [avatarUrl, setAvatarUrl] = useState();
+  const [dataReceiver, setDataReceiver] = useState();
+  const [isRemoteVideoEnabled, setIsRemoteVideoEnabled] = useState(true); // New state for remote video
 
   const dataOwner = useContext(OwnDataContext);
   const socket = useSocket();
   const navigate = useNavigate();
 
-  // Lấy tham số từ URL
+  // Get URL params
   useEffect(() => {
     const params = getURLParam();
     setSenderID(params?.sender_id);
@@ -46,23 +47,15 @@ const VideoCall = ({ isVideoCall, titlePage, userId }) => {
     setReceiverID(params?.receiver_id);
   }, []);
 
-  // Đăng ký và gửi thông báo đến người nghe
+  // Register user and send a call request
   useEffect(() => {
     if (socket && sender_id && receiver_id && dataOwner?.user_id) {
-      socket.emit("registerUser", { user_id: dataOwner?.user_id });
-
-      // Gửi thông báo gọi cho người nghe
-      socket.emit("callUser", {
-        receiver_id,
-        sender_id,
-        room_id,
-        link_call: `/messenger/video-call?ROOM_ID=${receiver_id + sender_id}&sender_id=${sender_id}&receiver_id=${receiver_id}`,
-      });
-
-      // Lắng nghe sự kiện người nghe chấp nhận
+      // Listen for call acceptance or rejection
       socket.on("statusAcceptedCallUser", (data) => {
+        
         if (data?.status === "Accepted") {
           toast("Người nghe đang vào cuộc hội thoại...");
+          setIsCallAccepted(true);
         } else {
           toast.error("Người nghe đã từ chối gọi...");
           navigate(-1);
@@ -71,7 +64,7 @@ const VideoCall = ({ isVideoCall, titlePage, userId }) => {
     }
   }, [socket, receiver_id, sender_id, dataOwner]);
 
-  // Get thông tin người nghe
+  // Fetch receiver's profile information
   useEffect(() => {
     const fetchAPI = async () => {
       try {
@@ -82,8 +75,8 @@ const VideoCall = ({ isVideoCall, titlePage, userId }) => {
         );
 
         if (response.status === true && response.data?.avatar) {
-          const { avatar } = response.data;
-          setAvatarUrl(avatar);
+          const data = response.data;
+          setDataReceiver(data);
         }
       } catch (error) {
         console.log("Error: ", error);
@@ -93,8 +86,11 @@ const VideoCall = ({ isVideoCall, titlePage, userId }) => {
     fetchAPI();
   }, [receiver_id, sender_id, dataOwner]);
 
+
+  console.log(">>>>>>>>>>>:", isCallAccepted);
+  
+  // Initialize PeerJS client and handle stream events
   useEffect(() => {
-    // Khởi tạo PeerJS client và kết nối tới PeerJS server
     if (socket && sender_id && receiver_id && dataOwner) {
       const peer = new Peer(undefined, {
         host: process.env.REACT_APP_HOST,
@@ -104,7 +100,6 @@ const VideoCall = ({ isVideoCall, titlePage, userId }) => {
 
       peerRef.current = peer;
 
-      // Lắng nghe sự kiện khi nhận được peerId từ PeerJS server
       peer.on("open", (id) => {
         console.log("peer: ", id);
         socket.emit("getPeerIDCaller", {
@@ -118,9 +113,7 @@ const VideoCall = ({ isVideoCall, titlePage, userId }) => {
         callPeer(id);
       });
 
-      // Lắng nghe sự kiện khi nhận được stream từ peer khác
       peer.on("call", (call) => {
-        // Trả lời cuộc gọi với stream của mình
         navigator.mediaDevices
           .getUserMedia({ video: true, audio: true })
           .then((stream) => {
@@ -129,21 +122,37 @@ const VideoCall = ({ isVideoCall, titlePage, userId }) => {
               localVideoRef.current.srcObject = stream;
             }
 
-            call.answer(stream); // Trả lời cuộc gọi bằng stream video của mình
+            call.answer(stream);
 
-            // Nhận stream từ remote peer
             call.on("stream", (remoteStream) => {
-              if (remoteVideoRef.current) {
-                remoteVideoRef.current.srcObject = remoteStream;
+              if (remoteStream.getVideoTracks().length > 0) {
+                setIsRemoteVideoEnabled(true); // Remote video is enabled
+                if (remoteVideoRef.current) {
+                  remoteVideoRef.current.srcObject = remoteStream;
+                }
               } else {
-                console.log("remoteVideoRef.current is null, cannot set srcObject");
+                setIsRemoteVideoEnabled(false); // Remote video is disabled
+                console.log("Remote video is not enabled.");
               }
+
+              remoteStream.getVideoTracks()[0].onended = () => {
+                setIsRemoteVideoEnabled(false); // Update state when remote video is ended
+              };
             });
+          })
+          .catch((error) => {
+            console.error("Error accessing media devices: ", error);
+            toast.error("Failed to access camera or microphone.");
           });
+      });
+
+      peer.on("error", (err) => {
+        console.error("PeerJS error: ", err);
       });
     }
   }, [socket, receiver_id, sender_id, dataOwner]);
 
+  // Call another peer by peer ID
   const callPeer = (id) => {
     console.log("ID người gọi: " + id);
 
@@ -155,29 +164,40 @@ const VideoCall = ({ isVideoCall, titlePage, userId }) => {
           localVideoRef.current.srcObject = stream;
         }
 
-        // Gọi tới peer khác
         const call = peerRef.current.call(id, stream);
 
-        // Nhận stream từ remote peer
         call.on("stream", (remoteStream) => {
-          if (remoteVideoRef.current) {
-            remoteVideoRef.current.srcObject = remoteStream;
+          if (remoteStream.getVideoTracks().length > 0) {
+            setIsRemoteVideoEnabled(true);
+            if (remoteVideoRef.current) {
+              remoteVideoRef.current.srcObject = remoteStream;
+            }
           } else {
-            console.log("remoteVideoRef.current is null, cannot set srcObject");
+            setIsRemoteVideoEnabled(false);
+            console.log("Remote video is not enabled.");
           }
+
+          remoteStream.getVideoTracks()[0].onended = () => {
+            setIsRemoteVideoEnabled(false);
+          };
         });
+      })
+      .catch((error) => {
+        console.error("Error accessing media devices: ", error);
+        toast.error("Failed to access camera or microphone.");
       });
   };
 
-  // Hàm kết thúc cuộc gọi
+  // End call and navigate back
   const handleEndCall = () => {
     if (localStreamRef.current) {
-      localStreamRef.current.getTracks().forEach((track) => track.stop()); // Dừng tất cả các track
+      localStreamRef.current.getTracks().forEach((track) => track.stop());
     }
-    peerRef.current.destroy(); // Hủy kết nối PeerJS
-    navigate(-1); // Quay lại trang trước đó
+    peerRef.current.destroy();
+    navigate(-1);
   };
 
+  // Toggle video stream
   const handleVideoToggle = () => {
     const videoTrack = localStreamRef.current
       ?.getTracks()
@@ -188,6 +208,7 @@ const VideoCall = ({ isVideoCall, titlePage, userId }) => {
     }
   };
 
+  // Toggle audio stream
   const handleAudioToggle = () => {
     const audioTrack = localStreamRef.current
       ?.getTracks()
@@ -214,11 +235,16 @@ const VideoCall = ({ isVideoCall, titlePage, userId }) => {
             autoPlay
             playsInline
             className="partner-video"
+            style={{ display: isRemoteVideoEnabled ? "block" : "none" }} // Show/hide remote video based on state
           />
-          {/* Hiện avatar nếu chưa có video từ remote */}
-          {(!remoteVideoRef.current || !remoteVideoRef.current.srcObject) && avatarUrl && (
+          {/* Show avatar if no remote video */}
+          {!isRemoteVideoEnabled && dataReceiver && (
             <div className="avatar">
-              <img src={avatarUrl} alt="Avatar" />
+              <img
+                src={dataReceiver?.avatar}
+                alt="Avatar"
+                className="partner-avatar"
+              />
             </div>
           )}
         </div>
@@ -229,7 +255,7 @@ const VideoCall = ({ isVideoCall, titlePage, userId }) => {
           <button onClick={handleAudioToggle} className="control-button">
             {isAudioMuted ? <FaMicrophoneSlash /> : <FaMicrophone />}
           </button>
-          <button className="control-button end-call" onClick={handleEndCall}>
+          <button onClick={handleEndCall} className="control-button end-call">
             <FaPhoneAlt />
           </button>
         </div>

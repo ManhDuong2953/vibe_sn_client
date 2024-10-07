@@ -56,18 +56,18 @@ const API_PROFILE_HEART_CREATE = (id) =>
 const API_PROFILE_HEART_DELETE = (id) =>
   API_HOST + "/users/profile-heart/delete/" + id;
 
-
 // KeysPair API endpoint
-const API_CREATE_KEYSPAIR =  API_HOST + "/users/keys_pair/register/";
-const API_IS_EXIST_KEYSPAIR =  API_HOST + "/users/keys_pair/is_exist_keys_pair/";
-const API_GET_PRIVATE_KEY =  API_HOST + "/users/keys_pair/get_private_key/";
-const API_DELETE_KEYS_PAIR =  API_HOST + "/users/keys_pair/delete_keys_pair/";
+const API_CREATE_KEYSPAIR = API_HOST + "/users/keys_pair/register/";
+const API_IS_EXIST_KEYSPAIR = API_HOST + "/users/keys_pair/is_exist_keys_pair/";
+const API_GET_PRIVATE_KEY = API_HOST + "/users/keys_pair/get_private_key/";
+const API_DELETE_KEYS_PAIR = API_HOST + "/users/keys_pair/delete_keys_pair/";
+const API_CHECK_KEYSPAIR = (id) => API_HOST + "/users/keys_pair/is-has-keypair/" + id;
 
 // Message API ENDPOINT
 
 const API_SEND_MESSAGE = (id) => API_HOST + "/messenger/send/" + id;
 const API_GET_ALL_MESSAGE = (id) => API_HOST + "/messenger/all-message/" + id;
-
+const API_GET_ALL_CONVERSATION = API_HOST + "/messenger/all-conversation/";
 
 export {
   API_SIGNUP_POST,
@@ -109,5 +109,7 @@ export {
   API_IS_EXIST_KEYSPAIR,
   API_DELETE_KEYS_PAIR,
   API_SEND_MESSAGE,
-  API_GET_ALL_MESSAGE
-}
+  API_GET_ALL_MESSAGE,
+  API_GET_ALL_CONVERSATION,
+  API_CHECK_KEYSPAIR
+};

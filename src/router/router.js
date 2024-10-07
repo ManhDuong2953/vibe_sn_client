@@ -248,7 +248,13 @@ const routes = [
     component: <CreateFaceRecognitionPage titlePage="Chợ | Vibe" />,
   },
   {
-    path: '/messenger/:id_receiver',
+    path: '/messenger/:id_receiver_param',
+    exact: true,
+    requireAuth: true,
+    component: <ChatMessengerPage titlePage="Chợ | Vibe" />,
+  },
+  {
+    path: '/messenger',
     exact: true,
     requireAuth: true,
     component: <ChatMessengerPage titlePage="Chợ | Vibe" />,

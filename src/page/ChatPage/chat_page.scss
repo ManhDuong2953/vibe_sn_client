@@ -129,7 +129,6 @@
       align-items: center;
       padding: 10px 16px;
       background-color: var(--navbar-color);
-      border-bottom: 1px solid var(--border-color);
 
       .chat-user-info {
         display: flex;
@@ -140,6 +139,7 @@
             width: 45px;
             height: 45px;
             border-radius: 50%;
+            object-fit: cover;
           }
           &::before {
             content: "";
@@ -440,6 +440,7 @@
       img.avt-img {
         width: 100px;
         height: 100px;
+        object-fit: cover;
         border-radius: 50%;
       }
       .direct-info {

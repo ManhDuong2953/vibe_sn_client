@@ -3,11 +3,13 @@
     display: block;
     width: -webkit-fill-available;
     a {
-      border-radius: 5px;
       padding: 10px 16px;
       text-decoration: none;
       display: flex;
+      background-color: var(--black-text);
       align-items: center;
+      border-radius: 0px;
+      margin: 0;
       .avt-contact {
         display: flex;
         align-items: center;
@@ -51,11 +53,11 @@
           font-weight: 700;
           color: var(--text-color);
         }
-      .avt-contact {
-    img{
-        border: 3px solid var(--active-color);
-    }  
-    }
+        .avt-contact {
+          img {
+            border: 3px solid var(--active-color);
+          }
+        }
       }
     }
     a:hover {

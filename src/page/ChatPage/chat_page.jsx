@@ -20,7 +20,7 @@ import { AiOutlineSearch } from "react-icons/ai";
 import "./chat_page.scss";
 import NavigativeBar from "../../layout/NavigativeBar/navigative_bar";
 import ContactMessengerItem from "../../layout/ContactMessengerItem/contact_messenger_item";
-import { Link, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { MdDeleteForever, MdPermMedia } from "react-icons/md";
 import { LuCopyPlus } from "react-icons/lu";
 import { FilePond } from "react-filepond";
@@ -36,6 +36,7 @@ import { useSocket } from "../../provider/socket_context";
 import { OwnDataContext } from "../../provider/own_data";
 import { IoMdCloseCircle } from "react-icons/io";
 import {
+  API_CHECK_KEYSPAIR,
   API_CREATE_KEYSPAIR,
   API_DELETE_KEYS_PAIR,
   API_GET_ALL_MESSAGE,
@@ -45,15 +46,19 @@ import {
   API_SEND_MESSAGE,
 } from "../../API/api_server";
 import { deleteData, getData, postData } from "../../ultils/fetchAPI/fetch_API";
+import { toast } from "react-toastify";
 
 function ChatMessengerPage({ titlePage }) {
   useEffect(() => {
     document.title = titlePage;
   }, [titlePage]);
 
+  const navigator = useNavigate();
+  const [isHasKeysPairReceiver, setIsHasKeysPairReceiver] = useState("");
   const [message, setMessage] = useState("");
   const [messages, setMessages] = useState([]); // State for messages
-  const { id_receiver } = useParams();
+  const { id_receiver_param } = useParams();
+  const [id_receiver, setIDReceiver] = useState();
   const [files, setFiles] = useState([]);
   const [showFilePond, setShowFilePond] = useState(false);
   const [showAudio, setShowAudio] = useState(false);
@@ -78,21 +83,34 @@ function ChatMessengerPage({ titlePage }) {
   const [showReply, setShowReply] = useState(false);
   const [contentReply, setContentReply] = useState(null);
   const endOfMessagesRef = useRef(null);
-  
 
   useEffect(() => {
-    // Cuộn đến tin nhắn cuối cùng mỗi khi danh sách tin nhắn thay đổi
-    endOfMessagesRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [messages]);
+    if (id_receiver_param) {
+      setIDReceiver(id_receiver_param);
+    }
+  }, [id_receiver_param]);
+
+  const handleGetFristCOnversition = useCallback(
+    (data) => {
+      if (data && !id_receiver_param) {
+        setIDReceiver(data?.friend_id);
+      }
+    },
+    [id_receiver_param]
+  );
+
   useEffect(() => {
-    if (socket && dataOwner && id_receiver) {
-      socket.emit("registerUser", { user_id: dataOwner?.user_id });
-
-      // Kiểm tra trạng thái online khi component được mount
-      socket.on("onlineUsers", (data) => {
-        setIsOnline(data.includes(id_receiver));
-      });
-
+    if (id_receiver) {
+      const checkExistKeyPair = async () => {
+        try {
+          const response = await getData(API_CHECK_KEYSPAIR(id_receiver));
+          if (response?.status === true || response.status === false) {
+            setIsHasKeysPairReceiver(response?.status);
+          }
+        } catch (error) {
+          console.log("Error: " + error);
+        }
+      };
       const getAllMessages = async () => {
         try {
           const response = await postData(API_GET_ALL_MESSAGE(id_receiver), {
@@ -106,7 +124,24 @@ function ChatMessengerPage({ titlePage }) {
         }
       };
 
+      checkExistKeyPair();
       getAllMessages();
+    } else {
+    }
+  }, [id_receiver]);
+
+  useEffect(() => {
+    // Cuộn đến tin nhắn cuối cùng mỗi khi danh sách tin nhắn thay đổi
+    endOfMessagesRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [messages]);
+  useEffect(() => {
+    if (socket && dataOwner && id_receiver) {
+      socket.emit("registerUser", { user_id: dataOwner?.user_id });
+
+      // Kiểm tra trạng thái online khi component được mount
+      socket.on("onlineUsers", (data) => {
+        setIsOnline(data.includes(id_receiver));
+      });
 
       //lắng nghe tin nhắn gửi đến
       socket.on("receiveMessage", (data) => {
@@ -171,7 +206,7 @@ function ChatMessengerPage({ titlePage }) {
       }
     };
     getDataReceiver();
-  }, []);
+  }, [id_receiver]);
 
   useEffect(() => {
     if (waveformRef.current) {
@@ -516,6 +551,30 @@ function ChatMessengerPage({ titlePage }) {
       inputRef.current.focus(); // Focus vào input khi showReply là true
     }
   }, [showReply]);
+
+  const handleClickCall = (type_call) => {
+    if (socket && id_receiver && dataOwner?.user_id && isOnline) {
+      socket.emit("registerUser", { user_id: dataOwner?.user_id });
+      const receiver_id = id_receiver;
+      const sender_id = dataOwner?.user_id;
+      // Send call notification to the receiver
+      socket.emit("callUser", {
+        receiver_id,
+        sender_id,
+        link_call: `/messenger/${type_call}?ROOM_ID=${
+          receiver_id + sender_id
+        }&sender_id=${sender_id}&receiver_id=${receiver_id}`,
+      });
+
+      navigator(
+        `/messenger/${type_call}?ROOM_ID=${
+          id_receiver + dataOwner?.user_id
+        }&sender_id=${dataOwner?.user_id}&receiver_id=${id_receiver}`
+      );
+    } else {
+      toast.info("Người dùng này không trực tuyến!");
+    }
+  };
   return (
     <React.Fragment>
       <NavigativeBar />
@@ -538,7 +597,9 @@ function ChatMessengerPage({ titlePage }) {
               <input type="text" placeholder="Tìm kiếm trên Messenger" />
             </div>
             <ul className="chat-list">
-              <ContactMessengerItem />
+              <ContactMessengerItem
+                getFristConversation={handleGetFristCOnversition}
+              />
             </ul>
           </div>
           <div className="chat-window">
@@ -557,20 +618,9 @@ function ChatMessengerPage({ titlePage }) {
                 </div>
               </div>
               <div className="chat-actions">
-                <Link
-                  to={`/messenger/audio-call?ROOM_ID=${
-                    id_receiver + dataOwner?.user_id
-                  }&sender_id=${dataOwner?.user_id}&receiver_id=${id_receiver}`}
-                >
-                  <FaPhoneAlt />
-                </Link>
-                <Link
-                  to={`/messenger/video-call?ROOM_ID=${
-                    id_receiver + dataOwner?.user_id
-                  }&sender_id=${dataOwner?.user_id}&receiver_id=${id_receiver}`}
-                >
-                  <FaVideo />
-                </Link>
+                <FaPhoneAlt onClick={() => handleClickCall("audio-call")} />
+                <FaVideo onClick={() => handleClickCall("video-call")} />
+
                 <FaEllipsisV onClick={() => setShowInfo(!showInfo)} />
               </div>
             </div>
@@ -667,67 +717,81 @@ function ChatMessengerPage({ titlePage }) {
                 </div>
               </div>
             )}
-            <div className="chat-input">
-              {showFilePond && (
-                <FilePond
-                  files={files}
-                  allowMultiple={true}
-                  onupdatefiles={setFiles}
-                  labelIdle='Kéo và Thả tệp phương tiện or <span class="filepond--label-action">Duyệt</span>'
-                />
-              )}
-              {showAudio && (
-                <div
-                  className="hear"
-                  onClick={isRecording ? stopRecording : startRecording}
-                >
-                  {isRecording ? (
-                    <>
-                      <FaStop /> Đang nghe...
-                    </>
-                  ) : (
-                    <>
-                      <FaMicrophone /> Bấm để ghi âm
-                    </>
-                  )}
-                </div>
-              )}
-              <div className="input-container">
-                <RiChatVoiceFill onClick={() => setShowAudio(!showAudio)} />
-                <MdPermMedia onClick={() => setShowFilePond(!showFilePond)} />
-                <input
-                  autoFocus={true}
-                  ref={inputRef}
-                  type="text"
-                  placeholder="Aa"
-                  onFocus={() => setIsTyping(true)}
-                  onBlur={() => setIsTyping(false)}
-                  value={message}
-                  onChange={(e) => setMessage(e.target.value)}
-                  onKeyDown={(e) => e.key === "Enter" && handleSend()}
-                />
-                <div className="btn-func">
-                  {(message !== "" || files.length > 0) && (
-                    <IoSend className="send-btn" onClick={handleSend} />
-                  )}
+            {isHasKeysPairReceiver ? (
+              <div className="chat-input">
+                {showFilePond && (
+                  <FilePond
+                    files={files}
+                    allowMultiple={true}
+                    onupdatefiles={setFiles}
+                    labelIdle='Kéo và Thả tệp phương tiện or <span class="filepond--label-action">Duyệt</span>'
+                  />
+                )}
+                {showAudio && (
+                  <div
+                    className="hear"
+                    onClick={isRecording ? stopRecording : startRecording}
+                  >
+                    {isRecording ? (
+                      <>
+                        <FaStop /> Đang nghe...
+                      </>
+                    ) : (
+                      <>
+                        <FaMicrophone /> Bấm để ghi âm
+                      </>
+                    )}
+                  </div>
+                )}
+                <div className="input-container">
+                  <RiChatVoiceFill onClick={() => setShowAudio(!showAudio)} />
+                  <MdPermMedia onClick={() => setShowFilePond(!showFilePond)} />
+                  <input
+                    autoFocus={true}
+                    ref={inputRef}
+                    type="text"
+                    placeholder="Aa"
+                    onFocus={() => setIsTyping(true)}
+                    onBlur={() => setIsTyping(false)}
+                    value={message}
+                    onChange={(e) => setMessage(e.target.value)}
+                    onKeyDown={(e) => e.key === "Enter" && handleSend()}
+                  />
+                  <div className="btn-func">
+                    {(message !== "" || files.length > 0) && (
+                      <IoSend className="send-btn" onClick={handleSend} />
+                    )}
+                  </div>
                 </div>
               </div>
-            </div>
+            ) : (
+              <h5 className="text-center">
+                Người dùng này chưa tạo mã PIN thực hiện mã hoá đầu cuối
+              </h5>
+            )}
           </div>
           {showInfo && (
             <div className="chat-info-panel">
               <div className="user-profile">
                 <img
                   className="avt-img"
-                  src="https://cdn.24h.com.vn/upload/1-2023/images/2023-01-04/Ve-dep-dien-dao-chung-sinh-cua-co-gai-sinh-nam-1999-lot-top-guong-mat-dep-nhat-the-gioi-57068584_2351143488502839_871658938696715268_n-1672812988-819-width1080height1080.jpg"
+                  src={infoReceiver && infoReceiver?.avatar}
                   alt=""
                 />
-                <div className="user-name">Dương Ánh</div>
-                <div className="user-status">Đang hoạt động</div>
+                <div className="user-name">
+                  {infoReceiver && infoReceiver?.user_name}
+                </div>
+                <div className="user-status">
+                  {" "}
+                  {isOnline ? "Đang hoạt động" : "Đã đóng cửa sổ chat"}
+                </div>
                 <p className="key-info">
-                  <FaUserLock /> Mã hóa tin nhắn
+                  <FaUserLock />{" "}
+                  {isHasKeysPairReceiver ? "Mã hóa tin nhắn" : "Chưa mã hoá"}
                 </p>
-                <Link>
+                <Link
+                  to={"/profile/" + (infoReceiver && infoReceiver?.user_id)}
+                >
                   <p className="direct-info">
                     <FaUserCircle /> Xem trang cá nhân
                   </p>
@@ -736,12 +800,17 @@ function ChatMessengerPage({ titlePage }) {
               <div className="chat-info">
                 <p>File phương tiện & file</p>
                 <ul className="list-media">
-                  <li>
-                    <img
-                      src="https://cdn.24h.com.vn/upload/1-2023/images/2023-01-04/Ve-dep-dien-dao-chung-sinh-cua-co-gai-sinh-nam-1999-lot-top-guong-mat-dep-nhat-the-gioi-57068584_2351143488502839_871658938696715268_n-1672812988-819-width1080height1080.jpg"
-                      alt=""
-                    />
-                  </li>
+                  {messages &&
+                    messages.map((msg, index) => {
+                      if (msg.content_type === "image") {
+                        return (
+                          <li>
+                            <img src={msg?.content_text} alt="" />
+                          </li>
+                        );
+                      }
+                    })}
+
                   <li>
                     <div className="more">
                       <LuCopyPlus />

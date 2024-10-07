@@ -104,7 +104,6 @@ function NavigativeBar() {
                             <li>
                                 <div className="messenger-icon--container">
                                     <BiLogoMessenger />
-                                    <p>9</p>
                                     <b>Nhắn tin</b>
                                 </div>
                             </li>
