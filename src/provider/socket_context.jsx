@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useEffect, useState } from "react";
+import React, { createContext, useContext, useEffect, useState, useRef } from "react";
 import { io } from "socket.io-client";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -7,6 +7,7 @@ import { useNavigate } from "react-router-dom";
 import { OwnDataContext } from "./own_data";
 import { getData } from "../ultils/fetchAPI/fetch_API";
 import { API_GET_INFO_USER_PROFILE_BY_ID } from "../API/api_server";
+import AudioRing from "../www/mp3/receive-phone-calls-get-a-phone-call-get-called-153318.mp3"; // Đường dẫn đến file âm thanh
 
 // Tạo context
 const SocketContext = createContext();
@@ -14,12 +15,13 @@ const SocketContext = createContext();
 // URL server của bạn, thay đổi nếu cần
 const SOCKET_URL = process.env.REACT_APP_PORT_SOCKET;
 
-// Tạo Provider để quản lý kết nối socket
 export const SocketProvider = ({ children }) => {
   const [socket, setSocket] = useState(null);
-  const navigator = useNavigate();
+  const navigate = useNavigate();
   const dataOwner = useContext(OwnDataContext);
-  
+  const audioRef = useRef(null); // Tạo tham chiếu cho audio
+  const [isCalling, setIsCalling] = useState(false); // Trạng thái gọi
+
   useEffect(() => {
     const newSocket = io(SOCKET_URL);
     setSocket(newSocket);
@@ -36,7 +38,9 @@ export const SocketProvider = ({ children }) => {
         status: "Accepted",
         ...data,
       });
-      navigator(data?.link_call);
+      navigate(data?.link_call);
+      stopAudio(); // Dừng âm thanh khi nhận cuộc gọi
+      setIsCalling(false); // Đặt trạng thái gọi thành false
     }
   };
 
@@ -47,6 +51,21 @@ export const SocketProvider = ({ children }) => {
         status: "Declined",
         ...data,
       });
+      stopAudio(); // Dừng âm thanh khi từ chối
+      setIsCalling(false); // Đặt trạng thái gọi thành false
+    }
+  };
+
+  const stopAudio = () => {
+    if (audioRef.current) {
+      audioRef.current.pause();
+      audioRef.current.currentTime = 0; // Reset âm thanh về đầu
+    }
+  };
+
+  const playAudio = () => {
+    if (audioRef.current) {
+      audioRef.current.play().catch((error) => console.log("Error playing audio:", error));
     }
   };
 
@@ -64,11 +83,14 @@ export const SocketProvider = ({ children }) => {
 
   useEffect(() => {
     if (socket && dataOwner) {
-      // Nhận thông báo gọi từ người gọi
+      socket.emit("registerUser", { user_id: dataOwner?.user_id });
+
       socket.on("user-calling", async (data) => {
         if (data && dataOwner && data?.receiver_id === dataOwner?.user_id) {
           const callerInfo = await getInfoCaller(data?.sender_id);
           if (callerInfo) {
+            setIsCalling(true); // Đặt trạng thái gọi thành true
+            playAudio(); // Phát âm thanh khi có cuộc gọi đến
             toast.info(
               ({ closeToast }) => (
                 <div>
@@ -88,7 +110,7 @@ export const SocketProvider = ({ children }) => {
                         backgroundColor: "#4CAF50", // Màu xanh cho nút nghe
                         color: "white",
                         padding: "6px 10px",
-                        fontSize: "12px", // Làm nhỏ chữ
+                        fontSize: "12px",
                         border: "none",
                         borderRadius: "4px",
                         cursor: "pointer",
@@ -144,6 +166,7 @@ export const SocketProvider = ({ children }) => {
                 closeOnClick: true,
                 hideProgressBar: false, // Hiển thị thanh tiến trình
                 icon: false, // Ẩn icon mặc định của toast
+                onClose: stopAudio, // Dừng âm thanh khi toast đóng
               }
             );
           }
@@ -159,7 +182,11 @@ export const SocketProvider = ({ children }) => {
   }, [dataOwner, socket]);
 
   return (
-    <SocketContext.Provider value={socket}>{children}</SocketContext.Provider>
+    <>
+      {/* Thêm thẻ audio vào đây */}
+      <audio ref={audioRef} src={AudioRing} />
+      <SocketContext.Provider value={socket}>{children}</SocketContext.Provider>
+    </>
   );
 };
 

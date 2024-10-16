@@ -48,8 +48,6 @@ const LoginPage = ({ titlePage }) => {
 
   const handleLoginSocial = async (payload) => {
     try {
-      console.log(payload);
-
       const response = await getData(
         API_CHECK_EXIST_USER(`uid_${payload?.user_id}`)
       );

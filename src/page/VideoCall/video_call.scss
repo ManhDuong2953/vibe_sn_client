@@ -8,6 +8,10 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  .time {
+    padding: 10px;
+    background-color: black;
+  }
   .btn-accept {
     padding: 5px 10px;
     font-size: 16px;
@@ -15,31 +19,30 @@
     background-color: rgb(24, 116, 255);
     border-radius: 10px;
     cursor: pointer;
-    &:hover{
+    &:hover {
       opacity: 0.7;
     }
   }
   .video-wrapper {
     position: relative;
     width: 100%;
-    height: 80%;
+    height: 70%;
     display: flex;
     justify-content: center;
     align-items: center;
 
     video {
-      border-radius: 10px;
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+      background: black;
     }
 
     .user-video {
       position: absolute;
       bottom: 10px;
       right: 10px;
-      width: 200px;
-      height: 150px;
+      height: 40%;
       border: 5px solid var(--active-color);
     }
+
     img.partner-avatar {
       width: 28vw;
       aspect-ratio: 1;

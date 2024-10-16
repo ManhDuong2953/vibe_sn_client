@@ -27,7 +27,6 @@ import { FilePond } from "react-filepond";
 import "filepond/dist/filepond.min.css";
 import { RiChatVoiceFill } from "react-icons/ri";
 import { IoSend } from "react-icons/io5";
-import WaveSurfer from "wavesurfer.js";
 import Waveform from "../../component/WaveSurfer/wave_surfer";
 import { FaSignalMessenger } from "react-icons/fa6";
 import Draggable from "react-draggable";
@@ -47,50 +46,76 @@ import {
 } from "../../API/api_server";
 import { deleteData, getData, postData } from "../../ultils/fetchAPI/fetch_API";
 import { toast } from "react-toastify";
+import { formatDate } from "../../ultils/formatDate/format_date";
+import ToolTipCustom from "../../component/ToolTip/tool_tip";
 
 function ChatMessengerPage({ titlePage }) {
+  //Tên tiêu đề
   useEffect(() => {
     document.title = titlePage;
   }, [titlePage]);
 
-  const navigator = useNavigate();
+  //khởi tạo các biến
+  const navigate = useNavigate();
+  // Khởi tạo socket
+  const socket = useSocket();
+  //Kiểm tra người dùng có cặp khoá chưa
   const [isHasKeysPairReceiver, setIsHasKeysPairReceiver] = useState("");
+  //Set tin nhắn và danh sách tin nhắn
   const [message, setMessage] = useState("");
-  const [messages, setMessages] = useState([]); // State for messages
+  const [messages, setMessages] = useState([]);
+  //Lấy id người nhận từ URL Params hoặc từ list conversation
   const { id_receiver_param } = useParams();
   const [id_receiver, setIDReceiver] = useState();
+  //Danh sách files
   const [files, setFiles] = useState([]);
+  //Hiển thị file pond
   const [showFilePond, setShowFilePond] = useState(false);
+  //Hiển thị ghi âm
   const [showAudio, setShowAudio] = useState(false);
-  const [showInfo, setShowInfo] = useState(false);
-  const [infoReceiver, setInfoReceiver] = useState();
+  //Biến kiểm tra xem có đang ghi âm hay không
   const [isRecording, setIsRecording] = useState(false);
-  const [mediaRecorder, setMediaRecorder] = useState(null);
-  const [audioURL, setAudioURL] = useState(null);
-  const audioChunks = useRef([]);
-  const waveformRef = useRef();
-  const socket = useSocket();
+  // Lấy thông tin bản thân
   const dataOwner = useContext(OwnDataContext);
+  //Hiển thị thông tin side right
+  const [showInfo, setShowInfo] = useState(false);
+  //Thông tin người nhận từ API
+  const [infoReceiver, setInfoReceiver] = useState();
+  // Navigator ghi âm
+  const [mediaRecorder, setMediaRecorder] = useState(null);
+  // check đã verifying mã PIN chưa thì đi vào trang nhắn tin
   const [isVerifiedCode, setIsVerifiedCode] = useState(false);
+  // Check người dùng có mã pin chưa thì gửi mã PIN lên server kiểm rta để trả về private key đã decrypt
   const [isHasCode, setIsHasCode] = useState(false);
+  // loading
   const [loading, setLoading] = useState(false);
   const [PIN, setPIN] = useState(["", "", "", "", "", ""]);
   const private_key = localStorage.getItem("private_key");
-  const [isOnline, setIsOnline] = useState(false);
+  // set tin nhắn nào đang được hover
   const [hoveredIndex, setHoveredIndex] = useState(null);
+  // check xem người dùng có đang focus input
   const [isTyping, setIsTyping] = useState(false);
+  // check xem đối phương có đang focus input
   const [receiverIsTyping, setReceiverIsTyping] = useState(false);
+  // Bật tắt reply
   const [showReply, setShowReply] = useState(false);
+  //Nội dung reply
   const [contentReply, setContentReply] = useState(null);
+  //Danh sách người dùng online
+  const [listUsersOnline, setListUsersOnline] = useState([]);
+  // tạo ref scroll load cuối trang
   const endOfMessagesRef = useRef(null);
+  const [sendLoading, setSendLoading] = useState(false);
 
+  // set id receiver ngay ban đầu nếu có params URL
   useEffect(() => {
     if (id_receiver_param) {
       setIDReceiver(id_receiver_param);
     }
   }, [id_receiver_param]);
 
-  const handleGetFristCOnversition = useCallback(
+  // set lại id receiver nếu không có params URL thì lấy last message id friend
+  const handleGetFristConversition = useCallback(
     (data) => {
       if (data && !id_receiver_param) {
         setIDReceiver(data?.friend_id);
@@ -98,228 +123,7 @@ function ChatMessengerPage({ titlePage }) {
     },
     [id_receiver_param]
   );
-
-  useEffect(() => {
-    if (id_receiver) {
-      const checkExistKeyPair = async () => {
-        try {
-          const response = await getData(API_CHECK_KEYSPAIR(id_receiver));
-          if (response?.status === true || response.status === false) {
-            setIsHasKeysPairReceiver(response?.status);
-          }
-        } catch (error) {
-          console.log("Error: " + error);
-        }
-      };
-      const getAllMessages = async () => {
-        try {
-          const response = await postData(API_GET_ALL_MESSAGE(id_receiver), {
-            private_key: localStorage.getItem("private_key"),
-          });
-          if (response?.status === true) {
-            setMessages(response?.data);
-          }
-        } catch (error) {
-          console.log("Error: " + error);
-        }
-      };
-
-      checkExistKeyPair();
-      getAllMessages();
-    } else {
-    }
-  }, [id_receiver]);
-
-  useEffect(() => {
-    // Cuộn đến tin nhắn cuối cùng mỗi khi danh sách tin nhắn thay đổi
-    endOfMessagesRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [messages]);
-  useEffect(() => {
-    if (socket && dataOwner && id_receiver) {
-      socket.emit("registerUser", { user_id: dataOwner?.user_id });
-
-      // Kiểm tra trạng thái online khi component được mount
-      socket.on("onlineUsers", (data) => {
-        setIsOnline(data.includes(id_receiver));
-      });
-
-      //lắng nghe tin nhắn gửi đến
-      socket.on("receiveMessage", (data) => {
-        setMessages((prevMessages) => [
-          ...prevMessages,
-          {
-            sender_id: data?.sender_id,
-            receiver_id: id_receiver,
-            content_text: data?.content_text,
-            content_type: data?.content_type,
-            name_file: data?.name_file ?? "Không xác định",
-            reply_text: data?.reply_text,
-          },
-        ]);
-        setMessage(""); // Reset input
-      });
-
-      // Dọn dẹp khi component bị hủy
-      return () => {
-        socket.off("connect");
-        socket.off("registerUser");
-        socket.off("onlineUsers");
-      };
-    }
-  }, [socket, dataOwner, id_receiver]);
-
-  //Sự kiện có đang nhắn?
-  useEffect(() => {
-    try {
-      //Gửi sự kiện mình đang nhắn
-      socket.emit("senderWritting", {
-        sender_id: dataOwner?.user_id,
-        receiver_id: id_receiver,
-        status: isTyping,
-      });
-      //Lắng nghe sự kiện đối phương nhắn tin
-      socket.on("receiverNotifiWritting", (data) => {
-        setReceiverIsTyping(data?.status);
-      });
-      //Lắng nghe sự kiện đối phương nhắn tin
-      socket.on("receiverNotifiWritting", (data) => {
-        setReceiverIsTyping(data?.status);
-      });
-    } catch (error) {
-      // console.log("error", error);
-    }
-  }, [isTyping]);
-
-  useEffect(() => {
-    const getDataReceiver = async () => {
-      try {
-        if (id_receiver) {
-          const response = await getData(
-            API_GET_INFO_USER_PROFILE_BY_ID(id_receiver)
-          );
-          if (response?.status) {
-            setInfoReceiver(response?.data);
-          }
-        }
-      } catch (error) {
-        console.log(error);
-      }
-    };
-    getDataReceiver();
-  }, [id_receiver]);
-
-  useEffect(() => {
-    if (waveformRef.current) {
-      const wavesurfer = WaveSurfer.create({
-        container: waveformRef.current,
-      });
-    }
-  }, []);
-
-  useEffect(() => {
-    if (mediaRecorder) {
-      mediaRecorder.ondataavailable = (event) => {
-        audioChunks.current.push(event.data);
-      };
-      mediaRecorder.onstop = () => {
-        const audioBlob = new Blob(audioChunks.current, { type: "audio/wav" });
-        const url = URL.createObjectURL(audioBlob);
-        setAudioURL(url);
-        audioChunks.current = [];
-        handleSendAudio(audioBlob); // Send audio when recording stops
-      };
-    }
-  }, [mediaRecorder]);
-
-  const startRecording = async () => {
-    const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-    const recorder = new MediaRecorder(stream);
-    setMediaRecorder(recorder);
-    recorder.start();
-    setIsRecording(true);
-  };
-
-  const stopRecording = () => {
-    mediaRecorder.stop();
-    setIsRecording(false);
-  };
-
-  const handleSendAudio = async (audioFile) => {
-    // Create FormData for the audio file
-    const formData = new FormData();
-
-    // Create a temporary local URL for the audio file
-    const localAudioURL = URL.createObjectURL(audioFile);
-
-    // Construct the new message object for UI update
-    const newMessage = {
-      content_type: "audio",
-      content_text: localAudioURL,
-      sender_id: dataOwner?.user_id,
-      receiver_id: id_receiver,
-      name_file: audioFile.name ?? "Unknown",
-      reply_text: contentReply,
-    };
-
-    formData.append("file", audioFile, audioFile.name); // Assuming audioFile contains the file object
-    formData.append("content_type", "audio");
-    formData.append("name_file", audioFile.name);
-    formData.append("content_text", Date.now()); // Hoặc tên file nếu cần
-    formData.append("sender_id", dataOwner?.user_id);
-    formData.append("receiver_id", id_receiver);
-    if (showReply) {
-      formData.append("reply_text", contentReply);
-    }
-    // Try sending the audio file via API
-    try {
-      await postData(API_SEND_MESSAGE(id_receiver), formData, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      });
-
-      // Update the UI with the new message
-      setMessages((prevMessages) => [...prevMessages, newMessage]);
-    } catch (error) {
-      console.log("Error sending audio message: ", error);
-    }
-    // Reset lại input và tệp tin
-    setMessage(""); // Reset input
-    setFiles([]);
-    setShowFilePond(false);
-    setShowAudio(false);
-    setShowReply(false);
-    setContentReply("");
-  };
-
-  useEffect(() => {
-    const chatMessages = document.querySelector(".chat-messages");
-    if (chatMessages) {
-      chatMessages.scrollTop = chatMessages.scrollHeight;
-    }
-  }, [messages]);
-
-  useEffect(() => {
-    const icon = document.querySelector(".icon-list-chat");
-    const sidebar = document.querySelector(".sidebar");
-
-    const handleToggle = () => {
-      sidebar.classList.toggle("active");
-    };
-
-    if (icon) {
-      icon.addEventListener("click", handleToggle);
-    }
-
-    return () => {
-      if (icon) {
-        icon.removeEventListener("click", handleToggle);
-      }
-    };
-  }, []);
-
   //PIN Input
-
   const handleChange = (e, index) => {
     const value = e.target.value;
     if (value.length > 1) return; // Chỉ chấp nhận 1 ký tự mỗi ô
@@ -407,6 +211,7 @@ function ChatMessengerPage({ titlePage }) {
     }
   };
 
+  // người dùng đổi mã PIN
   const handleChanglePIN = async () => {
     if (window.confirm("Dữ liệu tin nhắn trước đó của bạn sẽ mất vĩnh viễn?")) {
       window.location.reload();
@@ -420,7 +225,228 @@ function ChatMessengerPage({ titlePage }) {
       }
     }
   };
+  //Kiểm tra người dùng có cặp khoá chưa,và lấy toàn bộ tin nhắn lúc đầu
+  useEffect(() => {
+    if (id_receiver) {
+      const checkExistKeyPair = async () => {
+        try {
+          const response = await getData(API_CHECK_KEYSPAIR(id_receiver));
+          if (response?.status === true || response.status === false) {
+            setIsHasKeysPairReceiver(response?.status);
+          }
+        } catch (error) {
+          console.log("Error: " + error);
+        }
+      };
+      const getAllMessages = async () => {
+        try {
+          const response = await postData(API_GET_ALL_MESSAGE(id_receiver), {
+            private_key: localStorage.getItem("private_key"),
+          });
+          if (response?.status === true) {
+            const sortedMessages = response?.data
+              .filter((msg) => msg.content_text !== null) // Lọc những tin nhắn có content_text khác null
+              .sort((a, b) => new Date(a.created_at) - new Date(b.created_at)); // Sắp xếp theo thời gian
 
+            setMessages(sortedMessages);
+          }
+        } catch (error) {
+          console.log("Error: " + error);
+        }
+      };
+
+      checkExistKeyPair();
+      getAllMessages();
+    }
+  }, [id_receiver]);
+  // Hàm nhóm tin nhắn theo ngày
+  const groupMessagesByDate = (messages) => {
+    return messages.reduce((groupedMessages, message) => {
+      const date = formatDate(new Date(message.created_at), "dd/mm/yy"); // Lấy ngày từ created_at
+
+      if (!groupedMessages[date]) {
+        groupedMessages[date] = [];
+      }
+      groupedMessages[date].push(message);
+      return groupedMessages;
+    }, {});
+  };
+  const groupedMessages = groupMessagesByDate(messages);
+
+  // Cuộn đến tin nhắn cuối cùng mỗi khi danh sách tin nhắn thay đổi
+  useEffect(() => {
+    endOfMessagesRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [messages]);
+
+  // Đăng ký người dùng online và lấy thông tin đối phương
+  useEffect(() => {
+    if (id_receiver) {
+      // Đăng ký sự kiện onlineUsers
+      socket.on("onlineUsers", (data) => {
+        setListUsersOnline(data);
+      });
+
+      const getDataReceiver = async () => {
+        try {
+          const response = await getData(
+            API_GET_INFO_USER_PROFILE_BY_ID(id_receiver)
+          );
+          if (response?.status) {
+            setInfoReceiver(response?.data);
+          }
+        } catch (error) {
+          console.log(error);
+        }
+      };
+      getDataReceiver();
+    }
+  }, [id_receiver]);
+  // lắng nghe sự kiện nhận tin nhắn
+  useEffect(() => {
+    if (socket && dataOwner && id_receiver) {
+      socket.emit("registerUser", { user_id: dataOwner?.user_id });
+
+      //lắng nghe tin nhắn gửi đến
+      socket.on("receiveMessage", (data) => {
+        setMessages((prevMessages) => [
+          ...prevMessages,
+          {
+            sender_id: data?.sender_id,
+            receiver_id: id_receiver,
+            content_text: data?.content_text,
+            content_type: data?.content_type,
+            name_file: data?.name_file ?? "Không xác định",
+            reply_text: data?.reply_text,
+          },
+        ]);
+        setMessage(""); // Reset input
+      });
+
+      // Dọn dẹp khi component bị hủy
+      return () => {
+        socket.off("connect");
+      };
+    }
+  }, [socket, dataOwner, id_receiver]);
+
+  //Sự kiện có đang nhắn?
+  useEffect(() => {
+    try {
+      //Gửi sự kiện mình đang nhắn
+      socket.emit("senderWritting", {
+        sender_id: dataOwner?.user_id,
+        receiver_id: id_receiver,
+        status: isTyping,
+      });
+      //Lắng nghe sự kiện đối phương nhắn tin
+      socket.on("receiverNotifiWritting", (data) => {
+        setReceiverIsTyping(data?.status);
+      });
+    } catch (error) {
+      // console.log("error", error);
+    }
+  }, [isTyping]);
+
+  // bắt đầu ghi âm
+  const startRecording = async () => {
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      const recorder = new MediaRecorder(stream);
+
+      setMediaRecorder(recorder);
+      recorder.start();
+      setIsRecording(true);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  // Dừng ghi âm
+  const stopRecording = () => {
+    mediaRecorder.stop();
+    setIsRecording(false);
+  };
+
+  //Gửi audio
+  const handleSendAudio = async (audioFile) => {
+    // Create FormData for the audio file
+    const formData = new FormData();
+
+    // Create a temporary local URL for the audio file
+    const localAudioURL = URL.createObjectURL(audioFile);
+
+    // Construct the new message object for UI update
+    const newMessage = {
+      content_type: "audio",
+      content_text: localAudioURL,
+      sender_id: dataOwner?.user_id,
+      receiver_id: id_receiver,
+      name_file: audioFile.name ?? "Unknown",
+      reply_text: contentReply,
+    };
+
+    formData.append("file", audioFile, audioFile.name); // Assuming audioFile contains the file object
+    formData.append("content_type", "audio");
+    formData.append("name_file", audioFile.name);
+    formData.append("content_text", Date.now()); // Hoặc tên file nếu cần
+    formData.append("sender_id", dataOwner?.user_id);
+    formData.append("receiver_id", id_receiver);
+    if (showReply) {
+      formData.append("reply_text", contentReply);
+    }
+    // Try sending the audio file via API
+    try {
+      const response = await postData(API_SEND_MESSAGE(id_receiver), formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
+
+      // Update the UI with the new message
+      setMessages((prevMessages) => [...prevMessages, newMessage]);
+    } catch (error) {
+      console.log("Error sending audio message: ", error);
+    }
+    // Reset lại input và tệp tin
+    setMessage(""); // Reset input
+    setFiles([]);
+    setShowFilePond(false);
+    setShowAudio(false);
+    setShowReply(false);
+    setContentReply("");
+  };
+
+  //Gửi audio nếu có media recorded
+  useEffect(() => {
+    if (!mediaRecorder) return;
+
+    mediaRecorder.ondataavailable = (event) => {
+      const audioBlob = new Blob([event.data], { type: "audio/wav" });
+      handleSendAudio(audioBlob);
+    };
+  }, [mediaRecorder]);
+
+  // SHow side bar list chat
+  useEffect(() => {
+    const icon = document.querySelector(".icon-list-chat");
+    const sidebar = document.querySelector(".sidebar");
+
+    const handleToggle = () => {
+      sidebar.classList.toggle("active");
+    };
+
+    if (icon) {
+      icon.addEventListener("click", handleToggle);
+    }
+
+    return () => {
+      if (icon) {
+        icon.removeEventListener("click", handleToggle);
+      }
+    };
+  }, []);
+
+  // set người dùng đã có cặp khoá key chưa
   useEffect(() => {
     if (private_key && private_key !== undefined) {
       setIsVerifiedCode(true);
@@ -544,16 +570,15 @@ function ChatMessengerPage({ titlePage }) {
     setContentReply("");
   };
 
-  const inputRef = useRef(null);
-
-  useEffect(() => {
-    if (showReply && inputRef.current) {
-      inputRef.current.focus(); // Focus vào input khi showReply là true
-    }
-  }, [showReply]);
-
+  // sử lý khi ấn call
   const handleClickCall = (type_call) => {
-    if (socket && id_receiver && dataOwner?.user_id && isOnline) {
+    if (
+      socket &&
+      id_receiver &&
+      dataOwner?.user_id &&
+      listUsersOnline &&
+      listUsersOnline?.includes(id_receiver)
+    ) {
       socket.emit("registerUser", { user_id: dataOwner?.user_id });
       const receiver_id = id_receiver;
       const sender_id = dataOwner?.user_id;
@@ -566,7 +591,7 @@ function ChatMessengerPage({ titlePage }) {
         }&sender_id=${sender_id}&receiver_id=${receiver_id}`,
       });
 
-      navigator(
+      navigate(
         `/messenger/${type_call}?ROOM_ID=${
           id_receiver + dataOwner?.user_id
         }&sender_id=${dataOwner?.user_id}&receiver_id=${id_receiver}`
@@ -575,6 +600,32 @@ function ChatMessengerPage({ titlePage }) {
       toast.info("Người dùng này không trực tuyến!");
     }
   };
+
+  // Focus vào input khi showReply là true
+  const inputRef = useRef(null);
+
+  // Focus vào input khi showReply là true
+  useEffect(() => {
+    if (showReply && inputRef.current) {
+      inputRef.current.focus();
+    }
+  }, [showReply]);
+
+  // Scroll when new messages arrive
+  useEffect(() => {
+    const chatMessages = document.querySelector(".chat-messages");
+    if (chatMessages) {
+      chatMessages.scrollTop = chatMessages.scrollHeight;
+    }
+  }, []); // This runs only once when the page loads
+
+  useEffect(() => {
+    const chatMessages = document.querySelector(".chat-messages");
+    if (chatMessages) {
+      chatMessages.scrollTop = chatMessages.scrollHeight;
+    }
+  }, [messages]); // This runs whenever `messages` change
+
   return (
     <React.Fragment>
       <NavigativeBar />
@@ -593,235 +644,321 @@ function ChatMessengerPage({ titlePage }) {
               <FaFacebookMessenger size={28} /> Nhắn tin
               <AiOutlineSearch size={24} />
             </div>
-            <div className="search-bar">
-              <input type="text" placeholder="Tìm kiếm trên Messenger" />
-            </div>
+
             <ul className="chat-list">
               <ContactMessengerItem
-                getFristConversation={handleGetFristCOnversition}
+                getFristConversation={handleGetFristConversition}
+                listUsersOnline={listUsersOnline}
               />
             </ul>
           </div>
-          <div className="chat-window">
-            <div className="chat-header">
-              <div className="chat-user-info active">
-                <div className={`avt-img ${isOnline ? "online" : ""}`}>
-                  <img src={infoReceiver && infoReceiver?.avatar} alt="" />
-                </div>
-                <div>
-                  <div className="chat-user-name">
-                    {infoReceiver && infoReceiver?.user_name}
-                  </div>
-                  <div className="chat-user-status">
-                    {isOnline ? "Đang hoạt động" : "Đã đóng cửa sổ chat"}
-                  </div>
-                </div>
-              </div>
-              <div className="chat-actions">
-                <FaPhoneAlt onClick={() => handleClickCall("audio-call")} />
-                <FaVideo onClick={() => handleClickCall("video-call")} />
-
-                <FaEllipsisV onClick={() => setShowInfo(!showInfo)} />
-              </div>
-            </div>
-            <ul className="chat-messages">
-              {messages.map((msg, index) => {
-                if (msg && msg.content_text) {
-                  return (
-                    <li
-                      key={index}
-                      className={`message ${
-                        msg.sender_id === dataOwner?.user_id ? "sender" : ""
+          {id_receiver && (
+            <>
+              <div className="chat-window">
+                <div className="chat-header">
+                  <div className="chat-user-info active">
+                    <div
+                      className={`avt-img ${
+                        id_receiver &&
+                        listUsersOnline &&
+                        listUsersOnline?.includes(id_receiver)
+                          ? "online"
+                          : ""
                       }`}
-                      onMouseEnter={() => setHoveredIndex(index)}
-                      onMouseLeave={() => setHoveredIndex(null)}
                     >
-                      <div className="message-container">
-                        {msg.reply_text && (
-                          <p className="message-reply">{msg.reply_text}</p>
-                        )}
-                        <span>
-                          <div className="message-content">
-                            {msg.content_type === "text" && (
-                              <p className="message-text">{msg.content_text}</p>
-                            )}
-                            {msg.content_type === "link" && (
-                              <p
-                                dangerouslySetInnerHTML={{
-                                  __html: msg.content_text,
-                                }}
-                              ></p>
-                            )}
-                            {msg.content_type === "image" && (
-                              <a download href={msg.content_text}>
-                                <img src={msg.content_text} alt="content" />
-                              </a>
-                            )}
-                            {msg.content_type === "video" && (
-                              <a download href={msg.content_text}>
-                                <video
-                                  controls
-                                  muted
-                                  src={msg.content_text}
-                                  alt="content"
-                                />
-                              </a>
-                            )}
-                            {msg.content_type === "audio" && (
-                              <Waveform audioUrl={msg.content_text} />
-                            )}
-                            {msg.content_type === "other" && (
-                              <div className="file-container">
-                                <FaFileDownload />
-                                <a href={msg.content_text} download>
-                                  {msg.name_file}
-                                </a>
-                              </div>
-                            )}
-                          </div>
-                          {hoveredIndex === index && (
-                            <div
-                              className="reply-icon-message"
-                              onClick={() => {
-                                setShowReply(true);
-                                setContentReply(msg.content_text);
-                              }}
-                            >
-                              <ImReply />
-                            </div>
-                          )}
-                        </span>
-                      </div>
-                    </li>
-                  );
-                }
-              })}
-              <li ref={endOfMessagesRef} className="last-msg"></li>
-            </ul>
-            {receiverIsTyping && (
-              <i style={{ fontSize: "12px" }} className="writting">
-                {infoReceiver && infoReceiver?.user_name} đang nhắn ...
-              </i>
-            )}
-            {showReply && (
-              <div className="reply-context">
-                <IoMdCloseCircle
-                  className="close-reply-message"
-                  onClick={() => setShowReply(false)}
-                />
-                <div className="left-reply">
-                  <div className="messenger-reply">
-                    <p>{contentReply}</p>
-                  </div>
-                  <ImReply />
-                </div>
-              </div>
-            )}
-            {isHasKeysPairReceiver ? (
-              <div className="chat-input">
-                {showFilePond && (
-                  <FilePond
-                    files={files}
-                    allowMultiple={true}
-                    onupdatefiles={setFiles}
-                    labelIdle='Kéo và Thả tệp phương tiện or <span class="filepond--label-action">Duyệt</span>'
-                  />
-                )}
-                {showAudio && (
-                  <div
-                    className="hear"
-                    onClick={isRecording ? stopRecording : startRecording}
-                  >
-                    {isRecording ? (
-                      <>
-                        <FaStop /> Đang nghe...
-                      </>
-                    ) : (
-                      <>
-                        <FaMicrophone /> Bấm để ghi âm
-                      </>
-                    )}
-                  </div>
-                )}
-                <div className="input-container">
-                  <RiChatVoiceFill onClick={() => setShowAudio(!showAudio)} />
-                  <MdPermMedia onClick={() => setShowFilePond(!showFilePond)} />
-                  <input
-                    autoFocus={true}
-                    ref={inputRef}
-                    type="text"
-                    placeholder="Aa"
-                    onFocus={() => setIsTyping(true)}
-                    onBlur={() => setIsTyping(false)}
-                    value={message}
-                    onChange={(e) => setMessage(e.target.value)}
-                    onKeyDown={(e) => e.key === "Enter" && handleSend()}
-                  />
-                  <div className="btn-func">
-                    {(message !== "" || files.length > 0) && (
-                      <IoSend className="send-btn" onClick={handleSend} />
-                    )}
-                  </div>
-                </div>
-              </div>
-            ) : (
-              <h5 className="text-center">
-                Người dùng này chưa tạo mã PIN thực hiện mã hoá đầu cuối
-              </h5>
-            )}
-          </div>
-          {showInfo && (
-            <div className="chat-info-panel">
-              <div className="user-profile">
-                <img
-                  className="avt-img"
-                  src={infoReceiver && infoReceiver?.avatar}
-                  alt=""
-                />
-                <div className="user-name">
-                  {infoReceiver && infoReceiver?.user_name}
-                </div>
-                <div className="user-status">
-                  {" "}
-                  {isOnline ? "Đang hoạt động" : "Đã đóng cửa sổ chat"}
-                </div>
-                <p className="key-info">
-                  <FaUserLock />{" "}
-                  {isHasKeysPairReceiver ? "Mã hóa tin nhắn" : "Chưa mã hoá"}
-                </p>
-                <Link
-                  to={"/profile/" + (infoReceiver && infoReceiver?.user_id)}
-                >
-                  <p className="direct-info">
-                    <FaUserCircle /> Xem trang cá nhân
-                  </p>
-                </Link>
-              </div>
-              <div className="chat-info">
-                <p>File phương tiện & file</p>
-                <ul className="list-media">
-                  {messages &&
-                    messages.map((msg, index) => {
-                      if (msg.content_type === "image") {
-                        return (
-                          <li>
-                            <img src={msg?.content_text} alt="" />
-                          </li>
-                        );
-                      }
-                    })}
-
-                  <li>
-                    <div className="more">
-                      <LuCopyPlus />
+                      <img src={infoReceiver && infoReceiver?.avatar} alt="" />
                     </div>
-                  </li>
+                    <div>
+                      <div className="chat-user-name">
+                        {infoReceiver && infoReceiver?.user_name}
+                      </div>
+                      <div className="chat-user-status">
+                        {id_receiver &&
+                        listUsersOnline &&
+                        listUsersOnline?.includes(id_receiver)
+                          ? "Đang hoạt động"
+                          : "Đã đóng cửa sổ chat"}
+                      </div>
+                    </div>
+                  </div>
+                  <div className="chat-actions">
+                    <ToolTipCustom content={"Cuộc gọi thoại"}>
+                      <FaPhoneAlt
+                        onClick={() => handleClickCall("audio-call")}
+                      />
+                    </ToolTipCustom>
+                    <ToolTipCustom content={"Cuộc gọi Video"}>
+                      <FaVideo onClick={() => handleClickCall("video-call")} />
+                    </ToolTipCustom>
+                    <ToolTipCustom content={"Thông tin người nhận"}>
+                      <FaEllipsisV onClick={() => setShowInfo(!showInfo)} />
+                    </ToolTipCustom>
+                  </div>
+                </div>
+                <ul className="chat-messages">
+                  {Object.keys(groupedMessages).map((date) => (
+                    <React.Fragment key={date}>
+                      <li className="message-date">
+                        {date === formatDate(Date.now(), "dd/mm/yy")
+                          ? "Hôm nay"
+                          : date === "NaN/NaN/NaN"
+                          ? "Tin nhắn chưa đọc"
+                          : date}
+                      </li>
+
+                      {/* Hiển thị tin nhắn theo từng ngày */}
+                      {groupedMessages[date].map((msg, index) => {
+                        if (msg && msg.content_text) {
+                          return (
+                            <li
+                              key={index}
+                              className={`message ${
+                                msg.sender_id === dataOwner?.user_id
+                                  ? "sender"
+                                  : ""
+                              }`}
+                              onMouseEnter={() =>
+                                setHoveredIndex(msg.messenger_id)
+                              }
+                              onMouseLeave={() => setHoveredIndex(null)}
+                            >
+                              <div className="message-container">
+                                {msg.reply_text && (
+                                  <p className="message-reply">
+                                    {msg.reply_text}
+                                  </p>
+                                )}
+                                <span>
+                                  <div className="message-content">
+                                    {msg.content_type === "text" && (
+                                      <p className="message-text">
+                                        {msg.content_text}
+                                      </p>
+                                    )}
+                                    {msg.content_type === "link" && (
+                                      <p
+                                        dangerouslySetInnerHTML={{
+                                          __html: msg.content_text,
+                                        }}
+                                      ></p>
+                                    )}
+                                    {msg.content_type === "image" && (
+                                      <a download href={msg.content_text}>
+                                        <img
+                                          src={msg.content_text}
+                                          alt="content"
+                                        />
+                                      </a>
+                                    )}
+                                    {msg.content_type === "video" && (
+                                      <a download href={msg.content_text}>
+                                        <video
+                                          controls
+                                          muted
+                                          src={msg.content_text}
+                                          alt="content"
+                                        />
+                                      </a>
+                                    )}
+                                    {msg.content_type === "audio" && (
+                                      <Waveform audioUrl={msg.content_text} />
+                                    )}
+                                    {msg.content_type === "other" && (
+                                      <div className="file-container">
+                                        <FaFileDownload />
+                                        <a href={msg.content_text} download>
+                                          {msg.name_file}
+                                        </a>
+                                      </div>
+                                    )}
+                                  </div>
+                                  {hoveredIndex === msg.messenger_id && (
+                                    <div
+                                      className="reply-icon-message"
+                                      onClick={() => {
+                                        setShowReply(true);
+                                        setContentReply(() => {
+                                          if (msg.content_type === "text") {
+                                            return msg.content_text;
+                                          } else if (
+                                            msg.content_type === "link"
+                                          ) {
+                                            return (
+                                              <p
+                                                dangerouslySetInnerHTML={{
+                                                  __html: msg.content_text,
+                                                }}
+                                              ></p>
+                                            );
+                                          } else if (
+                                            msg.content_type === "image"
+                                          ) {
+                                            return "Ảnh";
+                                          } else if (
+                                            msg.content_type === "video"
+                                          ) {
+                                            return "Video";
+                                          } else if (
+                                            msg.content_type === "audio"
+                                          ) {
+                                            return "Tin nhắn thoại";
+                                          } else if (
+                                            msg.content_type === "other"
+                                          ) {
+                                            return "Tệp tin";
+                                          }
+                                        });
+                                      }}
+                                    >
+                                      <ImReply />
+                                    </div>
+                                  )}
+                                </span>
+                              </div>
+                            </li>
+                          );
+                        }
+                      })}
+                    </React.Fragment>
+                  ))}
+                  <li ref={endOfMessagesRef} className="last-msg"></li>
                 </ul>
-                <p className="delete">
-                  <MdDeleteForever /> Xóa đoạn chat
-                </p>
+                {receiverIsTyping && (
+                  <i style={{ fontSize: "12px" }} className="writting">
+                    {infoReceiver && infoReceiver?.user_name} đang nhắn ...
+                  </i>
+                )}
+                {showReply && (
+                  <div className="reply-context">
+                    <IoMdCloseCircle
+                      className="close-reply-message"
+                      onClick={() => setShowReply(false)}
+                    />
+                    <div className="left-reply">
+                      <div className="messenger-reply">
+                        <p>{contentReply}</p>
+                      </div>
+                      <ImReply />
+                    </div>
+                  </div>
+                )}
+                {isHasKeysPairReceiver ? (
+                  <div className="chat-input">
+                    {showFilePond && (
+                      <FilePond
+                        files={files}
+                        allowMultiple={true}
+                        onupdatefiles={setFiles}
+                        labelIdle='Kéo và Thả tệp phương tiện or <span class="filepond--label-action">Duyệt</span>'
+                      />
+                    )}
+                    {showAudio && (
+                      <div
+                        className="hear"
+                        onClick={isRecording ? stopRecording : startRecording}
+                      >
+                        {isRecording ? (
+                          <>
+                            <FaStop /> Đang nghe...
+                          </>
+                        ) : (
+                          <>
+                            <FaMicrophone /> Bấm để ghi âm
+                          </>
+                        )}
+                      </div>
+                    )}
+                    <div className="input-container">
+                      <RiChatVoiceFill
+                        onClick={() => setShowAudio(!showAudio)}
+                      />
+                      <MdPermMedia
+                        onClick={() => setShowFilePond(!showFilePond)}
+                      />
+                      <input
+                        autoFocus={true}
+                        ref={inputRef}
+                        type="text"
+                        placeholder="Aa"
+                        onFocus={() => setIsTyping(true)}
+                        onBlur={() => setIsTyping(false)}
+                        value={message}
+                        onChange={(e) => setMessage(e.target.value)}
+                        onKeyDown={(e) => e.key === "Enter" && handleSend()}
+                      />
+                      <div className="btn-func">
+                        {(message !== "" || files.length > 0) && (
+                          <IoSend className="send-btn" onClick={handleSend} />
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                ) : (
+                  <h5 className="text-center">
+                    Người dùng này chưa tạo mã PIN thực hiện mã hoá đầu cuối
+                  </h5>
+                )}
               </div>
-            </div>
+              {showInfo && (
+                <div className="chat-info-panel">
+                  <div className="user-profile">
+                    <img
+                      className="avt-img"
+                      src={infoReceiver && infoReceiver?.avatar}
+                      alt=""
+                    />
+                    <div className="user-name">
+                      {infoReceiver && infoReceiver?.user_name}
+                    </div>
+                    <div className="user-status">
+                      {" "}
+                      {id_receiver &&
+                      listUsersOnline &&
+                      listUsersOnline?.includes(id_receiver)
+                        ? "Đang hoạt động"
+                        : "Đã đóng cửa sổ chat"}
+                    </div>
+                    <p className="key-info">
+                      <FaUserLock />{" "}
+                      {isHasKeysPairReceiver
+                        ? "Mã hóa tin nhắn"
+                        : "Chưa mã hoá"}
+                    </p>
+                    <Link
+                      to={"/profile/" + (infoReceiver && infoReceiver?.user_id)}
+                    >
+                      <p className="direct-info">
+                        <FaUserCircle /> Xem trang cá nhân
+                      </p>
+                    </Link>
+                  </div>
+                  <div className="chat-info">
+                    <p>File phương tiện & file</p>
+                    <ul className="list-media">
+                      {messages &&
+                        messages.map((msg, index) => {
+                          if (msg.content_type === "image") {
+                            return (
+                              <li>
+                                <img src={msg?.content_text} alt="" />
+                              </li>
+                            );
+                          }
+                        })}
+
+                      <li>
+                        <div className="more">
+                          <LuCopyPlus />
+                        </div>
+                      </li>
+                    </ul>
+                    <p className="delete">
+                      <MdDeleteForever /> Xóa đoạn chat
+                    </p>
+                  </div>
+                </div>
+              )}
+            </>
           )}
         </div>
       ) : (

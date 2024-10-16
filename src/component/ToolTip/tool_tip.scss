@@ -1,0 +1,12 @@
+/* tooltip-custom.css */
+.tooltip-custom {
+    z-index: 9999; /* Đặt giá trị z-index cao để tooltip nổi lên trên mọi thứ */
+    position: absolute; /* Đảm bảo vị trí của tooltip */
+    border: 1px solid #ccc; /* Bạn có thể điều chỉnh viền */
+    background-color: white; /* Màu nền cho tooltip */
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1); /* Tạo bóng cho tooltip */
+    padding: 8px; /* Khoảng cách bên trong tooltip */
+    border-radius: 4px; /* Bo tròn các góc */
+    font-size: 14px; /* Kích thước chữ */
+  }
+  

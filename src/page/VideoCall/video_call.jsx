@@ -1,4 +1,10 @@
-import React, { useRef, useState, useEffect, useContext } from "react";
+import React, {
+  useReducer,
+  useRef,
+  useEffect,
+  useContext,
+  useState,
+} from "react";
 import "./video_call.scss";
 import {
   FaVideoSlash,
@@ -8,36 +14,65 @@ import {
   FaPhoneAlt,
 } from "react-icons/fa";
 import { getURLParam } from "../../ultils/getParamURL/get_param_URL";
-import { getData } from "../../ultils/fetchAPI/fetch_API";
-import { API_GET_INFO_USER_PROFILE_BY_ID } from "../../API/api_server";
+import { getData, postData } from "../../ultils/fetchAPI/fetch_API";
+import {
+  API_GET_INFO_USER_PROFILE_BY_ID,
+  API_SEND_MESSAGE,
+} from "../../API/api_server";
 import { useSocket } from "../../provider/socket_context";
 import { OwnDataContext } from "../../provider/own_data";
-import { useNavigate } from "react-router-dom";
 import Peer from "peerjs";
 import { toast } from "react-toastify";
+import ToolTipCustom from "../../component/ToolTip/tool_tip";
+import { formatSecondsToTime } from "../../ultils/formatDate/format_date";
 
 const VideoCall = ({ isVideoCall, titlePage, userId }) => {
   useEffect(() => {
     document.title = titlePage;
   }, [titlePage]);
 
+  const initialState = {
+    isCallAccepted: true,
+    isVideoMuted: false,
+    isAudioMuted: false,
+  };
+
+  const callReducer = (state, action) => {
+    switch (action.type) {
+      case "ACCEPT_CALL":
+        return { ...state, isCallAccepted: true };
+      case "TOGGLE_VIDEO":
+        return { ...state, isVideoMuted: !state.isVideoMuted };
+      case "TOGGLE_AUDIO":
+        return { ...state, isAudioMuted: !state.isAudioMuted };
+      case "END_CALL":
+        return { ...state, isCallAccepted: false };
+      default:
+        return state;
+    }
+  };
+
   const localVideoRef = useRef(null);
   const remoteVideoRef = useRef(null);
   const peerRef = useRef(null);
   const localStreamRef = useRef(null);
 
+  const [state, dispatch] = useReducer(callReducer, initialState);
+  const { isCallAccepted, isVideoMuted, isAudioMuted } = state;
+  const [stateRemote, setStateRemote] = useState({
+    isCallRemoteAccepted: false,
+    isVideoRemoteMuted: false,
+    isAudioRemoteMuted: false,
+  });
+
   const [receiver_id, setReceiverID] = useState();
   const [room_id, setRoomID] = useState();
   const [sender_id, setSenderID] = useState();
-  const [isCallAccepted, setIsCallAccepted] = useState(false);
-  const [isVideoMuted, setIsVideoMuted] = useState(isVideoCall !== false);
-  const [isAudioMuted, setIsAudioMuted] = useState(false);
   const [dataReceiver, setDataReceiver] = useState();
-  const [isRemoteVideoEnabled, setIsRemoteVideoEnabled] = useState(true); // New state for remote video
-
+  const [statusCall, setStatusCall] = useState(false);
+  const [time, setTime] = useState(0);
   const dataOwner = useContext(OwnDataContext);
   const socket = useSocket();
-  const navigate = useNavigate();
 
   // Get URL params
   useEffect(() => {
@@ -47,48 +82,60 @@ const VideoCall = ({ isVideoCall, titlePage, userId }) => {
     setReceiverID(params?.receiver_id);
   }, []);
 
-  // Register user and send a call request
   useEffect(() => {
     if (socket && sender_id && receiver_id && dataOwner?.user_id) {
-      // Listen for call acceptance or rejection
-      socket.on("statusAcceptedCallUser", (data) => {
-        
+      const handleStatusAccepted = async (data) => {
         if (data?.status === "Accepted") {
           toast("Người nghe đang vào cuộc hội thoại...");
-          setIsCallAccepted(true);
-        } else {
+          dispatch({ type: "ACCEPT_CALL" });
+          setStatusCall(true);
+        } else if (data?.status === "Declined") {
           toast.error("Người nghe đã từ chối gọi...");
-          navigate(-1);
+          await handleSendMessage("missed");
+
+          window.location.href = `/messenger/${
+            dataOwner?.user_id !== sender_id ? sender_id : receiver_id
+          }`;
         }
-      });
+      };
+
+      if (receiver_id === dataOwner?.user_id) {
+        setStatusCall(true);
+        dispatch({ type: "ACCEPT_CALL" });
+      }
+
+      socket.on("statusAcceptedCallUser", handleStatusAccepted);
+
+      return () => {
+        socket.off("statusAcceptedCallUser", handleStatusAccepted); // Cleanup on unmount
+      };
     }
   }, [socket, receiver_id, sender_id, dataOwner]);
 
   // Fetch receiver's profile information
   useEffect(() => {
-    const fetchAPI = async () => {
-      try {
-        const response = await getData(
-          API_GET_INFO_USER_PROFILE_BY_ID(
-            dataOwner?.user_id !== sender_id ? sender_id : receiver_id
-          )
-        );
+    if (receiver_id && dataOwner) {
+      const fetchAPI = async () => {
+        try {
+          const response = await getData(
+            API_GET_INFO_USER_PROFILE_BY_ID(
+              dataOwner?.user_id !== sender_id ? sender_id : receiver_id
+            )
+          );
 
-        if (response.status === true && response.data?.avatar) {
-          const data = response.data;
-          setDataReceiver(data);
+          if (response.status === true && response.data?.avatar) {
+            const data = response.data;
+            setDataReceiver(data);
+          }
+        } catch (error) {
+          console.log("Error: ", error);
         }
-      } catch (error) {
-        console.log("Error: ", error);
-      }
-    };
+      };
 
-    fetchAPI();
-  }, [receiver_id, sender_id, dataOwner]);
+      fetchAPI();
+    }
+  }, [receiver_id, dataOwner]);
 
-
-  console.log(">>>>>>>>>>>:", isCallAccepted);
-  
   // Initialize PeerJS client and handle stream events
   useEffect(() => {
     if (socket && sender_id && receiver_id && dataOwner) {
@@ -126,18 +173,14 @@ const VideoCall = ({ isVideoCall, titlePage, userId }) => {
 
             call.on("stream", (remoteStream) => {
               if (remoteStream.getVideoTracks().length > 0) {
-                setIsRemoteVideoEnabled(true); // Remote video is enabled
                 if (remoteVideoRef.current) {
                   remoteVideoRef.current.srcObject = remoteStream;
                 }
               } else {
-                setIsRemoteVideoEnabled(false); // Remote video is disabled
                 console.log("Remote video is not enabled.");
               }
 
-              remoteStream.getVideoTracks()[0].onended = () => {
-                setIsRemoteVideoEnabled(false); // Update state when remote video is ended
-              };
+              remoteStream.getVideoTracks()[0].onended = () => {};
             });
           })
           .catch((error) => {
@@ -154,8 +197,6 @@ const VideoCall = ({ isVideoCall, titlePage, userId }) => {
 
   // Call another peer by peer ID
   const callPeer = (id) => {
-    console.log("ID người gọi: " + id);
-
     navigator.mediaDevices
       .getUserMedia({ video: true, audio: true })
       .then((stream) => {
@@ -168,18 +209,14 @@ const VideoCall = ({ isVideoCall, titlePage, userId }) => {
 
         call.on("stream", (remoteStream) => {
           if (remoteStream.getVideoTracks().length > 0) {
-            setIsRemoteVideoEnabled(true);
             if (remoteVideoRef.current) {
               remoteVideoRef.current.srcObject = remoteStream;
             }
           } else {
-            setIsRemoteVideoEnabled(false);
             console.log("Remote video is not enabled.");
           }
 
-          remoteStream.getVideoTracks()[0].onended = () => {
-            setIsRemoteVideoEnabled(false);
-          };
+          remoteStream.getVideoTracks()[0].onended = () => {};
         });
       })
       .catch((error) => {
@@ -188,23 +225,74 @@ const VideoCall = ({ isVideoCall, titlePage, userId }) => {
       });
   };
 
+  // Sync remote state with the server
+  useEffect(() => {
+    if (socket && state) {
+      socket.emit("statusCall", {
+        ...state,
+        to: dataOwner?.user_id !== sender_id ? sender_id : receiver_id,
+      });
+
+      socket.on("statusCallToUser", (data) => {
+        setStateRemote(data);
+        if (statusCall && !data.isCallRemoteAccepted) {
+          handleEndCall();
+        }
+      });
+    }
+  }, [state]);
+
+  socket.on("statusCallToUser", (data) => {
+    console.log(data);
+  });
+
   // End call and navigate back
-  const handleEndCall = () => {
+  const handleEndCall = async () => {
     if (localStreamRef.current) {
       localStreamRef.current.getTracks().forEach((track) => track.stop());
     }
     peerRef.current.destroy();
-    navigate(-1);
+
+    dispatch({ type: "END_CALL" });
+    await handleSendMessage("accepted");
+
+    if (sender_id && receiver_id && dataOwner)
+      window.location.href = `/messenger/${
+        dataOwner?.user_id !== sender_id ? sender_id : receiver_id
+      }`;
   };
 
-  // Toggle video stream
   const handleVideoToggle = () => {
     const videoTrack = localStreamRef.current
       ?.getTracks()
       .find((track) => track.kind === "video");
+
     if (videoTrack) {
-      videoTrack.enabled = !isVideoMuted;
-      setIsVideoMuted((prev) => !prev);
+      videoTrack.enabled = !videoTrack.enabled; // Toggle the video track
+
+      dispatch({ type: "TOGGLE_VIDEO" }); // Update UI state
+
+      if (videoTrack.enabled) {
+        // If the video is re-enabled, renegotiate the stream
+        socket.emit("renegotiateStream", {
+          peer_id: peerRef.current.id,
+          videoEnabled: videoTrack.enabled,
+        });
+      }
+    }
+  };
+
+  const handleSendMessage = async (status) => {
+    try {
+      if (!receiver_id) return;
+      await postData(API_SEND_MESSAGE(receiver_id), {
+        content_type: `all:${status}`,
+        content_text: time,
+      });
+
+      // Update the UI with the new message
+    } catch (error) {
+      console.log("Error sending audio message: ", error);
     }
   };
 
@@ -214,10 +302,48 @@ const VideoCall = ({ isVideoCall, titlePage, userId }) => {
       ?.getTracks()
       .find((track) => track.kind === "audio");
     if (audioTrack) {
-      audioTrack.enabled = !isAudioMuted;
-      setIsAudioMuted((prev) => !prev);
+      // Directly toggle the track's enabled state
+      audioTrack.enabled = !audioTrack.enabled;
+      dispatch({ type: "TOGGLE_AUDIO" }); // Update the UI state
     }
   };
+  // Trong useEffect này, kiểm tra và cập nhật trạng thái khi video bị mute hoặc unmute
+  useEffect(() => {
+    const avtImage = document.querySelector(".avatar");
+    avtImage.style.display = "none"; // ��n ảnh đại diện khi video bị mute
+
+    if (remoteVideoRef.current) {
+      if (stateRemote.isVideoRemoteMuted) {
+        remoteVideoRef.current.style.display = "none"; // Ẩn video khi video bị mute
+        avtImage.style.display = "block"; // ��n ảnh đại diện khi video bị mute
+      } else {
+        remoteVideoRef.current.style.display = "block"; // Hiển thị video khi video không bị mute
+        avtImage.style.display = "none"; // ��n ảnh đại diện khi video bị mute
+      }
+    }
+  }, [stateRemote.isVideoRemoteMuted]);
+
+  useEffect(() => {
+    if (statusCall) {
+      const timeCounter = setTimeout(() => {
+        setTime((time) => time + 1);
+      }, 1000);
+      return () => clearTimeout(timeCounter);
+    }
+  }, [time, statusCall]);
+  console.log(receiver_id);
+
+  useEffect(() => {
+    if (!statusCall) {
+      const timeoutId = setTimeout(async () => {
+        await handleSendMessage("missed");
+        window.location.href = `/messenger/${receiver_id}`;
+      }, 5000); // 60 seconds
+
+      // Clear the timeout if the component unmounts or if statusCall becomes true
+      return () => clearTimeout(timeoutId);
+    }
+  }, [statusCall, receiver_id]);
 
   return (
     <React.Fragment>
@@ -230,34 +356,59 @@ const VideoCall = ({ isVideoCall, titlePage, userId }) => {
             muted
             className="user-video"
           />
-          <video
-            ref={remoteVideoRef}
-            autoPlay
-            playsInline
-            className="partner-video"
-            style={{ display: isRemoteVideoEnabled ? "block" : "none" }} // Show/hide remote video based on state
-          />
-          {/* Show avatar if no remote video */}
-          {!isRemoteVideoEnabled && dataReceiver && (
-            <div className="avatar">
-              <img
-                src={dataReceiver?.avatar}
-                alt="Avatar"
-                className="partner-avatar"
+
+          {dataOwner?.user_id === sender_id ? (
+            statusCall ? (
+              <video
+                ref={remoteVideoRef}
+                autoPlay
+                playsInline
+                className="partner-video"
               />
-            </div>
+            ) : (
+              <div className="avatar">
+                <img
+                  src={dataReceiver?.avatar}
+                  alt="Avatar"
+                  className="partner-avatar"
+                />
+              </div>
+            )
+          ) : (
+            <>
+              <video
+                ref={remoteVideoRef}
+                autoPlay
+                playsInline
+                className="partner-video"
+              />
+            </>
           )}
+          <div className="avatar">
+            <img
+              src={dataReceiver?.avatar}
+              alt="Avatar"
+              className="partner-avatar"
+            />
+          </div>
         </div>
+        <div className="time">{formatSecondsToTime(time)}</div>
         <div className="controls">
-          <button onClick={handleVideoToggle} className="control-button">
-            {isVideoMuted ? <FaVideo /> : <FaVideoSlash />}
-          </button>
-          <button onClick={handleAudioToggle} className="control-button">
-            {isAudioMuted ? <FaMicrophoneSlash /> : <FaMicrophone />}
-          </button>
-          <button onClick={handleEndCall} className="control-button end-call">
-            <FaPhoneAlt />
-          </button>
+          <ToolTipCustom content={"Bật/Tắt video"}>
+            <button className="control-button" onClick={handleVideoToggle}>
+              {isVideoMuted ? <FaVideoSlash /> : <FaVideo />}
+            </button>
+          </ToolTipCustom>
+          <ToolTipCustom content={"Bật/Tắt âm thanh"}>
+            <button className="control-button" onClick={handleAudioToggle}>
+              {isAudioMuted ? <FaMicrophoneSlash /> : <FaMicrophone />}
+            </button>
+          </ToolTipCustom>
+          <ToolTipCustom content={"Kết thúc cuộc gọi"}>
+            <button className="control-button end-call" onClick={handleEndCall}>
+              <FaPhoneAlt />
+            </button>
+          </ToolTipCustom>
         </div>
       </div>
     </React.Fragment>

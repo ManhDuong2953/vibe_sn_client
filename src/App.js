@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { Suspense, useEffect } from "react";
 import routes from "./router/router";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -13,6 +13,7 @@ import {
 import PrivateRoute from "./component/PrivateRouter/PrivateRouter";
 import OwnDataProvider from "./provider/own_data";
 import { SocketProvider } from "./provider/socket_context";
+import Spinner from "./component/Spinner/spinner";
 
 function App() {
   const theme = useSelector((state) => state.themeUI.theme);
@@ -56,7 +57,7 @@ function App() {
     <div className="App">
       <ToastContainer
         position="top-right"
-        autoClose={2000}
+        autoClose={5000}
         hideProgressBar={false}
         newestOnTop={false}
         closeOnClick
@@ -66,37 +67,45 @@ function App() {
         pauseOnHover
         theme={theme}
       />
-      <Router>
-        <Routes>
-          {routes.map((route, index) => {
-            if (route.requireAuth) {
+      <Suspense
+        fallback={
+          <div>
+            <Spinner />
+          </div>
+        }
+      >
+        <Router>
+          <Routes>
+            {routes.map((route, index) => {
+              if (route.requireAuth) {
+                return (
+                  <Route key={index} element={<PrivateRoute />}>
+                    <Route
+                      path={route.path}
+                      exact={route.exact}
+                      element={
+                        <OwnDataProvider>
+                          <SocketProvider>
+                            <ImageProvider>{route.component}</ImageProvider>
+                          </SocketProvider>
+                        </OwnDataProvider>
+                      }
+                    />
+                  </Route>
+                );
+              }
               return (
-                <Route key={index} element={<PrivateRoute />}>
-                  <Route
-                    path={route.path}
-                    exact={route.exact}
-                    element={
-                      <OwnDataProvider>
-                        <SocketProvider>
-                          <ImageProvider>{route.component}</ImageProvider>
-                        </SocketProvider>
-                      </OwnDataProvider>
-                    }
-                  />
-                </Route>
+                <Route
+                  key={index}
+                  path={route.path}
+                  exact={route.exact}
+                  element={route.component}
+                />
               );
-            }
-            return (
-              <Route
-                key={index}
-                path={route.path}
-                exact={route.exact}
-                element={route.component}
-              />
-            );
-          })}
-        </Routes>
-      </Router>
+            })}
+          </Routes>
+        </Router>
+      </Suspense>
       <div id="overlay"></div>
     </div>
   );

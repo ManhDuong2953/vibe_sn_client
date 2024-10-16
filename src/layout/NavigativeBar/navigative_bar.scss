@@ -94,28 +94,23 @@
       display: flex;
       flex-direction: row;
       justify-content: space-between;
-      img.logo {
-        display: none;
-      }
+
       /* Máy tính bảng loại to, hiển thị chiều dọc */
       @media (max-width: 768px) {
         display: none;
         &.active {
           display: flex;
-        background: var(--bg-sidebar-left);
         }
-        padding: 56px 0;
-        flex-direction: column;
+        display: none;
+        width: 100%;
         position: fixed;
-        top: 0;
-        right: 0;
+        bottom: 0;
+        align-items: center;
+        height: unset;
         z-index: 100;
         background-color: var(--navbar-color);
-        border-left: 1px solid var(--border-color);
-        img.logo {
-          height: 36px;
-          display: inline;
-        }
+        border-top: 1px solid var(--border-color);
+        left: 0;
         li {
           align-self: center;
           &:has(img.logo) {
@@ -138,10 +133,7 @@
         @media (max-width: 768px) {
           height: auto;
           flex: 1;
-          padding: 0 20px;
-          &:first-child {
-            border-top: 1px solid var(--border-color);
-          }
+          padding: 10px;
         }
         li {
           svg {
@@ -155,16 +147,11 @@
           b {
             display: none;
           }
-          @media (max-width: 768px) {
-            b {
-              display: block;
-            }
-          }
+
 
           .messenger-icon--container {
             position: relative;
             width: fit-content;
-
           }
         }
       }

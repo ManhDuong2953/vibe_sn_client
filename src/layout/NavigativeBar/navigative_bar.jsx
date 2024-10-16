@@ -93,7 +93,6 @@ function NavigativeBar() {
                         <div className="temp"></div>
                     </div>
                     <ul className="navbar-side--middle">
-                        <li><img src={logo} className="logo" onError={(e) => { e.target.src = imgError }} alt="" /></li>
                         <Link to="/" className="active" title="Trang chủ">
                             <li><AiFillHome /><b>Trang chủ</b></li>
                         </Link>
@@ -103,7 +102,7 @@ function NavigativeBar() {
                         <Link to="/messenger" title="Nhắn tin">
                             <li>
                                 <div className="messenger-icon--container">
-                                    <BiLogoMessenger />
+                                    <BiLogoMessenger size={31} />
                                     <b>Nhắn tin</b>
                                 </div>
                             </li>

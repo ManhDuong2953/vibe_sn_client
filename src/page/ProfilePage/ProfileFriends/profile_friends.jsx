@@ -8,6 +8,7 @@ import { useParams } from "react-router-dom";
 import { getData } from "../../../ultils/fetchAPI/fetch_API";
 import { API_FRIEND_LIST } from "../../../API/api_server";
 import ContactItem from "../../../layout/SideBarRight/Contact/ContactItem/contact_item";
+import { useSocket } from "../../../provider/socket_context";
 function ProfileFriend({ titlePage }) {
   useEffect(() => {
     document.title = titlePage;
@@ -15,6 +16,9 @@ function ProfileFriend({ titlePage }) {
   const { user_id } = useParams();
   const [loading, setLoading] = useState(false);
   const [dataFriend, setDataFriend] = useState();
+  const socket = useSocket();
+  const [listUsersOnline, setListUsersOnline] = useState([]);
+
   useEffect(() => {
     try {
       const fetchData = async () => {
@@ -27,7 +31,17 @@ function ProfileFriend({ titlePage }) {
       console.log(error.message);
     }
   }, [user_id]);
-  console.log(dataFriend);
+
+  useEffect(() => {
+    if (socket) {
+      socket.emit("registerUser", { user_id: user_id });
+      // Đăng ký sự kiện onlineUsers
+      socket.on("onlineUsers", (data) => {
+        setListUsersOnline(data);
+      });
+    }
+  }, [socket]);
+  console.log(listUsersOnline);
 
   return (
     <React.Fragment>
@@ -48,11 +62,12 @@ function ProfileFriend({ titlePage }) {
             {dataFriend &&
               dataFriend?.map((friendItem, index) => (
                 <ContactItem
-                  index={index}
                   loading={true}
-                  user_id={friendItem?.friend_id}
-                  avatar_link={friendItem?.avatar_link}
-                  user_name={friendItem?.user_name}
+                  data={friendItem}
+                  active={
+                    listUsersOnline &&
+                    listUsersOnline?.includes(friendItem?.friend_id)
+                  }
                 />
               ))}
           </div>

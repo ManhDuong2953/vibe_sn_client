@@ -1,41 +1,42 @@
-// routes.js
+import { lazy } from 'react';
 
-import ChatMessengerPage from "../page/ChatPage/chat_page";
-import CreateFaceRecognitionPage from "../page/FaceRecognitionPage/CreateFaceRecognition/create_face_recognition";
-import LoginFaceRecognitionPage from "../page/FaceRecognitionPage/LoginFaceRecognition/login_face_recognition";
-import ForgotPasswordPage from "../page/ForgotPassword/forgot_password";
-import CreateGroupPage from "../page/GroupPage/CreateGroup/create_group";
-import EditInfoGroupPage from "../page/GroupPage/EditInfoGroup/edit_info_group";
-import GroupAdminPage from "../page/GroupPage/GroupAdmin/group_admin";
-import GroupAdminMemberPage from "../page/GroupPage/GroupAdminMember/group_admin_member";
-import GroupHomePage from "../page/GroupPage/GroupHome/group_home";
-import GroupMemberPage from "../page/GroupPage/GroupMember/group_member";
-import ListPostGroupPage from "../page/GroupPage/ListPostGroup/list_post_group";
-import HomePage from "../page/Home/home_page";
-import LoginPage from "../page/LoginPage/login_page";
-import Logout from "../page/Logout/log_out";
-import CreateProductPage from "../page/MarketplacePage/MarketplaceCreate/marketplace_create";
-import MarketplaceDetail from "../page/MarketplacePage/MarketplaceDetail/marketplace_detail";
-import EditProductPage from "../page/MarketplacePage/MarketplaceEdit/marketplace_edit";
-import MarketplaceSearchPage from "../page/MarketplacePage/MarketplaceSearch/marketplace_search";
-import PostDetail from "../page/PostPage/PostDetail/post_detail";
-import EditPost from "../page/PostPage/PostEdit/post_edit";
-import ProfileEditor from "../page/ProfilePage/ProfileEditor/profile_editor";
-import ProfileFriend from "../page/ProfilePage/ProfileFriends/profile_friends";
-import ProfileGroup from "../page/ProfilePage/ProfileGroup/profile_group";
-import ProfilePage from "../page/ProfilePage/ProfileHome/profile_page";
-import ProfileImage from "../page/ProfilePage/ProfileImage/profile_image";
-import ProfileLiked from "../page/ProfilePage/ProfileLiked/profile_liked";
-import ProfileRequest from "../page/ProfilePage/ProfileRequest/profile_request";
-import ProfileStoreStory from "../page/ProfilePage/ProfileStoreStory/profile_store_story";
-import SearchPage from "../page/SearchPage/search_page";
-import SettingPage from "../page/SettingPage/setting_page";
-import SignupPage from "../page/SignupPage/signup_page";
-import CreateStoryImagePreview from "../page/StoriesPage/CreateStoryPage/CreateStoryImagePreview/create_story_image_preview";
-import CreateStoryTextPreview from "../page/StoriesPage/CreateStoryPage/CreateStoryTextPreview/create_story_text_preview";
-import CreateStoryPage from "../page/StoriesPage/CreateStoryPage/create_story_page";
-import StoriesPage from "../page/StoriesPage/stories_page";
-import VideoCall from "../page/VideoCall/video_call";
+const ChatMessengerPage = lazy(() => import("../page/ChatPage/chat_page"));
+const CreateFaceRecognitionPage = lazy(() => import("../page/FaceRecognitionPage/CreateFaceRecognition/create_face_recognition"));
+const LoginFaceRecognitionPage = lazy(() => import("../page/FaceRecognitionPage/LoginFaceRecognition/login_face_recognition"));
+const ForgotPasswordPage = lazy(() => import("../page/ForgotPassword/forgot_password"));
+const CreateGroupPage = lazy(() => import("../page/GroupPage/CreateGroup/create_group"));
+const EditInfoGroupPage = lazy(() => import("../page/GroupPage/EditInfoGroup/edit_info_group"));
+const GroupAdminPage = lazy(() => import("../page/GroupPage/GroupAdmin/group_admin"));
+const GroupAdminMemberPage = lazy(() => import("../page/GroupPage/GroupAdminMember/group_admin_member"));
+const GroupHomePage = lazy(() => import("../page/GroupPage/GroupHome/group_home"));
+const GroupMemberPage = lazy(() => import("../page/GroupPage/GroupMember/group_member"));
+const ListPostGroupPage = lazy(() => import("../page/GroupPage/ListPostGroup/list_post_group"));
+const HomePage = lazy(() => import("../page/Home/home_page"));
+const LoginPage = lazy(() => import("../page/LoginPage/login_page"));
+const Logout = lazy(() => import("../page/Logout/log_out"));
+const CreateProductPage = lazy(() => import("../page/MarketplacePage/MarketplaceCreate/marketplace_create"));
+const MarketplaceDetail = lazy(() => import("../page/MarketplacePage/MarketplaceDetail/marketplace_detail"));
+const EditProductPage = lazy(() => import("../page/MarketplacePage/MarketplaceEdit/marketplace_edit"));
+const MarketplaceSearchPage = lazy(() => import("../page/MarketplacePage/MarketplaceSearch/marketplace_search"));
+const PostDetail = lazy(() => import("../page/PostPage/PostDetail/post_detail"));
+const EditPost = lazy(() => import("../page/PostPage/PostEdit/post_edit"));
+const ProfileEditor = lazy(() => import("../page/ProfilePage/ProfileEditor/profile_editor"));
+const ProfileFriend = lazy(() => import("../page/ProfilePage/ProfileFriends/profile_friends"));
+const ProfileGroup = lazy(() => import("../page/ProfilePage/ProfileGroup/profile_group"));
+const ProfilePage = lazy(() => import("../page/ProfilePage/ProfileHome/profile_page"));
+const ProfileImage = lazy(() => import("../page/ProfilePage/ProfileImage/profile_image"));
+const ProfileLiked = lazy(() => import("../page/ProfilePage/ProfileLiked/profile_liked"));
+const ProfileRequest = lazy(() => import("../page/ProfilePage/ProfileRequest/profile_request"));
+const ProfileStoreStory = lazy(() => import("../page/ProfilePage/ProfileStoreStory/profile_store_story"));
+const SearchPage = lazy(() => import("../page/SearchPage/search_page"));
+const SettingPage = lazy(() => import("../page/SettingPage/setting_page"));
+const SignupPage = lazy(() => import("../page/SignupPage/signup_page"));
+const CreateStoryImagePreview = lazy(() => import("../page/StoriesPage/CreateStoryPage/CreateStoryImagePreview/create_story_image_preview"));
+const CreateStoryTextPreview = lazy(() => import("../page/StoriesPage/CreateStoryPage/CreateStoryTextPreview/create_story_text_preview"));
+const CreateStoryPage = lazy(() => import("../page/StoriesPage/CreateStoryPage/create_story_page"));
+const StoriesPage = lazy(() => import("../page/StoriesPage/stories_page"));
+const VideoCall = lazy(() => import("../page/VideoCall/video_call"));
+
 
 
 const routes = [
@@ -209,13 +210,13 @@ const routes = [
     path: '/setting',
     exact: true,
     requireAuth: true,
-    component: <SettingPage titlePage="Chợ | Vibe" />,
+    component: <SettingPage titlePage="Cài đặt | Vibe" />,
   },
   {
     path: '/login/face-recognition/',
     exact: true,
     requireAuth: false,
-    component: <LoginFaceRecognitionPage titlePage="Chợ | Vibe" />,
+    component: <LoginFaceRecognitionPage titlePage="Đăng nhập Nhận diện khuôn mặt | Vibe" />,
   },
   {
     path: '/login',
@@ -233,49 +234,49 @@ const routes = [
     path: '/login/forgot-password',
     exact: true,
     requireAuth: false,
-    component: <ForgotPasswordPage titlePage="Chợ | Vibe" />,
+    component: <ForgotPasswordPage titlePage="Quên mật khẩu | Vibe" />,
   },
   {
     path: '/signup',
     exact: true,
     requireAuth: false,
-    component: <SignupPage titlePage="Chợ | Vibe" />,
+    component: <SignupPage titlePage="Đăng kí | Vibe" />,
   },
   {
     path: '/face-recognition/create',
     exact: true,
     requireAuth: true,
-    component: <CreateFaceRecognitionPage titlePage="Chợ | Vibe" />,
+    component: <CreateFaceRecognitionPage titlePage="Tạo Nhận diện khuôn mặt | Vibe" />,
   },
   {
     path: '/messenger/:id_receiver_param',
     exact: true,
     requireAuth: true,
-    component: <ChatMessengerPage titlePage="Chợ | Vibe" />,
+    component: <ChatMessengerPage titlePage="Nhắn tin | Vibe" />,
   },
   {
     path: '/messenger',
     exact: true,
     requireAuth: true,
-    component: <ChatMessengerPage titlePage="Chợ | Vibe" />,
+    component: <ChatMessengerPage titlePage="Nhắn tin | Vibe" />,
   },
   {
     path: '/messenger/video-call',
     exact: true,
     requireAuth: true,
-    component: <VideoCall titlePage="Chợ | Vibe" />,
+    component: <VideoCall titlePage="Cuộc gọi video | Vibe" />,
   },
   {
     path: '/messenger/audio-call',
     exact: true,
     requireAuth: true,
-    component: <VideoCall isVideoCall={false} titlePage="Chợ | Vibe" />,
+    component: <VideoCall isVideoCall={false} titlePage="Cuộc gọi thoại | Vibe" />,
   },
   {
     path: '/search',
     exact: true,
     requireAuth: true,
-    component: <SearchPage titlePage="Chợ | Vibe" />,
+    component: <SearchPage titlePage="Tìm kiếm | Vibe" />,
   }
 
 

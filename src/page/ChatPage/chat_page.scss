@@ -73,7 +73,7 @@
     }
   }
   .sidebar {
-    width: 300px;
+    width: 350px;
     background: var(--bg-sidebar-left);
     display: flex;
     flex-direction: column;
@@ -96,21 +96,6 @@
       font-weight: 700;
     }
 
-    .search-bar {
-      padding: 0 16px 16px;
-      input {
-        width: 100%;
-        padding: 10px 20px;
-        border-radius: 4px;
-        border: none;
-        background-color: var(--input-color);
-        color: var(--text-color);
-      }
-      input::placeholder {
-        color: var(--text-blur-color);
-      }
-    }
-
     ul.chat-list {
       flex: 1;
       overflow-y: auto;
@@ -122,7 +107,7 @@
     display: flex;
     flex-direction: column;
     background-color: var(--bg-color);
-    width: -webkit-fill-available;
+    width: 0;
     .chat-header {
       display: flex;
       justify-content: space-between;
@@ -238,11 +223,18 @@
     i.writting {
       margin: 10px;
     }
+
     ul.chat-messages {
       flex: 1;
-      padding: 16px;
+      padding: 30px 16px;
       overflow-y: auto;
       background: var(--bg-list-chat) center / cover;
+      li.message-date {
+        text-align: center;
+        font-size: 9px;
+        opacity: 0.8;
+        padding: 20px 0 5px;
+      }
       li.message {
         display: flex;
         flex-direction: row;
@@ -293,7 +285,6 @@
               font-weight: 500;
             }
 
-
             .message-content {
               width: fit-content;
               background-color: var(--navbar-color);
@@ -319,8 +310,7 @@
                 padding: 6px;
               }
               &:has(audio) {
-                width: 30%;
-                padding: 0;
+                padding: 0 25px;
               }
 
               & > * {

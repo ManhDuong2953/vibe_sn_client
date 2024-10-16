@@ -1,5 +1,4 @@
 import React, { useContext, useEffect, useState } from "react";
-import PopupInfoShort from "../../component/PopupInfoShort/popup_info_short";
 import AvatarWithText from "../../skeleton/avatarwithtext";
 import { Link } from "react-router-dom";
 import "./contact_messenger_item.scss";
@@ -9,12 +8,14 @@ import { useSocket } from "../../provider/socket_context";
 import { timeAgo } from "../../ultils/formatDate/format_date";
 import { OwnDataContext } from "../../provider/own_data";
 
-function ContactMessengerItem({ getFristConversation }) {
+function ContactMessengerItem({ getFristConversation, listUsersOnline }) {
   const [loading, setLoading] = useState(false);
   const [listConversation, setListConversation] = useState([]);
-  const [listUsersOnline, setListUsersOnline] = useState([]);
+  const [filteredConversations, setFilteredConversations] = useState([]);
+  const [searchQuery, setSearchQuery] = useState(""); // New state for search input
   const socket = useSocket();
   const dataOwner = useContext(OwnDataContext);
+
   const fetchData = async () => {
     const response = await postData(API_GET_ALL_CONVERSATION, {
       private_key: localStorage.getItem("private_key"),
@@ -40,10 +41,6 @@ function ContactMessengerItem({ getFristConversation }) {
       socket.on("updateConversation", () => {
         fetchData(); // update list conversation when new message received
       });
-      // Kiểm tra trạng thái online khi component được mount
-      socket.on("onlineUsers", (data) => {
-        setListUsersOnline(data);
-      });
     }
   }, [socket]);
 
@@ -51,14 +48,31 @@ function ContactMessengerItem({ getFristConversation }) {
     getFristConversation(listConversation[0]);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [listConversation]);
+
+  useEffect(() => {
+    // Filter conversations by search query
+    const filtered = listConversation.filter((conversation) =>
+      conversation.friend_name.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+    setFilteredConversations(filtered);
+  }, [searchQuery, listConversation]);
+
   return (
     <React.Fragment>
+      <div className="search-bar search-input">
+        <input
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          type="text"
+          placeholder="Tìm kiếm trên Messenger"
+        />
+      </div>
       {loading ? (
         <ul className="list-contact">
-          {listConversation &&
+          {filteredConversations &&
             listUsersOnline &&
             dataOwner &&
-            listConversation.map((msg, index) => {
+            filteredConversations.map((msg, index) => {
               return (
                 <li
                   key={index}
@@ -70,16 +84,36 @@ function ContactMessengerItem({ getFristConversation }) {
                     <div className="avt-contact">
                       <img src={msg.friend_avatar} alt={msg.friend_name} />
                     </div>
-                    <span className="text-ellipsis">
+                    <span text-ellipsis>
                       <p className="name-contact">{msg.friend_name}</p>
                       <p className="newest-messenger">
-                        <i>{timeAgo(msg.last_message_time)}:</i>
-                        <b>
-                          {" " +
-                            (msg.sender_id === dataOwner?.user_id
-                              ? "Bạn: " + msg.last_message
-                              : msg.last_message)}
-                        </b>
+                        {msg.content_text && (
+                          <>
+                            <b className="text-ellipsis">
+                              {msg.sender_id === dataOwner?.user_id && (
+                                <>Bạn: </>
+                              )}
+                              {msg.content_type === "text" && msg.content_text}
+                              {msg.content_type === "link" && (
+                                <b style={{ opacity: "0.8" }}>
+                                  Trả lời bằng Liên kết
+                                </b>
+                              )}
+                              {msg.content_type === "image" &&
+                                "Trả lời bằng Ảnh"}
+                              {msg.content_type === "video" &&
+                                "Trả lời bằng Video"}
+                              {msg.content_type === "audio" && (
+                                <b style={{ opacity: "0.8" }}>
+                                  Trả lời bằng Tin nhắn thoại
+                                </b>
+                              )}
+                              {msg.content_type === "other" &&
+                                "Trả lời bằng Tệp tin"}
+                            </b>
+                            <i>{timeAgo(msg.last_message_time)}</i>
+                          </>
+                        )}
                       </p>
                     </span>
                   </Link>

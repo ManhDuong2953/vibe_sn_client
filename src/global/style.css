@@ -29,6 +29,7 @@
   --text-blur-color: rgba(255, 255, 255, 0.6);
   --bg-temp-color: transparent !important;
   --input-color: #5b5c5e;
+  --bg-sidebar-left: url("https://vapa.vn/wp-content/uploads/2022/12/anh-den-dep-002.jpg")  top center / cover no-repeat
 }
 
 [data-theme="light"] {
@@ -91,6 +92,18 @@ svg {
 .text-center {
   text-align: center;
 }
+
+.Toastify__toast-body > div:last-child {
+  word-break: break-word;
+  flex: 1 1;
+  color: red;
+}
+
+.profile-container {
+  width: 1000px;
+  margin: auto;
+}
+
 input:disabled,
 button:disabled,
 select:disabled,
