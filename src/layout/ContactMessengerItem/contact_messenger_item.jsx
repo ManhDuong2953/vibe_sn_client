@@ -45,13 +45,15 @@ function ContactMessengerItem({ getFristConversation, listUsersOnline }) {
   }, [socket]);
 
   useEffect(() => {
-    getFristConversation(listConversation[0]);
+    if (listConversation) {
+      getFristConversation(listConversation && listConversation[0]);
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [listConversation]);
 
   useEffect(() => {
     // Filter conversations by search query
-    const filtered = listConversation.filter((conversation) =>
+    const filtered = listConversation?.filter((conversation) =>
       conversation.friend_name.toLowerCase().includes(searchQuery.toLowerCase())
     );
     setFilteredConversations(filtered);
@@ -72,7 +74,7 @@ function ContactMessengerItem({ getFristConversation, listUsersOnline }) {
           {filteredConversations &&
             listUsersOnline &&
             dataOwner &&
-            filteredConversations.map((msg, index) => {
+            filteredConversations?.map((msg, index) => {
               return (
                 <li
                   key={index}

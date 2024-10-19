@@ -343,6 +343,24 @@
             }
           }
         }
+        .call-container {
+          display: flex;
+          align-items: center;
+          p {
+            font-size: 14px;
+            margin-right: 5px;
+            margin-left: 10px;
+          }
+
+          svg {
+            font-size: 20px;
+          }
+          svg.missed {
+            path {
+              color: red !important;
+            }
+          }
+        }
       }
     }
     .filepond--drop-label {
@@ -385,9 +403,13 @@
         }
 
         svg {
+          &.loading-icon {
+            padding: 0 !important;
+          }
           padding: 6px;
           font-size: 40px;
           margin-right: 4px;
+          margin-left: 4px;
           &:hover {
             path {
               color: var(--text-blur-color);

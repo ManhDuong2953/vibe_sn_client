@@ -21,12 +21,17 @@ import "./chat_page.scss";
 import NavigativeBar from "../../layout/NavigativeBar/navigative_bar";
 import ContactMessengerItem from "../../layout/ContactMessengerItem/contact_messenger_item";
 import { Link, useNavigate, useParams } from "react-router-dom";
-import { MdDeleteForever, MdPermMedia } from "react-icons/md";
+import {
+  MdCallEnd,
+  MdDeleteForever,
+  MdPermMedia,
+  MdPhoneMissed,
+} from "react-icons/md";
 import { LuCopyPlus } from "react-icons/lu";
 import { FilePond } from "react-filepond";
 import "filepond/dist/filepond.min.css";
 import { RiChatVoiceFill } from "react-icons/ri";
-import { IoSend } from "react-icons/io5";
+import { IoCallSharp, IoSend } from "react-icons/io5";
 import Waveform from "../../component/WaveSurfer/wave_surfer";
 import { FaSignalMessenger } from "react-icons/fa6";
 import Draggable from "react-draggable";
@@ -46,8 +51,12 @@ import {
 } from "../../API/api_server";
 import { deleteData, getData, postData } from "../../ultils/fetchAPI/fetch_API";
 import { toast } from "react-toastify";
-import { formatDate } from "../../ultils/formatDate/format_date";
+import {
+  formatDate,
+  formatSecondsToTime,
+} from "../../ultils/formatDate/format_date";
 import ToolTipCustom from "../../component/ToolTip/tool_tip";
+import { LoadingIcon } from "../../ultils/icons/loading";
 
 function ChatMessengerPage({ titlePage }) {
   //Tên tiêu đề
@@ -457,6 +466,7 @@ function ChatMessengerPage({ titlePage }) {
 
   // Gửi tin nhắn
   const handleSend = async () => {
+    setSendLoading(true);
     const urlRegex = /(https?:\/\/[^\s]+)/g;
 
     // Kiểm tra nếu tin nhắn là văn bản
@@ -487,6 +497,9 @@ function ChatMessengerPage({ titlePage }) {
 
       // Gửi tin nhắn văn bản qua API
       try {
+        setShowFilePond(false);
+        setShowAudio(false);
+        setShowReply(false);
         await postData(API_SEND_MESSAGE(id_receiver), {
           content_type: newMessage.content_type,
           content_text: newMessage.content_text,
@@ -535,6 +548,9 @@ function ChatMessengerPage({ titlePage }) {
 
         // Gửi từng file qua API
         try {
+          setShowFilePond(false);
+          setShowAudio(false);
+          setShowReply(false);
           await postData(API_SEND_MESSAGE(id_receiver), formData, {
             headers: {
               "Content-Type": "multipart/form-data",
@@ -564,10 +580,9 @@ function ChatMessengerPage({ titlePage }) {
     // Reset lại input và tệp tin
     setMessage(""); // Reset input
     setFiles([]);
-    setShowFilePond(false);
-    setShowAudio(false);
-    setShowReply(false);
+
     setContentReply("");
+    setSendLoading(false);
   };
 
   // sử lý khi ấn call
@@ -771,6 +786,33 @@ function ChatMessengerPage({ titlePage }) {
                                         </a>
                                       </div>
                                     )}
+                                    {msg.content_type?.includes("call") && (
+                                      <div className="call-container">
+                                        {msg.content_type?.includes(
+                                          "missed"
+                                        ) && (
+                                          <>
+                                            <MdPhoneMissed className="missed" />
+                                            <p>Cuộc gọi nhỡ</p>
+                                          </>
+                                        )}
+                                        {msg.content_type?.includes(
+                                          "accepted"
+                                        ) && (
+                                          <>
+                                            <MdCallEnd className="accepted" />
+                                            <p>
+                                              Cuộc gọi thoại{" "}
+                                              <b>
+                                                {formatSecondsToTime(
+                                                  msg.content_text
+                                                )}
+                                              </b>
+                                            </p>
+                                          </>
+                                        )}
+                                      </div>
+                                    )}
                                   </div>
                                   {hoveredIndex === msg.messenger_id && (
                                     <div
@@ -884,13 +926,19 @@ function ChatMessengerPage({ titlePage }) {
                         onBlur={() => setIsTyping(false)}
                         value={message}
                         onChange={(e) => setMessage(e.target.value)}
-                        onKeyDown={(e) => e.key === "Enter" && handleSend()}
+                        onKeyDown={(e) =>
+                          !sendLoading && e.key === "Enter" && handleSend()
+                        }
                       />
-                      <div className="btn-func">
-                        {(message !== "" || files.length > 0) && (
-                          <IoSend className="send-btn" onClick={handleSend} />
-                        )}
-                      </div>
+                      {sendLoading ? (
+                        <LoadingIcon />
+                      ) : (
+                        <div className="btn-func">
+                          {(message !== "" || files.length > 0) && (
+                            <IoSend className="send-btn" onClick={handleSend} />
+                          )}
+                        </div>
+                      )}
                     </div>
                   </div>
                 ) : (

@@ -64,7 +64,7 @@ const VideoCall = ({ isVideoCall, titlePage, userId }) => {
     isVideoRemoteMuted: false,
     isAudioRemoteMuted: false,
   });
-
+  const [callEnded, setCallEnded] = useState(false);
   const [receiver_id, setReceiverID] = useState();
   const [room_id, setRoomID] = useState();
   const [sender_id, setSenderID] = useState();
@@ -239,22 +239,25 @@ const VideoCall = ({ isVideoCall, titlePage, userId }) => {
           handleEndCall();
         }
       });
+      return () => socket.off("statusCallToUser"); // Cleanup khi component unmount
     }
   }, [state]);
 
-  socket.on("statusCallToUser", (data) => {
-    console.log(data);
-  });
-
   // End call and navigate back
   const handleEndCall = async () => {
+    if (callEnded) return; // Ngăn không cho hàm gọi nhiều lần
+    setCallEnded(true); // Đặt cờ để lần sau không gọi lại
     if (localStreamRef.current) {
       localStreamRef.current.getTracks().forEach((track) => track.stop());
     }
     peerRef.current.destroy();
 
     dispatch({ type: "END_CALL" });
-    await handleSendMessage("accepted");
+    if (statusCall && !callEnded) {
+      await handleSendMessage("accepted");
+    } else {
+      await handleSendMessage("missed");
+    }
 
     if (sender_id && receiver_id && dataOwner)
       window.location.href = `/messenger/${
@@ -284,17 +287,17 @@ const VideoCall = ({ isVideoCall, titlePage, userId }) => {
 
   const handleSendMessage = async (status) => {
     try {
-      if (!receiver_id) return;
-      await postData(API_SEND_MESSAGE(receiver_id), {
-        content_type: `all:${status}`,
-        content_text: time,
-      });
+        if (!receiver_id || callEnded || time <= 0) return; // Không gửi nếu thời gian là 0 giây
 
-      // Update the UI with the new message
+        await postData(API_SEND_MESSAGE(receiver_id), {
+            content_type: `call:${status}`,
+            content_text: `${time}`, // Format lại tin nhắn
+            sender_id,
+        });
     } catch (error) {
-      console.log("Error sending audio message: ", error);
+        console.log('Error sending call message: ', error);
     }
-  };
+};
 
   // Toggle audio stream
   const handleAudioToggle = () => {
@@ -331,7 +334,6 @@ const VideoCall = ({ isVideoCall, titlePage, userId }) => {
       return () => clearTimeout(timeCounter);
     }
   }, [time, statusCall]);
-  console.log(receiver_id);
 
   useEffect(() => {
     if (!statusCall) {
@@ -394,21 +396,24 @@ const VideoCall = ({ isVideoCall, titlePage, userId }) => {
         </div>
         <div className="time">{formatSecondsToTime(time)}</div>
         <div className="controls">
-          <ToolTipCustom content={"Bật/Tắt video"}>
-            <button className="control-button" onClick={handleVideoToggle}>
-              {isVideoMuted ? <FaVideoSlash /> : <FaVideo />}
-            </button>
-          </ToolTipCustom>
-          <ToolTipCustom content={"Bật/Tắt âm thanh"}>
-            <button className="control-button" onClick={handleAudioToggle}>
-              {isAudioMuted ? <FaMicrophoneSlash /> : <FaMicrophone />}
-            </button>
-          </ToolTipCustom>
-          <ToolTipCustom content={"Kết thúc cuộc gọi"}>
-            <button className="control-button end-call" onClick={handleEndCall}>
-              <FaPhoneAlt />
-            </button>
-          </ToolTipCustom>
+          {/* <ToolTipCustom content={"Bật/Tắt video"}> */}
+          <button className="control-button" onClick={handleVideoToggle}>
+            {isVideoMuted ? <FaVideoSlash /> : <FaVideo />}
+          </button>
+          {/* </ToolTipCustom> */}
+          {/* <ToolTipCustom content={"Bật/Tắt âm thanh"}> */}
+          <button className="control-button" onClick={handleAudioToggle}>
+            {isAudioMuted ? <FaMicrophoneSlash /> : <FaMicrophone />}
+          </button>
+          {/* </ToolTipCustom> */}
+          {/* <ToolTipCustom content={"Kết thúc cuộc gọi"}> */}
+          <button
+            className="control-button end-call"
+            onClick={() => dispatch({ type: "END_CALL" })}
+          >
+            <FaPhoneAlt />
+          </button>
+          {/* </ToolTipCustom> */}
         </div>
       </div>
     </React.Fragment>
