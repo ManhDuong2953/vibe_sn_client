@@ -112,6 +112,10 @@ function ContactMessengerItem({ getFristConversation, listUsersOnline }) {
                               )}
                               {msg.content_type === "other" &&
                                 "Trả lời bằng Tệp tin"}
+                              {msg.content_type?.includes("accepted") &&
+                                "Cuộc gọi thoại"}
+                              {msg.content_type?.includes("missed") &&
+                                "Cuộc gọi nhỡ"}
                             </b>
                             <i>{timeAgo(msg.last_message_time)}</i>
                           </>

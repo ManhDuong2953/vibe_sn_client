@@ -25,6 +25,7 @@ import {
   MdCallEnd,
   MdDeleteForever,
   MdPermMedia,
+  MdPhoneCallback,
   MdPhoneMissed,
 } from "react-icons/md";
 import { LuCopyPlus } from "react-icons/lu";
@@ -740,7 +741,13 @@ function ChatMessengerPage({ titlePage }) {
                               <div className="message-container">
                                 {msg.reply_text && (
                                   <p className="message-reply">
-                                    {msg.reply_text}
+                                    {
+                                      <div
+                                        dangerouslySetInnerHTML={{
+                                          __html: msg.reply_text,
+                                        }}
+                                      />
+                                    }
                                   </p>
                                 )}
                                 <span>
@@ -792,15 +799,25 @@ function ChatMessengerPage({ titlePage }) {
                                           "missed"
                                         ) && (
                                           <>
-                                            <MdPhoneMissed className="missed" />
-                                            <p>Cuộc gọi nhỡ</p>
+                                            <div className="missed-container">
+                                              <MdPhoneMissed className="missed" />
+                                              <p>Cuộc gọi nhỡ</p>
+                                            </div>
+
+                                            <button
+                                              onClick={() =>
+                                                handleClickCall("video-call")
+                                              }
+                                            >
+                                              GỌI LẠI
+                                            </button>
                                           </>
                                         )}
                                         {msg.content_type?.includes(
                                           "accepted"
                                         ) && (
                                           <>
-                                            <MdCallEnd className="accepted" />
+                                            <MdPhoneCallback className="accepted" />
                                             <p>
                                               Cuộc gọi thoại{" "}
                                               <b>
@@ -821,33 +838,37 @@ function ChatMessengerPage({ titlePage }) {
                                         setShowReply(true);
                                         setContentReply(() => {
                                           if (msg.content_type === "text") {
-                                            return msg.content_text;
+                                            return `<span>${msg.content_text}</span>`; // Nội dung văn bản
                                           } else if (
                                             msg.content_type === "link"
                                           ) {
-                                            return (
-                                              <p
-                                                dangerouslySetInnerHTML={{
-                                                  __html: msg.content_text,
-                                                }}
-                                              ></p>
-                                            );
+                                            return `<span><a href="${msg.content_text}" target="_blank" rel="noopener noreferrer">${msg.content_text}</a></span>`; // Nội dung link
                                           } else if (
                                             msg.content_type === "image"
                                           ) {
-                                            return "Ảnh";
+                                            return '<span><i class="fas fa-image"></i> Ảnh</span>'; // HTML cho ảnh
                                           } else if (
                                             msg.content_type === "video"
                                           ) {
-                                            return "Video";
+                                            return '<span><i class="fas fa-video"></i> Video</span>'; // HTML cho video
                                           } else if (
                                             msg.content_type === "audio"
                                           ) {
-                                            return "Tin nhắn thoại";
+                                            return '<span><i class="fas fa-microphone-alt"></i> Tin nhắn thoại</span>'; // HTML cho audio
                                           } else if (
                                             msg.content_type === "other"
                                           ) {
-                                            return "Tệp tin";
+                                            return '<span><i class="fas fa-file"></i> Tệp tin</span>'; // HTML cho file
+                                          } else if (
+                                            msg.content_type?.includes(
+                                              "accepted"
+                                            )
+                                          ) {
+                                            return '<span><i class="fas fa-phone"></i> Cuộc gọi thoại</span>'; // HTML cho cuộc gọi thoại
+                                          } else if (
+                                            msg.content_type?.includes("missed")
+                                          ) {
+                                            return '<span><i class="fas fa-phone-slash"></i> Cuộc gọi nhỡ</span>'; // HTML cho cuộc gọi nhỡ
                                           }
                                         });
                                       }}
@@ -878,7 +899,11 @@ function ChatMessengerPage({ titlePage }) {
                     />
                     <div className="left-reply">
                       <div className="messenger-reply">
-                        <p>{contentReply}</p>
+                        {
+                          <div
+                            dangerouslySetInnerHTML={{ __html: contentReply }}
+                          />
+                        }
                       </div>
                       <ImReply />
                     </div>

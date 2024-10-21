@@ -4,6 +4,7 @@ import React, {
   useEffect,
   useContext,
   useState,
+  useCallback,
 } from "react";
 import "./video_call.scss";
 import {
@@ -195,6 +196,27 @@ const VideoCall = ({ isVideoCall, titlePage, userId }) => {
     }
   }, [socket, receiver_id, sender_id, dataOwner]);
 
+  // End call and navigate back
+  const handleEndCall = async () => {
+    if (callEnded) return; // Ngăn không cho hàm gọi nhiều lần
+    setCallEnded(true); // Đặt cờ để lần sau không gọi lại
+    if (localStreamRef.current) {
+      localStreamRef.current.getTracks().forEach((track) => track.stop());
+    }
+    peerRef.current.destroy();
+
+    dispatch({ type: "END_CALL" });
+    if (statusCall && !callEnded) {
+      await handleSendMessage("accepted");
+    } else {
+      await handleSendMessage("missed");
+    }
+
+    if (sender_id && receiver_id && dataOwner)
+      window.location.href = `/messenger/${
+        dataOwner?.user_id !== sender_id ? sender_id : receiver_id
+      }`;
+  };
   // Call another peer by peer ID
   const callPeer = (id) => {
     navigator.mediaDevices
@@ -232,7 +254,9 @@ const VideoCall = ({ isVideoCall, titlePage, userId }) => {
         ...state,
         to: dataOwner?.user_id !== sender_id ? sender_id : receiver_id,
       });
-
+      if (!state.isCallAccepted) {
+        handleEndCall();
+      }
       socket.on("statusCallToUser", (data) => {
         setStateRemote(data);
         if (statusCall && !data.isCallRemoteAccepted) {
@@ -242,28 +266,6 @@ const VideoCall = ({ isVideoCall, titlePage, userId }) => {
       return () => socket.off("statusCallToUser"); // Cleanup khi component unmount
     }
   }, [state]);
-
-  // End call and navigate back
-  const handleEndCall = async () => {
-    if (callEnded) return; // Ngăn không cho hàm gọi nhiều lần
-    setCallEnded(true); // Đặt cờ để lần sau không gọi lại
-    if (localStreamRef.current) {
-      localStreamRef.current.getTracks().forEach((track) => track.stop());
-    }
-    peerRef.current.destroy();
-
-    dispatch({ type: "END_CALL" });
-    if (statusCall && !callEnded) {
-      await handleSendMessage("accepted");
-    } else {
-      await handleSendMessage("missed");
-    }
-
-    if (sender_id && receiver_id && dataOwner)
-      window.location.href = `/messenger/${
-        dataOwner?.user_id !== sender_id ? sender_id : receiver_id
-      }`;
-  };
 
   const handleVideoToggle = () => {
     const videoTrack = localStreamRef.current
@@ -287,17 +289,23 @@ const VideoCall = ({ isVideoCall, titlePage, userId }) => {
 
   const handleSendMessage = async (status) => {
     try {
-        if (!receiver_id || callEnded || time <= 0) return; // Không gửi nếu thời gian là 0 giây
+      if (
+        !receiver_id ||
+        (time === 0 && status == "accepted") ||
+        callEnded ||
+        (dataOwner && dataOwner?.userId === receiver_id)
+      )
+        return;
 
-        await postData(API_SEND_MESSAGE(receiver_id), {
-            content_type: `call:${status}`,
-            content_text: `${time}`, // Format lại tin nhắn
-            sender_id,
-        });
+      await postData(API_SEND_MESSAGE(receiver_id), {
+        content_type: `call:${status}`,
+        content_text: `${time}`, // Format lại tin nhắn
+        sender_id,
+      });
     } catch (error) {
-        console.log('Error sending call message: ', error);
+      console.log("Error sending call message: ", error);
     }
-};
+  };
 
   // Toggle audio stream
   const handleAudioToggle = () => {
@@ -340,7 +348,7 @@ const VideoCall = ({ isVideoCall, titlePage, userId }) => {
       const timeoutId = setTimeout(async () => {
         await handleSendMessage("missed");
         window.location.href = `/messenger/${receiver_id}`;
-      }, 5000); // 60 seconds
+      }, 60000); // 60 seconds
 
       // Clear the timeout if the component unmounts or if statusCall becomes true
       return () => clearTimeout(timeoutId);
@@ -396,24 +404,24 @@ const VideoCall = ({ isVideoCall, titlePage, userId }) => {
         </div>
         <div className="time">{formatSecondsToTime(time)}</div>
         <div className="controls">
-          {/* <ToolTipCustom content={"Bật/Tắt video"}> */}
-          <button className="control-button" onClick={handleVideoToggle}>
-            {isVideoMuted ? <FaVideoSlash /> : <FaVideo />}
-          </button>
-          {/* </ToolTipCustom> */}
-          {/* <ToolTipCustom content={"Bật/Tắt âm thanh"}> */}
-          <button className="control-button" onClick={handleAudioToggle}>
-            {isAudioMuted ? <FaMicrophoneSlash /> : <FaMicrophone />}
-          </button>
-          {/* </ToolTipCustom> */}
-          {/* <ToolTipCustom content={"Kết thúc cuộc gọi"}> */}
-          <button
-            className="control-button end-call"
-            onClick={() => dispatch({ type: "END_CALL" })}
-          >
-            <FaPhoneAlt />
-          </button>
-          {/* </ToolTipCustom> */}
+          <ToolTipCustom content={"Bật/Tắt video"}>
+            <button className="control-button" onClick={handleVideoToggle}>
+              {isVideoMuted ? <FaVideoSlash /> : <FaVideo />}
+            </button>
+          </ToolTipCustom>
+          <ToolTipCustom content={"Bật/Tắt âm thanh"}>
+            <button className="control-button" onClick={handleAudioToggle}>
+              {isAudioMuted ? <FaMicrophoneSlash /> : <FaMicrophone />}
+            </button>
+          </ToolTipCustom>
+          <ToolTipCustom content={"Kết thúc cuộc gọi"}>
+            <button
+              className="control-button end-call"
+              onClick={() => dispatch({ type: "END_CALL" })}
+            >
+              <FaPhoneAlt />
+            </button>
+          </ToolTipCustom>
         </div>
       </div>
     </React.Fragment>

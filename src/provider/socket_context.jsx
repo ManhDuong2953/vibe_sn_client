@@ -1,4 +1,10 @@
-import React, { createContext, useContext, useEffect, useState, useRef } from "react";
+import React, {
+  createContext,
+  useContext,
+  useEffect,
+  useState,
+  useRef,
+} from "react";
 import { io } from "socket.io-client";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -65,13 +71,17 @@ export const SocketProvider = ({ children }) => {
 
   const playAudio = () => {
     if (audioRef.current) {
-      audioRef.current.play().catch((error) => console.log("Error playing audio:", error));
+      audioRef.current
+        .play()
+        .catch((error) => console.log("Error playing audio:", error));
     }
   };
 
   const getInfoCaller = async (sender_id) => {
     try {
-      const response = await getData(API_GET_INFO_USER_PROFILE_BY_ID(sender_id));
+      const response = await getData(
+        API_GET_INFO_USER_PROFILE_BY_ID(sender_id)
+      );
       if (response?.status) {
         return response?.data;
       }
@@ -84,6 +94,9 @@ export const SocketProvider = ({ children }) => {
   useEffect(() => {
     if (socket && dataOwner) {
       socket.emit("registerUser", { user_id: dataOwner?.user_id });
+      // socket.emit("statusCallToUser", (data) => {
+      //   console.log(data);
+      // });
 
       socket.on("user-calling", async (data) => {
         if (data && dataOwner && data?.receiver_id === dataOwner?.user_id) {
@@ -94,7 +107,10 @@ export const SocketProvider = ({ children }) => {
             toast.info(
               ({ closeToast }) => (
                 <div>
-                  <p><b style={{color: "green"}}>{callerInfo.user_name}</b> đang gọi cho bạn!</p>
+                  <p>
+                    <b style={{ color: "green" }}>{callerInfo.user_name}</b>{" "}
+                    đang gọi cho bạn!
+                  </p>
                   <div
                     style={{
                       display: "flex",

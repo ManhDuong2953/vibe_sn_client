@@ -1,4 +1,5 @@
 import { getAuth, signInWithPopup, GoogleAuthProvider } from "firebase/auth";
+import { toast } from "react-toastify";
 
 
 export default async function ShowPopupLoginWithGoogle() {
@@ -30,12 +31,10 @@ export default async function ShowPopupLoginWithGoogle() {
             type_account: 'google'
         };
     } catch (error) {
-        console.error('Error Code:', error.code);
-        console.error('Error Message:', error.message);
+
         const email = error.customData?.email;
         const credential = GoogleAuthProvider.credentialFromError(error);
-        console.error('Error Email:', email);
-        console.error('Credential used:', credential);
+        toast.error("Đăng nhập thất bại. Thử lại!")
 
     }
 }
