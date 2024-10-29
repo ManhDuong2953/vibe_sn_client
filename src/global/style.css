@@ -29,7 +29,8 @@
   --text-blur-color: rgba(255, 255, 255, 0.6);
   --bg-temp-color: transparent !important;
   --input-color: #5b5c5e;
-  --bg-sidebar-left: url("https://vapa.vn/wp-content/uploads/2022/12/anh-den-dep-002.jpg")  top center / cover no-repeat
+  --bg-sidebar-left: url("https://vapa.vn/wp-content/uploads/2022/12/anh-den-dep-002.jpg")
+    top center / cover no-repeat;
 }
 
 [data-theme="light"] {
@@ -129,6 +130,17 @@ button[type="submit"]:hover {
   object-fit: cover;
 }
 
+input,
+select,
+option {
+  background-color: var(--input-color) !important;
+  color: var(--text-color) !important;
+}
+
+input::placeholder {
+  color: var(--text-blur-color) !important;
+}
+
 input:focus {
   outline: unset !important;
 }
@@ -221,7 +233,16 @@ a.filepond--credits {
   width: calc(100vw - 50px) !important;
   margin: auto;
 }
-
+.reactEasyCrop_Container {
+  position: absolute !important;
+  top: calc(10% + 56px) !important;
+  left: 10% !important;
+  right: 10% !important;
+  bottom: 10% !important;
+}
+.crop-img-container{
+  background-color: var(--bg-color);
+}
 /* Điện thoại di động, hiển thị chiều dọc */
 @media (max-width: 320px) {
   svg {

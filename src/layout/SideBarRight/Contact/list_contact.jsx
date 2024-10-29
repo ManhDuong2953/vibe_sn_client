@@ -11,7 +11,7 @@ function ListContact() {
   const [listUsersOnline, setListUsersOnline] = useState([]);
   const [loading, setLoading] = useState(false);
   const socket = useSocket();
-  
+
   useEffect(() => {
     try {
       if (dataOwner) {
@@ -29,7 +29,6 @@ function ListContact() {
     }
   }, [dataOwner]);
   useEffect(() => {
-
     if (socket) {
       socket.emit("registerUser", { user_id: dataOwner?.user_id });
 
@@ -43,7 +42,7 @@ function ListContact() {
   return (
     <div className="list-contact--container">
       <ul className="list-contact">
-        {dataFriend &&
+        {dataFriend ? (
           dataFriend?.map((item, index) => (
             <ContactItem
               data={item}
@@ -53,7 +52,10 @@ function ListContact() {
                 listUsersOnline && listUsersOnline?.includes(item?.friend_id)
               }
             />
-          ))}
+          ))
+        ) : (
+          <p className="text-center">Không có bạn bè nào</p>
+        )}
       </ul>
     </div>
   );

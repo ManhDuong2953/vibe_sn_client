@@ -10,7 +10,7 @@ function ContactItem({ active, data, loading = false }) {
         {loading ? (
           <Link to={"/messenger/" + data?.friend_id}>
             <div className="avt-contact">
-              <PopupInfoShort />
+              <PopupInfoShort user_id={data && data?.friend_id} />
               <img src={data?.avatar_link} alt="" />
             </div>
 

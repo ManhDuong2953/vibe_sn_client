@@ -4,6 +4,7 @@ import React, {
   useEffect,
   useContext,
   useCallback,
+  useLayoutEffect,
 } from "react";
 import {
   FaUserCircle,
@@ -28,7 +29,7 @@ import {
   MdPhoneCallback,
   MdPhoneMissed,
 } from "react-icons/md";
-import { LuCopyPlus } from "react-icons/lu";
+import { LuCopyPlus, LuCornerDownRight } from "react-icons/lu";
 import { FilePond } from "react-filepond";
 import "filepond/dist/filepond.min.css";
 import { RiChatVoiceFill } from "react-icons/ri";
@@ -457,7 +458,7 @@ function ChatMessengerPage({ titlePage }) {
   }, []);
 
   // set người dùng đã có cặp khoá key chưa
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (private_key && private_key !== undefined) {
       setIsVerifiedCode(true);
     } else {
@@ -673,17 +674,25 @@ function ChatMessengerPage({ titlePage }) {
               <div className="chat-window">
                 <div className="chat-header">
                   <div className="chat-user-info active">
-                    <div
-                      className={`avt-img ${
-                        id_receiver &&
-                        listUsersOnline &&
-                        listUsersOnline?.includes(id_receiver)
-                          ? "online"
-                          : ""
-                      }`}
+                    <Link
+                      to={"/profile/" + (infoReceiver && infoReceiver?.user_id)}
                     >
-                      <img src={infoReceiver && infoReceiver?.avatar} alt="" />
-                    </div>
+                      {" "}
+                      <div
+                        className={`avt-img ${
+                          id_receiver &&
+                          listUsersOnline &&
+                          listUsersOnline?.includes(id_receiver)
+                            ? "online"
+                            : ""
+                        }`}
+                      >
+                        <img
+                          src={infoReceiver && infoReceiver?.avatar}
+                          alt=""
+                        />
+                      </div>
+                    </Link>
                     <div>
                       <div className="chat-user-name">
                         {infoReceiver && infoReceiver?.user_name}
@@ -898,6 +907,7 @@ function ChatMessengerPage({ titlePage }) {
                       onClick={() => setShowReply(false)}
                     />
                     <div className="left-reply">
+                      <LuCornerDownRight />
                       <div className="messenger-reply">
                         {
                           <div
@@ -905,7 +915,6 @@ function ChatMessengerPage({ titlePage }) {
                           />
                         }
                       </div>
-                      <ImReply />
                     </div>
                   </div>
                 )}

@@ -13,10 +13,10 @@ body {
   padding: 20px;
   border-radius: 10px;
   overflow: hidden;
-.title{
-  display: flex;
-  justify-content: flex-start;
-}
+  .title {
+    display: flex;
+    justify-content: flex-start;
+  }
   .container {
     height: calc(100vh - 56px - 40px);
     width: 100%;
@@ -98,7 +98,7 @@ body {
           display: flex;
           flex-direction: column;
           width: 100%;
-
+          padding: 10px 15px 20px;
           .control-group {
             width: 100%;
             max-width: 400px;

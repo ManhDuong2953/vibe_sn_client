@@ -8,19 +8,24 @@ import { FaPeopleGroup } from "react-icons/fa6";
 import FormPost from "../../../component/FormPost/form_post";
 import ListSuggest from "../../../layout/SideBarRight/Suggest/list_suggest";
 import { CgPushChevronLeft, CgPushChevronRight } from "react-icons/cg";
+import { useParams } from "react-router-dom";
+import { getData } from "../../../ultils/fetchAPI/fetch_API";
+import { API_GROUP_DETAIL } from "../../../API/api_server";
 
 
 function GroupHomePage({ titlePage }) {
     useEffect(() => {
         document.title = titlePage;
     }, [titlePage]);
+    const {group_id} = useParams();
+   
     return (
         <React.Fragment>
             <div className="group-dom">
                 <NavigativeBar />
                 <div className="group-wrapper container">
                     <div className="group-container">
-                        <GroupHeader classNameActive={"post"} />
+                        <GroupHeader group_id={group_id} classNameActive={"post"} />
                         <div className="group-main">
                             <div className="group-left">
                                 <FormPost />

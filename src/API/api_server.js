@@ -61,13 +61,20 @@ const API_CREATE_KEYSPAIR = API_HOST + "/users/keys_pair/register/";
 const API_IS_EXIST_KEYSPAIR = API_HOST + "/users/keys_pair/is_exist_keys_pair/";
 const API_GET_PRIVATE_KEY = API_HOST + "/users/keys_pair/get_private_key/";
 const API_DELETE_KEYS_PAIR = API_HOST + "/users/keys_pair/delete_keys_pair/";
-const API_CHECK_KEYSPAIR = (id) => API_HOST + "/users/keys_pair/is-has-keypair/" + id;
+const API_CHECK_KEYSPAIR = (id) =>
+  API_HOST + "/users/keys_pair/is-has-keypair/" + id;
 
 // Message API ENDPOINT
 
 const API_SEND_MESSAGE = (id) => API_HOST + "/messenger/send/" + id;
 const API_GET_ALL_MESSAGE = (id) => API_HOST + "/messenger/all-message/" + id;
 const API_GET_ALL_CONVERSATION = API_HOST + "/messenger/all-conversation/";
+
+// GROUP API ENDPOINT
+const API_GROUP_CREATE = API_HOST + "/group/channel/create";
+const API_LIST_GROUP_BY_USERID  = (id) => API_HOST + "/group/members/list-all-group/" + id;
+const API_GROUP_DETAIL  = (id) => API_HOST + "/group/channel/details/" + id;
+const API_LIST_GROUP_BY_OWNER  = API_HOST + "/group/members/list-all-group/" ;
 
 export {
   API_SIGNUP_POST,
@@ -111,5 +118,9 @@ export {
   API_SEND_MESSAGE,
   API_GET_ALL_MESSAGE,
   API_GET_ALL_CONVERSATION,
-  API_CHECK_KEYSPAIR
+  API_CHECK_KEYSPAIR,
+  API_GROUP_CREATE,
+  API_LIST_GROUP_BY_OWNER,
+  API_LIST_GROUP_BY_USERID,
+  API_GROUP_DETAIL
 };

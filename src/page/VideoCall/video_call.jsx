@@ -27,14 +27,15 @@ import { toast } from "react-toastify";
 import ToolTipCustom from "../../component/ToolTip/tool_tip";
 import { formatSecondsToTime } from "../../ultils/formatDate/format_date";
 
-const VideoCall = ({ isVideoCall, titlePage, userId }) => {
+const VideoCall = ({ isVideoCall = true, titlePage }) => {
   useEffect(() => {
     document.title = titlePage;
   }, [titlePage]);
 
+
   const initialState = {
     isCallAccepted: true,
-    isVideoMuted: false,
+    isVideoMuted: !isVideoCall,
     isAudioMuted: false,
   };
 
@@ -62,7 +63,7 @@ const VideoCall = ({ isVideoCall, titlePage, userId }) => {
   const { isCallAccepted, isVideoMuted, isAudioMuted } = state;
   const [stateRemote, setStateRemote] = useState({
     isCallRemoteAccepted: false,
-    isVideoRemoteMuted: false,
+    isVideoRemoteMuted: !isVideoCall,
     isAudioRemoteMuted: false,
   });
   const [callEnded, setCallEnded] = useState(false);
@@ -149,7 +150,6 @@ const VideoCall = ({ isVideoCall, titlePage, userId }) => {
       peerRef.current = peer;
 
       peer.on("open", (id) => {
-        console.log("peer: ", id);
         socket.emit("getPeerIDCaller", {
           receiver_id: receiver_id,
           sender_id: sender_id,
@@ -258,6 +258,8 @@ const VideoCall = ({ isVideoCall, titlePage, userId }) => {
         handleEndCall();
       }
       socket.on("statusCallToUser", (data) => {
+        console.log(">>>: ", data);
+
         setStateRemote(data);
         if (statusCall && !data.isCallRemoteAccepted) {
           handleEndCall();
@@ -354,20 +356,29 @@ const VideoCall = ({ isVideoCall, titlePage, userId }) => {
       return () => clearTimeout(timeoutId);
     }
   }, [statusCall, receiver_id]);
+  useEffect(() => {
+    return () => {
+      if (localStreamRef.current) {
+        localStreamRef.current.getTracks().forEach((track) => track.stop());
+      }
+    };
+  }, []);
 
   return (
     <React.Fragment>
       <div className="video-call-container">
         <div className="video-wrapper">
-          <video
-            ref={localVideoRef}
-            playsInline
-            autoPlay
-            muted
-            className="user-video"
-          />
+          {isVideoCall && (
+            <video
+              ref={localVideoRef}
+              playsInline
+              autoPlay
+              muted
+              className="user-video"
+            />
+          )}
 
-          {dataOwner?.user_id === sender_id ? (
+          {isVideoCall && dataOwner?.user_id === sender_id ? (
             statusCall ? (
               <video
                 ref={remoteVideoRef}
@@ -404,11 +415,13 @@ const VideoCall = ({ isVideoCall, titlePage, userId }) => {
         </div>
         <div className="time">{formatSecondsToTime(time)}</div>
         <div className="controls">
-          <ToolTipCustom content={"Bật/Tắt video"}>
-            <button className="control-button" onClick={handleVideoToggle}>
-              {isVideoMuted ? <FaVideoSlash /> : <FaVideo />}
-            </button>
-          </ToolTipCustom>
+          {isVideoCall && (
+            <ToolTipCustom content={"Bật/Tắt video"}>
+              <button className="control-button" onClick={handleVideoToggle}>
+                {isVideoMuted ? <FaVideoSlash /> : <FaVideo />}
+              </button>
+            </ToolTipCustom>
+          )}
           <ToolTipCustom content={"Bật/Tắt âm thanh"}>
             <button className="control-button" onClick={handleAudioToggle}>
               {isAudioMuted ? <FaMicrophoneSlash /> : <FaMicrophone />}

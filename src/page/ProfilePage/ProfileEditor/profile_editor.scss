@@ -122,13 +122,14 @@
       position: relative;
       width: 80%;
       height: 80%;
-      background-color: var(--bg-temp-color);
+      background-color: var(--bg-color);
       border-radius: 8px;
       overflow: hidden;
       .crop-controls {
         position: absolute;
-        bottom: 20px;
-        left: 20px;
+        bottom: 10px;
+        left: 50%;
+        transform: translateX(-50%);
         display: flex;
       }
       img {
@@ -148,7 +149,7 @@
         &.cancel {
           margin-left: 5px;
           color: red;
-          background-color: white !important; 
+          background-color: white !important;
         }
         &:hover {
           background-color: var(--success-color) !important;

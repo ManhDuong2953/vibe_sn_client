@@ -94,16 +94,18 @@ export const SocketProvider = ({ children }) => {
   useEffect(() => {
     if (socket && dataOwner) {
       socket.emit("registerUser", { user_id: dataOwner?.user_id });
-      // socket.emit("statusCallToUser", (data) => {
-      //   console.log(data);
-      // });
+      socket.on("statusCallToUser", (data) => {
+        if (data.isCallRemoteAccepted === false) {
+          toast.dismiss();
+        }
+      });
 
       socket.on("user-calling", async (data) => {
         if (data && dataOwner && data?.receiver_id === dataOwner?.user_id) {
           const callerInfo = await getInfoCaller(data?.sender_id);
           if (callerInfo) {
             setIsCalling(true); // Đặt trạng thái gọi thành true
-            playAudio(); // Phát âm thanh khi có cuộc gọi đến
+            // playAudio(); // Phát âm thanh khi có cuộc gọi đến
             toast.info(
               ({ closeToast }) => (
                 <div>
@@ -199,7 +201,6 @@ export const SocketProvider = ({ children }) => {
 
   return (
     <>
-      {/* Thêm thẻ audio vào đây */}
       <audio ref={audioRef} src={AudioRing} />
       <SocketContext.Provider value={socket}>{children}</SocketContext.Provider>
     </>

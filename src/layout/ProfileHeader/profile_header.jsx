@@ -27,6 +27,7 @@ import {
 import { OwnDataContext } from "../../provider/own_data";
 import Spinner from "../../component/Spinner/spinner";
 import { BsFillPatchCheckFill } from "react-icons/bs";
+import { getAllFriends, getMutualFriends } from "../../services/fetch_api";
 function ProfileHeader({ classNameActive, userId }) {
   const [isHearted, setIsHearted] = useState(false);
   const [showQRCodePopup, setShowQRCodePopup] = useState(false);
@@ -47,6 +48,21 @@ function ProfileHeader({ classNameActive, userId }) {
       console.log(error.message);
     }
   }, [userId]);
+  const [countMutual, setCountMutual] = useState();
+
+  useEffect(() => {
+    const fetchFriends = async () => {
+      if (dataOwner && dataOwner.user_id !== userId) {
+        try {
+          const response = await getMutualFriends(dataOwner.user_id, userId);
+          setCountMutual(response);
+        } catch (error) {
+          console.error("Failed to fetch friends:", error);
+        }
+      }
+    };
+    fetchFriends();
+  }, [dataOwner]);
 
   useEffect(() => {
     const fetchAPI = async () => {
@@ -176,19 +192,21 @@ function ProfileHeader({ classNameActive, userId }) {
               <img src={data && data?.avatar} alt="" />
               <div className="header-container">
                 <div className="info-analyst">
-                  <h1 className="name">{data && data?.user_name} <TbRosetteDiscountCheckFilled className="icon-checked"/>
+                  <h1 className="name">
+                    {data && data?.user_name}{" "}
+                    <TbRosetteDiscountCheckFilled className="icon-checked" />
                   </h1>
                   <p className="nickname">@{data && data?.user_nickname}</p>
                   <div className="analyst">
-                    <p className="quantity-friend">1002 bạn bè</p>
-                    <i>•</i>
                     <p className="quantity-like">1002 lượt thích</p>
                     {data &&
                       dataOwner &&
                       dataOwner?.user_id !== data.user_id && (
                         <>
                           <i>•</i>
-                          <p className="quantity-same--fr">1002 bạn chung</p>
+                          <p className="quantity-same--fr">
+                            {countMutual} bạn chung
+                          </p>
                         </>
                       )}
                   </div>
@@ -206,7 +224,7 @@ function ProfileHeader({ classNameActive, userId }) {
                   {data && dataOwner && dataOwner?.user_id !== data.user_id && (
                     <>
                       {statusFr?.relationship_status === 1 && (
-                        <Link to={'/messenger/' + data?.user_id}>
+                        <Link to={"/messenger/" + data?.user_id}>
                           <div className="btn btn-messenger">
                             <FaFacebookMessenger /> Nhắn tin
                           </div>

@@ -64,7 +64,7 @@ function CreateStoryTextPreview({ titlePage }) {
                             <div className="title">
                                 <BackButton />
 
-                                <h1>Tạo tin</h1>
+                                <h2>Tạo tin</h2>
                             </div>
                             <div className="controls-text">
                                 <h3>Chỉnh sửa văn bản</h3>

@@ -86,7 +86,7 @@ function CreateStoryImagePreview({ titlePage }) {
                                 <div className="title">
                                 <BackButton />
 
-                                <h1>Tạo tin</h1>
+                                <h2>Tạo tin</h2>
                                 </div>
                                 {showTextEditor && (
                                     <div className="controls-text">
