@@ -9,9 +9,11 @@ import { FaLayerGroup } from "react-icons/fa6";
 import { getData } from "../../../ultils/fetchAPI/fetch_API";
 import { API_LIST_GROUP_BY_OWNER } from "../../../API/api_server";
 function ListPostGroupPage({ titlePage }) {
+  
   useEffect(() => {
     document.title = titlePage;
   }, [titlePage]);
+  
   const [dataGroup, setDataGroup] = useState([]);
   useEffect(() => {
     const icon = document.querySelector(".icon-gr");
@@ -26,16 +28,17 @@ function ListPostGroupPage({ titlePage }) {
       }
     };
   }, []);
+
   useEffect(() => {
     const getAllGroupByOwner = async () => {
       const response = await getData(API_LIST_GROUP_BY_OWNER);
       if (response.status) {
-        // Handle response data
         setDataGroup(response.data);
       }
     };
     getAllGroupByOwner();
   }, []);
+
   return (
     <React.Fragment>
       <NavigativeBar />

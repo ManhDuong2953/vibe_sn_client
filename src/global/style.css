@@ -94,15 +94,11 @@ svg {
   text-align: center;
 }
 
-.Toastify__toast-body > div:last-child {
-  word-break: break-word;
-  flex: 1 1;
-  color: red;
+.Toastify__toast-theme--light {
+  background-color: #000000 !important;
 }
-
-.profile-container {
-  width: 1000px;
-  margin: auto;
+.popup-info--container {
+  display: none;
 }
 
 input:disabled,
@@ -132,7 +128,8 @@ button[type="submit"]:hover {
 
 input,
 select,
-option {
+option,
+textarea {
   background-color: var(--input-color) !important;
   color: var(--text-color) !important;
 }
@@ -233,14 +230,14 @@ a.filepond--credits {
   width: calc(100vw - 50px) !important;
   margin: auto;
 }
-.reactEasyCrop_Container {
+.crop-img-container .reactEasyCrop_Container {
   position: absolute !important;
   top: calc(10% + 56px) !important;
   left: 10% !important;
   right: 10% !important;
   bottom: 10% !important;
 }
-.crop-img-container{
+.crop-img-container {
   background-color: var(--bg-color);
 }
 /* Điện thoại di động, hiển thị chiều dọc */

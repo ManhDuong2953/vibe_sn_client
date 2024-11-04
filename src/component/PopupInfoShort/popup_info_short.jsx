@@ -14,6 +14,8 @@ function PopupInfoShort({ user_id }) {
   const [hearted, setHearted] = useState(false);
   const [infoUser, setInfoUser] = useState();
   const dataOwner = useContext(OwnDataContext);
+  console.log(user_id);
+  
   useEffect(() => {
     try {
       if (!user_id) return;
@@ -62,7 +64,7 @@ function PopupInfoShort({ user_id }) {
         if (y <= screenMidpoint) {
           popupInfoElement.style.top = "40px";
         } else {
-          popupInfoElement.style.top = "-245px";
+          popupInfoElement.style.top = "-200px";
         }
       }
     };

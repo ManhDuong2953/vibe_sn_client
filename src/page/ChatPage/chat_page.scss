@@ -219,6 +219,13 @@
           margin: 1px 4px;
           border-radius: 5px;
           background-color: var(--accent-color);
+          &:has(video, img) {
+            padding: 0;
+          }
+          img,
+          video {
+            max-height: 100px !important;
+          }
           span,
           i {
             color: white;
@@ -260,7 +267,27 @@
             padding: 8px;
             border-radius: 8px;
             width: fit-content;
+            cursor: pointer;
+            &:hover {
+              opacity: 1;
+            }
+            img,
+            video {
+              max-height: 90px !important;
+            }
+            .message-text {
+              padding: 0 5px;
+            }
+            i {
+              margin-left: 4px;
+              font-size: 12px;
+              color: white;
+            }
+
             div {
+              &:has(video, img, audio, .file-container) {
+                border: none;
+              }
               border-left: 3px solid white;
               span {
                 margin-left: 3px;
@@ -271,16 +298,38 @@
               margin-right: 4px;
             }
             & > * {
-              font-size: 0.8rem;
+              font-size: 0.8rem !important;
               opacity: 0.6;
             }
-          }
-          .reply-icon-message {
-            margin: 8px 8px 0;
-            &:hover {
-              cursor: pointer;
-              opacity: 0.7;
+            .file-container {
+              display: flex;
+              align-items: center;
+              svg {
+                font-size: 14px;
+                margin: 0 10px 0 0;
+              }
+              a {
+                font-size: 13px;
+              }
             }
+            a {
+              text-decoration: underline;
+              font-weight: 500;
+            }
+          }
+          .icon-container {
+            display: flex;
+            align-items: center;
+            margin: 8px 8px 0;
+            .reply-icon-message {
+              padding:  5px 0;
+              margin-top: 5px;
+              &:hover {
+                cursor: pointer;
+                opacity: 0.7;
+              }
+            }
+
           }
           span {
             display: flex;
@@ -290,7 +339,8 @@
               display: flex;
               align-items: center;
               svg {
-                font-size: 15px;
+                font-size: 14px;
+                margin: 0 10px 0 0;
               }
               a {
                 font-size: 13px;
@@ -337,16 +387,10 @@
         }
         &.sender {
           flex-direction: row-reverse;
+          p.message-reply {
+            align-self: self-end;
+          }
           .message-container {
-            p.message-reply {
-              align-self: end;
-              color: white;
-              i {
-                margin-left: 4px;
-                font-size: 12px;
-                color: white;
-              }
-            }
             span {
               flex-direction: row-reverse;
               color: white;
@@ -380,19 +424,22 @@
           button {
             margin-top: 4px;
             width: -webkit-fill-available;
-            background-color: rgb(115, 115, 115);
-            color: rgb(255, 255, 255);
+            color: rgb(255 0 0);
             padding: 10px 10px;
-            font-weight: 500;
             font-size: 10px;
+            font-weight: 500;
             border-radius: 5px;
             border: 0.1px solid rgb(255, 255, 255);
             cursor: pointer;
+            &:hover {
+              opacity: 0.8;
+            }
           }
           b {
             color: chartreuse !important;
           }
-          p {
+          p,
+          a {
             font-size: 14px;
             margin-right: 5px;
             margin-left: 10px;

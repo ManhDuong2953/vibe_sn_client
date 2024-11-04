@@ -65,16 +65,31 @@ const API_CHECK_KEYSPAIR = (id) =>
   API_HOST + "/users/keys_pair/is-has-keypair/" + id;
 
 // Message API ENDPOINT
-
 const API_SEND_MESSAGE = (id) => API_HOST + "/messenger/send/" + id;
 const API_GET_ALL_MESSAGE = (id) => API_HOST + "/messenger/all-message/" + id;
 const API_GET_ALL_CONVERSATION = API_HOST + "/messenger/all-conversation/";
+const API_DELETE_ALL_MESSAGE = (id) =>
+  API_HOST + "/messenger/delete-all-messenger/" + id;
+const API_DELETE_MESSAGE = (id) =>
+  API_HOST + "/messenger/delete-messenger/" + id;
+const API_DELETE_MESSAGE_OWNER_SIDE = (id) =>
+  API_HOST + "/messenger/delete-messenger-by-owner-side/" + id;
+
+// STORY API ENDPOINT
+const API_CREATE_STORY = API_HOST + '/stories/create-story';
+const API_LIST_STORY = API_HOST + '/stories/list-story';
+const API_STORY_BY_ID = (id) => `${API_HOST}/stories/story-by-id/${id}`;
+const API_STORIES_BY_ID = (id) => `${API_HOST}/stories/stories-by-id/${id}`;
+const API_CREATE_HEART_STORY = (id) => `${API_HOST}/stories/create-heart-story/${id}`;
+
+
 
 // GROUP API ENDPOINT
 const API_GROUP_CREATE = API_HOST + "/group/channel/create";
-const API_LIST_GROUP_BY_USERID  = (id) => API_HOST + "/group/members/list-all-group/" + id;
-const API_GROUP_DETAIL  = (id) => API_HOST + "/group/channel/details/" + id;
-const API_LIST_GROUP_BY_OWNER  = API_HOST + "/group/members/list-all-group/" ;
+const API_LIST_GROUP_BY_USERID = (id) =>
+  API_HOST + "/group/members/list-all-group/" + id;
+const API_GROUP_DETAIL = (id) => API_HOST + "/group/channel/details/" + id;
+const API_LIST_GROUP_BY_OWNER = API_HOST + "/group/members/list-all-group/";
 
 export {
   API_SIGNUP_POST,
@@ -122,5 +137,13 @@ export {
   API_GROUP_CREATE,
   API_LIST_GROUP_BY_OWNER,
   API_LIST_GROUP_BY_USERID,
-  API_GROUP_DETAIL
+  API_GROUP_DETAIL,
+  API_DELETE_ALL_MESSAGE,
+  API_DELETE_MESSAGE,
+  API_DELETE_MESSAGE_OWNER_SIDE,
+  API_CREATE_HEART_STORY,
+  API_CREATE_STORY,
+  API_LIST_STORY,
+  API_STORY_BY_ID,
+  API_STORIES_BY_ID
 };

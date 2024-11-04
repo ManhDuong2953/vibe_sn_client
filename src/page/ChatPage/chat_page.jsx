@@ -23,7 +23,6 @@ import NavigativeBar from "../../layout/NavigativeBar/navigative_bar";
 import ContactMessengerItem from "../../layout/ContactMessengerItem/contact_messenger_item";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import {
-  MdCallEnd,
   MdDeleteForever,
   MdPermMedia,
   MdPhoneCallback,
@@ -33,7 +32,7 @@ import { LuCopyPlus, LuCornerDownRight } from "react-icons/lu";
 import { FilePond } from "react-filepond";
 import "filepond/dist/filepond.min.css";
 import { RiChatVoiceFill } from "react-icons/ri";
-import { IoCallSharp, IoSend } from "react-icons/io5";
+import { IoSend } from "react-icons/io5";
 import Waveform from "../../component/WaveSurfer/wave_surfer";
 import { FaSignalMessenger } from "react-icons/fa6";
 import Draggable from "react-draggable";
@@ -44,7 +43,10 @@ import { IoMdCloseCircle } from "react-icons/io";
 import {
   API_CHECK_KEYSPAIR,
   API_CREATE_KEYSPAIR,
+  API_DELETE_ALL_MESSAGE,
   API_DELETE_KEYS_PAIR,
+  API_DELETE_MESSAGE,
+  API_DELETE_MESSAGE_OWNER_SIDE,
   API_GET_ALL_MESSAGE,
   API_GET_INFO_USER_PROFILE_BY_ID,
   API_GET_PRIVATE_KEY,
@@ -59,12 +61,30 @@ import {
 } from "../../ultils/formatDate/format_date";
 import ToolTipCustom from "../../component/ToolTip/tool_tip";
 import { LoadingIcon } from "../../ultils/icons/loading";
-
+import Menu from "@mui/material/Menu";
+import MenuItem from "@mui/material/MenuItem";
+import IconButton from "@mui/material/IconButton";
+import DeleteOutlineRoundedIcon from "@mui/icons-material/DeleteOutlineRounded";
+import ReplayIcon from "@mui/icons-material/Replay";
+import ReplayCircleFilledIcon from "@mui/icons-material/ReplayCircleFilled";
 function ChatMessengerPage({ titlePage }) {
   //Tên tiêu đề
   useEffect(() => {
     document.title = titlePage;
   }, [titlePage]);
+
+  //Biến lưu trạng thái icon xoá hiện hay không
+  const [anchorEl, setAnchorEl] = useState(null);
+
+  // Mở menu khi bấm vào nút
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  // Đóng menu
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
 
   //khởi tạo các biến
   const navigate = useNavigate();
@@ -111,6 +131,7 @@ function ChatMessengerPage({ titlePage }) {
   // Bật tắt reply
   const [showReply, setShowReply] = useState(false);
   //Nội dung reply
+  const [idRepLy, setIdRepLy] = useState(null);
   const [contentReply, setContentReply] = useState(null);
   //Danh sách người dùng online
   const [listUsersOnline, setListUsersOnline] = useState([]);
@@ -322,12 +343,13 @@ function ChatMessengerPage({ titlePage }) {
         setMessages((prevMessages) => [
           ...prevMessages,
           {
+            messenger_id: data?.messenger_id,
             sender_id: data?.sender_id,
             receiver_id: id_receiver,
             content_text: data?.content_text,
             content_type: data?.content_type,
             name_file: data?.name_file ?? "Không xác định",
-            reply_text: data?.reply_text,
+            reply_messenger_id: data?.reply_messenger_id,
           },
         ]);
         setMessage(""); // Reset input
@@ -380,6 +402,7 @@ function ChatMessengerPage({ titlePage }) {
 
   //Gửi audio
   const handleSendAudio = async (audioFile) => {
+    setLoading(true);
     // Create FormData for the audio file
     const formData = new FormData();
 
@@ -393,7 +416,7 @@ function ChatMessengerPage({ titlePage }) {
       sender_id: dataOwner?.user_id,
       receiver_id: id_receiver,
       name_file: audioFile.name ?? "Unknown",
-      reply_text: contentReply,
+      reply_messenger_id: idRepLy,
     };
 
     formData.append("file", audioFile, audioFile.name); // Assuming audioFile contains the file object
@@ -403,7 +426,7 @@ function ChatMessengerPage({ titlePage }) {
     formData.append("sender_id", dataOwner?.user_id);
     formData.append("receiver_id", id_receiver);
     if (showReply) {
-      formData.append("reply_text", contentReply);
+      formData.append("reply_messenger_id", idRepLy);
     }
     // Try sending the audio file via API
     try {
@@ -413,8 +436,9 @@ function ChatMessengerPage({ titlePage }) {
         },
       });
 
-      // Update the UI with the new message
-      setMessages((prevMessages) => [...prevMessages, newMessage]);
+      if (response.status) {
+        setLoading(false);
+      }
     } catch (error) {
       console.log("Error sending audio message: ", error);
     }
@@ -424,7 +448,7 @@ function ChatMessengerPage({ titlePage }) {
     setShowFilePond(false);
     setShowAudio(false);
     setShowReply(false);
-    setContentReply("");
+    setIdRepLy();
   };
 
   //Gửi audio nếu có media recorded
@@ -485,7 +509,7 @@ function ChatMessengerPage({ titlePage }) {
           content_text: formattedMessage,
           sender_id: dataOwner?.user_id,
           receiver_id: id_receiver,
-          reply_text: contentReply,
+          reply_messenger_id: idRepLy,
         };
       } else {
         newMessage = {
@@ -493,7 +517,7 @@ function ChatMessengerPage({ titlePage }) {
           content_text: message,
           sender_id: dataOwner?.user_id,
           receiver_id: id_receiver,
-          reply_text: contentReply,
+          reply_messenger_id: idRepLy,
         };
       }
 
@@ -507,7 +531,7 @@ function ChatMessengerPage({ titlePage }) {
           content_text: newMessage.content_text,
           sender_id: newMessage.sender_id,
           receiver_id: newMessage.receiver_id,
-          reply_text: newMessage.reply_text,
+          reply_messenger_id: newMessage.reply_messenger_id,
         });
       } catch (error) {
         console.log("Error sending text message: ", error);
@@ -545,7 +569,7 @@ function ChatMessengerPage({ titlePage }) {
         formData.append("sender_id", dataOwner?.user_id);
         formData.append("receiver_id", id_receiver);
         if (showReply) {
-          formData.append("reply_text", contentReply);
+          formData.append("reply_messenger_id", idRepLy);
         }
 
         // Gửi từng file qua API
@@ -558,18 +582,6 @@ function ChatMessengerPage({ titlePage }) {
               "Content-Type": "multipart/form-data",
             },
           });
-
-          // Thêm tin nhắn vào state với link tạm thời
-          const fileMessage = {
-            content_type: contentType,
-            content_text: localFileURL, // Sử dụng link tạm thời
-            sender_id: dataOwner?.user_id,
-            receiver_id: id_receiver,
-            name_file: file.file.name ?? "Không xác định",
-            reply_text: contentReply,
-          };
-
-          setMessages((prevMessages) => [...prevMessages, fileMessage]);
         } catch (error) {
           console.log("Error sending file: ", error);
         }
@@ -577,13 +589,12 @@ function ChatMessengerPage({ titlePage }) {
     }
 
     // Cập nhật tin nhắn vào state với tin nhắn văn bản
-    setMessages((prevMessages) => [...prevMessages, newMessage]);
 
     // Reset lại input và tệp tin
     setMessage(""); // Reset input
     setFiles([]);
 
-    setContentReply("");
+    setIdRepLy();
     setSendLoading(false);
   };
 
@@ -642,6 +653,88 @@ function ChatMessengerPage({ titlePage }) {
       chatMessages.scrollTop = chatMessages.scrollHeight;
     }
   }, [messages]); // This runs whenever `messages` change
+
+  const handleSetReply = (reply_messenger_id) => {
+    if (reply_messenger_id) {
+      const replyElement = document.querySelector(
+        `.message-${reply_messenger_id}`
+      );
+      if (replyElement) {
+        setContentReply(replyElement.outerHTML);
+      }
+    }
+  };
+
+  const scrollToMessage = (messageId) => {
+    const messageElement = document.querySelector(`.message-${messageId}`);
+
+    if (messageElement) {
+      // Lưu lại màu nền ban đầu
+      const originalColor = messageElement.style.backgroundColor;
+      const highlightColor = "#cbd400c2"; // Màu nhấn mạnh
+      let isOriginalColor = false;
+
+      // Cuộn đến phần tử
+      messageElement.scrollIntoView({ behavior: "smooth", block: "center" });
+
+      // Đặt interval để nhấp nháy
+      const intervalId = setInterval(() => {
+        messageElement.style.backgroundColor = isOriginalColor
+          ? originalColor
+          : highlightColor;
+        isOriginalColor = !isOriginalColor;
+      }, 250); // Mỗi lần nhấp nháy diễn ra sau 300ms
+
+      // Sau 3 giây dừng nhấp nháy và quay lại màu cũ
+      setTimeout(() => {
+        clearInterval(intervalId);
+        messageElement.style.backgroundColor = originalColor;
+      }, 1500); // 3000ms = 3s
+    }
+  };
+
+  //Xoá all đoạn chat
+  const handleDeleteAllMessage = async () => {
+    try {
+      const response = await deleteData(API_DELETE_ALL_MESSAGE(id_receiver));
+      if (response.status) {
+        toast.success("Xóa đoạn chat thành công!");
+        window.location.href = "/messenger/" + id_receiver;
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  //Xoá tin nhắn
+  const handleDeleteMessage = async (messageId) => {
+    try {
+      const response = await deleteData(API_DELETE_MESSAGE(messageId));
+      if (response.status) {
+        setMessages((prevMessages) =>
+          prevMessages.filter((message) => message.messenger_id !== messageId)
+        );
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  //Xoá tin nhắn bên mình
+  const handleDeleteMessageOwnSide = async (messageId) => {
+    try {
+      const response = await deleteData(
+        API_DELETE_MESSAGE_OWNER_SIDE(messageId)
+      );
+      if (response.status) {
+        setMessages((prevMessages) =>
+          prevMessages.filter((message) => message.messenger_id !== messageId)
+        );
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   return (
     <React.Fragment>
@@ -737,9 +830,9 @@ function ChatMessengerPage({ titlePage }) {
                           return (
                             <li
                               key={index}
-                              className={`message ${
+                              className={`message${
                                 msg.sender_id === dataOwner?.user_id
-                                  ? "sender"
+                                  ? " sender"
                                   : ""
                               }`}
                               onMouseEnter={() =>
@@ -748,19 +841,29 @@ function ChatMessengerPage({ titlePage }) {
                               onMouseLeave={() => setHoveredIndex(null)}
                             >
                               <div className="message-container">
-                                {msg.reply_text && (
-                                  <p className="message-reply">
+                                {msg.reply_messenger_id && (
+                                  <p
+                                    className="message-reply"
+                                    onClick={() =>
+                                      scrollToMessage(msg.reply_messenger_id)
+                                    }
+                                  >
                                     {
                                       <div
                                         dangerouslySetInnerHTML={{
-                                          __html: msg.reply_text,
+                                          __html:
+                                            document.querySelector(
+                                              `.message-${msg.reply_messenger_id}`
+                                            )?.outerHTML ?? null,
                                         }}
                                       />
                                     }
                                   </p>
                                 )}
                                 <span>
-                                  <div className="message-content">
+                                  <div
+                                    className={`message-content message-${msg.messenger_id}`}
+                                  >
                                     {msg.content_type === "text" && (
                                       <p className="message-text">
                                         {msg.content_text}
@@ -774,22 +877,18 @@ function ChatMessengerPage({ titlePage }) {
                                       ></p>
                                     )}
                                     {msg.content_type === "image" && (
-                                      <a download href={msg.content_text}>
-                                        <img
-                                          src={msg.content_text}
-                                          alt="content"
-                                        />
-                                      </a>
+                                      <img
+                                        src={msg.content_text}
+                                        alt="content"
+                                      />
                                     )}
                                     {msg.content_type === "video" && (
-                                      <a download href={msg.content_text}>
-                                        <video
-                                          controls
-                                          muted
-                                          src={msg.content_text}
-                                          alt="content"
-                                        />
-                                      </a>
+                                      <video
+                                        controls
+                                        muted
+                                        src={msg.content_text}
+                                        alt="content"
+                                      />
                                     )}
                                     {msg.content_type === "audio" && (
                                       <Waveform audioUrl={msg.content_text} />
@@ -841,48 +940,68 @@ function ChatMessengerPage({ titlePage }) {
                                     )}
                                   </div>
                                   {hoveredIndex === msg.messenger_id && (
-                                    <div
-                                      className="reply-icon-message"
-                                      onClick={() => {
-                                        setShowReply(true);
-                                        setContentReply(() => {
-                                          if (msg.content_type === "text") {
-                                            return `<span>${msg.content_text}</span>`; // Nội dung văn bản
-                                          } else if (
-                                            msg.content_type === "link"
-                                          ) {
-                                            return `<span><a href="${msg.content_text}" target="_blank" rel="noopener noreferrer">${msg.content_text}</a></span>`; // Nội dung link
-                                          } else if (
-                                            msg.content_type === "image"
-                                          ) {
-                                            return '<span><i class="fas fa-image"></i> Ảnh</span>'; // HTML cho ảnh
-                                          } else if (
-                                            msg.content_type === "video"
-                                          ) {
-                                            return '<span><i class="fas fa-video"></i> Video</span>'; // HTML cho video
-                                          } else if (
-                                            msg.content_type === "audio"
-                                          ) {
-                                            return '<span><i class="fas fa-microphone-alt"></i> Tin nhắn thoại</span>'; // HTML cho audio
-                                          } else if (
-                                            msg.content_type === "other"
-                                          ) {
-                                            return '<span><i class="fas fa-file"></i> Tệp tin</span>'; // HTML cho file
-                                          } else if (
-                                            msg.content_type?.includes(
-                                              "accepted"
-                                            )
-                                          ) {
-                                            return '<span><i class="fas fa-phone"></i> Cuộc gọi thoại</span>'; // HTML cho cuộc gọi thoại
-                                          } else if (
-                                            msg.content_type?.includes("missed")
-                                          ) {
-                                            return '<span><i class="fas fa-phone-slash"></i> Cuộc gọi nhỡ</span>'; // HTML cho cuộc gọi nhỡ
-                                          }
-                                        });
-                                      }}
-                                    >
-                                      <ImReply />
+                                    <div className="icon-container">
+                                      <div
+                                        className="reply-icon-message"
+                                        onClick={() => {
+                                          setShowReply(true);
+                                          setIdRepLy(msg.messenger_id);
+                                          handleSetReply(msg.messenger_id);
+                                        }}
+                                      >
+                                        <ImReply />
+                                      </div>
+                                      <div className="delete_icon">
+                                        <div>
+                                          <IconButton onClick={handleClick}>
+                                            <DeleteOutlineRoundedIcon />
+                                          </IconButton>
+                                          <Menu
+                                            anchorEl={anchorEl}
+                                            open={Boolean(anchorEl)}
+                                            onClick={handleClose}
+                                            sx={{
+                                              "& .MuiPaper-root": {
+                                                backgroundColor: "#333", // Màu nền menu
+                                                color: "#fff", // Màu chữ
+                                              },
+                                            }}
+                                          >
+                                            <MenuItem
+                                              onClose={handleClose}
+                                              sx={{
+                                                "&:hover": {
+                                                  backgroundColor: "#555",
+                                                }, // Màu khi hover
+                                                color: "#fff", // Màu chữ
+                                              }}
+                                              onClick={() =>
+                                                handleDeleteMessageOwnSide(
+                                                  msg.messenger_id
+                                                )
+                                              }
+                                            >
+                                              <ReplayCircleFilledIcon /> Thu hồi
+                                              ở phía bạn
+                                            </MenuItem>
+                                            <MenuItem
+                                              onClick={() =>
+                                                handleDeleteMessage(
+                                                  msg.messenger_id
+                                                )
+                                              }
+                                              sx={{
+                                                "&:hover": {
+                                                  backgroundColor: "#555",
+                                                },
+                                                color: "#fff",
+                                              }}
+                                            >
+                                              <ReplayIcon /> Thu hồi ở mọi người
+                                            </MenuItem>
+                                          </Menu>
+                                        </div>
+                                      </div>
                                     </div>
                                   )}
                                 </span>
@@ -904,7 +1023,11 @@ function ChatMessengerPage({ titlePage }) {
                   <div className="reply-context">
                     <IoMdCloseCircle
                       className="close-reply-message"
-                      onClick={() => setShowReply(false)}
+                      onClick={() => {
+                        setContentReply(null);
+                        setIdRepLy(null);
+                        setShowReply(false);
+                      }}
                     />
                     <div className="left-reply">
                       <LuCornerDownRight />
@@ -933,7 +1056,9 @@ function ChatMessengerPage({ titlePage }) {
                         className="hear"
                         onClick={isRecording ? stopRecording : startRecording}
                       >
-                        {isRecording ? (
+                        {loading ? (
+                          <LoadingIcon />
+                        ) : isRecording ? (
                           <>
                             <FaStop /> Đang nghe...
                           </>
@@ -1034,7 +1159,12 @@ function ChatMessengerPage({ titlePage }) {
                         </div>
                       </li>
                     </ul>
-                    <p className="delete">
+                    <p
+                      className="delete"
+                      onClick={() => {
+                        handleDeleteAllMessage();
+                      }}
+                    >
                       <MdDeleteForever /> Xóa đoạn chat
                     </p>
                   </div>

@@ -48,6 +48,7 @@ function CreateStoryPage({ titlePage }) {
                                 </div>
                             </Link>
                         </div>
+                        
                         <div className="side-right">
                             <Link to="/story/create/preview/text">
                                 <div className="direct create-story--text-container">

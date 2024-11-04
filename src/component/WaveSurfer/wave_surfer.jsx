@@ -5,7 +5,6 @@ import './wave_surfer.scss';
 
 const Waveform = ({ audioUrl }) => {
   const [playing, setPlaying] = useState(false);
-  const [loading, setLoading] = useState(true);
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
   const waveformRef = useRef(null);
@@ -32,12 +31,10 @@ const Waveform = ({ audioUrl }) => {
       const loadAudio = async () => {
         try {
           await wavesurferRef.current.load(audioUrl);
-          setLoading(false);
           const audioDuration = wavesurferRef.current.getDuration();
           setDuration(audioDuration);
         } catch (error) {
           console.error('Error loading audio:', error);
-          setLoading(false);
         }
       };
 
@@ -69,8 +66,7 @@ const Waveform = ({ audioUrl }) => {
 
   return (
     <div className="waveform-container">
-      {loading && <div className="loading">Loading...</div>}
-      <button className="play-button" onClick={handlePlay} disabled={loading}>
+      <button className="play-button" onClick={handlePlay}>
         {!playing ? (
           <FaPlayCircle color="white" fontSize="10em" />
         ) : (

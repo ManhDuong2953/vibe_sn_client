@@ -2,7 +2,32 @@
   .container {
     overflow: hidden;
     height: 100vh;
-
+    img.icon-gift {
+      position: absolute;
+      bottom: 10%;
+      left: 50%;
+      transform: translate(-50%);
+      display: flex;
+    }
+    .nav-button {
+      background-color: #fff;
+      border: 1px solid #ccc;
+      padding: 10px;
+      cursor: pointer;
+      font-size: 16px;
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+    }
+    
+    .prev-button {
+      left: 10px;
+    }
+    
+    .next-button {
+      right: 10px;
+    }
+    
     .story-container {
       height: -webkit-fill-available;
       margin-top: 56px;
@@ -148,11 +173,13 @@
                     font-size: 15px;
                     font-weight: bold;
                     margin: 0;
+                    display: flex;
+                    align-items: center;
                     b {
                       font-weight: 400;
                       color: white;
                       font-size: 11px;
-                      margin: 2px 30px 0 10px;
+                      margin: 0px 30px 0 10px;
                     }
                   }
                 }
