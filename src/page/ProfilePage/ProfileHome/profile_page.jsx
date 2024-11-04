@@ -102,7 +102,7 @@ function ProfilePage({ titlePage }) {
                       dataFriend?.map((dataFriendItem) => (
                         <li className="friend-item">
                           <img
-                            src={dataFriendItem?.avatar_link}
+                            src={dataFriendItem?.avatar}
                             alt={dataFriendItem?.user_name}
                           />
                         </li>

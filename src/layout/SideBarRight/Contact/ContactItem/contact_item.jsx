@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import "./contact_item.scss";
-import React, { useEffect, useState } from "react";
+import React from "react";
 import AvatarWithText from "../../../../skeleton/avatarwithtext";
 import PopupInfoShort from "../../../../component/PopupInfoShort/popup_info_short";
 function ContactItem({ active, data, loading = false }) {
@@ -11,7 +11,7 @@ function ContactItem({ active, data, loading = false }) {
           <Link to={"/messenger/" + data?.friend_id}>
             <div className="avt-contact">
               <PopupInfoShort user_id={data && data?.friend_id} />
-              <img src={data?.avatar_link} alt="" />
+              <img src={data?.avatar} alt="" />
             </div>
 
             <p className="name-contact">{data?.user_name}</p>

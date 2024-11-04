@@ -49,6 +49,7 @@ body {
         justify-content: space-between;
         border-right: 1px solid var(--border-color);
         overflow-y: auto;
+        height: calc(100vh - 56px - 40px);
         @media (max-width: 768px) {
           margin: 20px 0;
           padding: 0 20px;
@@ -202,16 +203,15 @@ body {
           color: var(--text-blur-color);
         }
         .preview-container {
-          padding: 5px;
+          border: 2px solid var(--text-color);
+          border-radius: 10px;
+          overflow: hidden;
 
           .preview {
             position: relative;
             height: 80vh;
             aspect-ratio: 3 / 5;
             background-color: var(--navbar-color);
-            border: 2px solid var(--text-color);
-            border-radius: 10px;
-            overflow: hidden;
 
             .crop-container {
               position: absolute;

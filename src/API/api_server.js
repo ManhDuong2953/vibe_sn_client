@@ -81,6 +81,7 @@ const API_LIST_STORY = API_HOST + '/stories/list-story';
 const API_STORY_BY_ID = (id) => `${API_HOST}/stories/story-by-id/${id}`;
 const API_STORIES_BY_ID = (id) => `${API_HOST}/stories/stories-by-id/${id}`;
 const API_CREATE_HEART_STORY = (id) => `${API_HOST}/stories/create-heart-story/${id}`;
+const API_DELETE_STORY = (id) => `${API_HOST}/stories//delete-story/${id}`;
 
 
 
@@ -145,5 +146,6 @@ export {
   API_CREATE_STORY,
   API_LIST_STORY,
   API_STORY_BY_ID,
-  API_STORIES_BY_ID
+  API_STORIES_BY_ID,
+  API_DELETE_STORY
 };

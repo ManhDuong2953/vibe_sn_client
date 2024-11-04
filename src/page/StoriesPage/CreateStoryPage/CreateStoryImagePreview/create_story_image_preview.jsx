@@ -13,13 +13,12 @@ import getCroppedImg from "../../../../ultils/cropImage/get_crop_image";
 import NavigativeBar from "../../../../layout/NavigativeBar/navigative_bar";
 import { FaCropSimple } from "react-icons/fa6";
 import BackButton from "../../../../component/BackButton/back_button";
-import { OwnDataContext } from "../../../../provider/own_data";
 import PrivacyModal from "../../../../component/ModalPrivacy/modal_privacy";
 import Button from "@mui/material/Button";
 import MusicNoteIcon from "@mui/icons-material/MusicNote";
 import { styled } from "@mui/material/styles";
 import html2canvas from "html2canvas";
-import LibraryMusicIcon from '@mui/icons-material/LibraryMusic';
+import LibraryMusicIcon from "@mui/icons-material/LibraryMusic";
 
 const VisuallyHiddenInput = styled("input")({
   clip: "rect(0 0 0 0)",
@@ -38,8 +37,6 @@ function CreateStoryImagePreview({ titlePage }) {
     document.title = titlePage;
   }, [titlePage]);
 
-  const dataOwner = useContext(OwnDataContext);
-
   const { image } = useContext(ImageContext);
   const [text, setText] = useState("");
   const [showTextEditor, setShowTextEditor] = useState(false); // Trạng thái hiển thị editor text
@@ -54,7 +51,6 @@ function CreateStoryImagePreview({ titlePage }) {
   const previewRef = useRef(null);
   const textRef = useRef(null);
   const [imageLink, setImageLink] = useState(null);
-  const [textPosition, setTextPosition] = useState({ x: 0, y: 0 });
   const [audio, setAudio] = useState();
   const onCropComplete = useCallback((croppedArea, croppedAreaPixels) => {
     setCroppedAreaPixels(croppedAreaPixels);
@@ -80,27 +76,27 @@ function CreateStoryImagePreview({ titlePage }) {
   const handleUploadImage = () => {
     const node = document.querySelector(".preview");
     setOpen(true);
-  
+
     // Tạo một canvas mới
     const canvas = document.createElement("canvas");
-    const context = canvas.getContext("2d");
-  
+
     // Thiết lập kích thước canvas bằng với kích thước của node
     canvas.width = node.offsetWidth;
     canvas.height = node.offsetHeight;
-  
+
     // Vẽ nội dung của node lên canvas
-    html2canvas(node).then(canvas => {
-      // Chuyển đổi canvas thành URL hình ảnh dạng base64
-      const dataUrl = canvas.toDataURL("image/png");
-  
-      // Đặt URL hình ảnh vào state
-      setImageLink(dataUrl);
-    }).catch(error => {
-      console.error("Oops, something went wrong!", error);
-    });
+    html2canvas(node)
+      .then((canvas) => {
+        // Chuyển đổi canvas thành URL hình ảnh dạng base64
+        const dataUrl = canvas.toDataURL("image/png");
+
+        // Đặt URL hình ảnh vào state
+        setImageLink(dataUrl);
+      })
+      .catch((error) => {
+        console.error("Oops, something went wrong!", error);
+      });
   };
-  
 
   const handleClose = () => {
     setOpen(false);
@@ -120,6 +116,7 @@ function CreateStoryImagePreview({ titlePage }) {
     left: "50%",
     top: "50%",
     transform: "translate(-50%, -50%)",
+    width: "90%",
   };
 
   return (
@@ -141,6 +138,8 @@ function CreateStoryImagePreview({ titlePage }) {
                     <div className="control-group">
                       <label htmlFor="text-input">Nhập văn bản:</label>
                       <textarea
+                        maxLength={240}
+                        required
                         rows={4}
                         type="text"
                         id="text-input"
@@ -257,7 +256,7 @@ function CreateStoryImagePreview({ titlePage }) {
                           />
                         } // Force white color
                       >
-                        { (audio && audio?.name)  || "Tải âm thanh"}
+                        {(audio && audio?.name) || "Tải âm thanh"}
                         <VisuallyHiddenInput
                           type="file"
                           accept="audio/*"
@@ -281,7 +280,8 @@ function CreateStoryImagePreview({ titlePage }) {
                           onClick={handleAddText}
                           disabled={showTextEditor}
                         >
-                          <LibraryMusicIcon className="btn-func upload" /> Chữ & Âm thanh
+                          <LibraryMusicIcon className="btn-func upload" /> Chữ &
+                          Âm thanh
                         </button>
                       )}
                       <Button variant="contained" onClick={handleUploadImage}>
@@ -331,25 +331,7 @@ function CreateStoryImagePreview({ titlePage }) {
                       />
                     )}
                     {showTextEditor && (
-                      <Draggable
-                        onDrag={(e) => {
-                          if (textRef.current) {
-                            setTextPosition({
-                              x: e.clientX - textRef.current.offsetWidth / 2,
-                              y: e.clientY - textRef.current.offsetHeight / 2,
-                            });
-                          }
-                        }}
-                        onStop={(e) => {
-                          if (textRef.current) {
-                            setTextPosition({
-                              x: e.clientX - textRef.current.offsetWidth / 2,
-                              y: e.clientY - textRef.current.offsetHeight / 2,
-                            });
-                          }
-                        }}
-                        bounds=".preview"
-                      >
+                      <Draggable bounds=".preview">
                         <div ref={textRef} style={textStyle}>
                           {text}
                         </div>

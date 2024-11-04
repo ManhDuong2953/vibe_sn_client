@@ -10,24 +10,29 @@
       display: flex;
     }
     .nav-button {
-      background-color: #fff;
-      border: 1px solid #ccc;
-      padding: 10px;
       cursor: pointer;
-      font-size: 16px;
+      font-size: 42px;
+      padding: 10px;
       position: absolute;
       top: 50%;
       transform: translateY(-50%);
+      background: #3d3b395e;
+      border-radius: 50%;
+      opacity: 0.4;
+      &.prev-button {
+        left: 10px;
+      }
+
+      &.next-button {
+        right: 10px;
+      }
+
+      &:hover {
+        filter: brightness(0.8);
+        opacity: 1;
+      }
     }
-    
-    .prev-button {
-      left: 10px;
-    }
-    
-    .next-button {
-      right: 10px;
-    }
-    
+
     .story-container {
       height: -webkit-fill-available;
       margin-top: 56px;
@@ -132,8 +137,30 @@
               position: absolute;
               display: flex;
               align-items: center;
-              padding: 10px;
+              padding: 20px 10px 10px 10px;
               background-color: var(--background-color);
+              .white-bar {
+                position: absolute;
+                top: 0;
+                left: 50%;
+                transform: translateX(-50%);
+                width: 90%;
+                height: 10px; /* Chiều cao của thanh trắng */
+                display: flex; /* Chia đều các đoạn con bên trong */
+                background-color: transparent; /* Đảm bảo nền trong suốt */
+                z-index: 1;
+                margin: 5px 0;
+                .white-bar-segment {
+                  flex: 1 1;
+                  background-color: #7f7f7f;
+                  height: 3px;
+                  margin: 2px;
+                  border-radius: 2px;
+                  &.active{
+                    background-color: white;
+                  }
+                }
+              }
 
               .content-img--avt {
                 flex-shrink: 0;
@@ -153,6 +180,16 @@
                 display: flex;
                 flex-direction: column;
                 justify-content: center;
+                .delete-icon {
+                  font-size: 30px !important;
+                  padding: 5px;
+                  background-color: #ffffff;
+                  cursor: pointer;
+                  border-radius: 50%;
+                  position: absolute;
+                  right: 10px;
+                  top: 20px;
+                }
                 .info {
                   display: flex;
                   justify-content: space-between;

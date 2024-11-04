@@ -6,9 +6,9 @@ import { FaPlus } from "react-icons/fa6";
 import { FaCircleChevronLeft, FaCircleChevronRight } from "react-icons/fa6";
 import { OwnDataContext } from "../../provider/own_data";
 import { getData } from "../../ultils/fetchAPI/fetch_API.js";
-import { API_LIST_STORY } from "../../API/api_server.js"
+import { API_LIST_STORY } from "../../API/api_server.js";
 function ListStories() {
-    const [listStories , setListStories] = useState([]);
+  const [listStories, setListStories] = useState([]);
   const [indexItemStart, setIndexItemStart] = useState(0);
   const dataOwner = useContext(OwnDataContext);
   useEffect(() => {
@@ -55,26 +55,26 @@ function ListStories() {
   //fetch data
   useEffect(() => {
     const fetchData = async () => {
-        try {
-            const response = await getData(API_LIST_STORY);
-            if (response?.status) {
-                // Sử dụng reduce để lấy một story cho mỗi user_id
-                const uniqueStories = response.data.reduce((acc, story) => {
-                    // Kiểm tra nếu user_id chưa có trong acc
-                    if (!acc.some(item => item.user_id === story.user_id)) {
-                        acc.push(story); // Thêm story vào acc
-                    }
-                    return acc;
-                }, []);
-                setListStories(uniqueStories); // Cập nhật state với danh sách story duy nhất
+      try {
+        const response = await getData(API_LIST_STORY);
+        if (response?.status) {
+          // Sử dụng reduce để lấy một story cho mỗi user_id
+          const uniqueStories = response.data.reduce((acc, story) => {
+            // Kiểm tra nếu user_id chưa có trong acc
+            if (!acc.some((item) => item.user_id === story.user_id)) {
+              acc.push(story); // Thêm story vào acc
             }
-        } catch (error) {
-            console.error(error);
+            return acc;
+          }, []);
+          setListStories(uniqueStories); // Cập nhật state với danh sách story duy nhất
         }
+      } catch (error) {
+        console.error(error);
+      }
     };
 
     fetchData();
-}, []);
+  }, []);
 
   return (
     <React.Fragment>
@@ -94,9 +94,10 @@ function ListStories() {
               </div>
             </Link>
           </li>
-          {listStories && listStories?.map((story, index) => (
-            <StoryItem key={story.story_id} story={story} index={index} />
-          ))}
+          {listStories &&
+            listStories?.map((story, index) => (
+              <StoryItem key={story.story_id} story={story} index={index} />
+            ))}
         </ul>
         <FaCircleChevronRight className="btn btn-next" />
       </div>

@@ -126,6 +126,11 @@ button[type="submit"]:hover {
   object-fit: cover;
 }
 
+.profile-container {
+  width: 1000px !important;
+  margin: auto;
+}
+
 input,
 select,
 option,

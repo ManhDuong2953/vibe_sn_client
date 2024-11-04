@@ -1,30 +1,39 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import "./stories_page.scss";
 import { FaPlus, FaHandHoldingHeart } from "react-icons/fa6";
-import { Link, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { MdDelete } from "react-icons/md";
 import StoryPageItem from "./StoryPageItem/story_page_item";
 import soundClickHeart from "../../www/mp3/comedy_pop_finger_in_mouth_001.mp3";
 import ClassicPostLoader from "../../skeleton/classic_post_loader";
 import NavigativeBar from "../../layout/NavigativeBar/navigative_bar";
-import { getData, postData } from "../../ultils/fetchAPI/fetch_API";
-import { API_CREATE_HEART_STORY, API_LIST_STORY, API_STORIES_BY_ID } from "../../API/api_server";
+import { deleteData, getData, postData } from "../../ultils/fetchAPI/fetch_API";
+import {
+  API_CREATE_HEART_STORY,
+  API_DELETE_STORY,
+  API_LIST_STORY,
+  API_STORIES_BY_ID,
+} from "../../API/api_server";
 import { timeAgo } from "../../ultils/formatDate/format_date";
 import gifHeart from "../../www/icons/ab983edacf4e446da86c72d0f0628f1d.gif";
+import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
+import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
+import { OwnDataContext } from "../../provider/own_data";
 
 function StoriesPage({ titlePage }) {
   useEffect(() => {
     document.title = titlePage;
   }, [titlePage]);
 
-  const [heartQuantity, setHeartQuantity] = useState(0);
+  const [heartQuantities, setHeartQuantities] = useState({});
   const [contentLoaded, setContentLoaded] = useState(false);
   const [storyData, setStoryData] = useState([]);
   const [listStories, setListStories] = useState([]);
   const [isVisible, setIsVisible] = useState(false);
   const [currentIndex, setCurrentIndex] = useState(0);
   const { story_id } = useParams();
-
+  const dataOwner = useContext(OwnDataContext);
+  const navigate = useNavigate();
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -52,6 +61,12 @@ function StoriesPage({ titlePage }) {
         const response = await getData(API_STORIES_BY_ID(story_id));
         if (response?.status) {
           setStoryData(response.data);
+          setHeartQuantities(
+            response.data.reduce((acc, story) => {
+              acc[story.story_id] = story.heart_quantity || 0; // Đặt số lượng yêu thích ban đầu
+              return acc;
+            }, {})
+          );
           setContentLoaded(true);
         }
       } catch (error) {
@@ -61,13 +76,17 @@ function StoriesPage({ titlePage }) {
     fetchAPI();
   }, [story_id]);
 
-  const handleClickHeart = async () => {
+  const handleClickHeart = async (id) => {
     const soundClick = document.querySelector(".sound-click--heart");
     setIsVisible(true);
     setTimeout(() => setIsVisible(false), 1000);
-    const response = await postData(API_CREATE_HEART_STORY(story_id));
+
+    const response = await postData(API_CREATE_HEART_STORY(id));
     if (response?.status) {
-      setHeartQuantity((prev) => prev + 1);
+      setHeartQuantities((prev) => ({
+        ...prev,
+        [id]: (prev[id] || 0) + 1,
+      }));
     } else {
       console.error("Lỗi: Không thể cập nhật tim.");
     }
@@ -84,6 +103,19 @@ function StoriesPage({ titlePage }) {
     setCurrentIndex((prevIndex) =>
       prevIndex > 0 ? prevIndex - 1 : storyData.length - 1
     );
+  };
+
+  const handleDeleteStory = async (story_id) => {
+    try {
+      if (window.confirm("Bạn chắc chắn muốn xoá tin này chứ?")) {
+        const response = await deleteData(API_DELETE_STORY(story_id));
+        if (response.status) {
+          navigate("/");
+        }
+      }
+    } catch (error) {
+      console.error(error.message);
+    }
   };
 
   return (
@@ -107,45 +139,123 @@ function StoriesPage({ titlePage }) {
               <h4>Tất cả tin</h4>
               <ul className="list-user--stories">
                 {listStories.map((story, index) => (
-                  <StoryPageItem key={story.story_id} story={story} index={index} />
+                  <StoryPageItem
+                    key={story.story_id}
+                    story={story}
+                    index={index}
+                  />
                 ))}
               </ul>
             </div>
             <div className="content-story--main">
               {contentLoaded && storyData.length > 0 ? (
-                <div className="content-story--container" style={{ "--background-url": `url(${storyData[currentIndex]?.media_link})` }}>
+                <div
+                  className="content-story--container"
+                  style={{
+                    "--background-url": `url(${storyData[currentIndex]?.media_link})`,
+                  }}
+                >
                   <div className="img-content--wrapper">
                     <div className="content-info">
+                      <div className="white-bar">
+                        {storyData.map((_, index) => (
+                          <div
+                            key={index}
+                            className={`white-bar-segment ${index === currentIndex ? "active" : ""}`}
+                          ></div>
+                        ))}
+                      </div>
                       <div className="content-img--avt">
-                        <img src={storyData[currentIndex]?.user_avatar} alt="" />
+                        <img src={storyData[currentIndex]?.avatar} alt="" />
                       </div>
                       <div className="content-info--detail">
                         <div className="info">
                           <p className="name">
-                            {storyData[currentIndex]?.user_name} <b>{timeAgo(storyData[currentIndex]?.created_at)}</b>
+                            {storyData[currentIndex]?.user_name}
+                            <b>
+                              {timeAgo(storyData[currentIndex]?.created_at)}
+                            </b>
                           </p>
-                          <audio src={storyData[currentIndex]?.audio_link} autoPlay loop hidden></audio>
-                          <MdDelete />
+                          {storyData[currentIndex]?.audio_link && (
+                            <audio
+                              src={storyData[currentIndex]?.audio_link}
+                              autoPlay
+                              loop
+                              hidden
+                            ></audio>
+                          )}
+                          {storyData[currentIndex]?.user_id ===
+                            dataOwner.user_id && (
+                            <MdDelete
+                              className="delete-icon"
+                              onClick={() =>
+                                handleDeleteStory(
+                                  storyData[currentIndex]?.story_id
+                                )
+                              }
+                            />
+                          )}
                         </div>
                         <p className="quantity-heart">
-                          <FaHandHoldingHeart /> <p>{heartQuantity} lượt thích</p>
+                          <b>
+                            {
+                              storyData[currentIndex]?.story_privacy === 1
+                                ? String.fromCodePoint(0x1f30d) // 🌍 icon
+                                : String.fromCodePoint(0x1f512) // 🔒 icon
+                            }
+                          </b>
+
+                          <p>
+                            {heartQuantities[
+                              storyData[currentIndex]?.story_id
+                            ] || 0}{" "}
+                            lượt thích
+                          </p>
                         </p>
                       </div>
                     </div>
-                    <img src={storyData[currentIndex]?.media_link} alt="" className="content" />
-                    {isVisible && <img className="icon-gift" src={gifHeart} alt="" />}
-                    <div className="icon-heart" onClick={handleClickHeart}>
-                      <lord-icon src="https://cdn.lordicon.com/ohfmmfhn.json" trigger="click" stroke="bold" state="hover-heartbeat-alt" colors="red"></lord-icon>
-                      <p>Tặng Dasha Taran một lượt yêu thích ngay nào</p>
+                    <img
+                      src={storyData[currentIndex]?.media_link}
+                      alt=""
+                      className="content"
+                    />
+                    {isVisible && (
+                      <img className="icon-gift" src={gifHeart} alt="" />
+                    )}
+                    <div
+                      className="icon-heart"
+                      onClick={() =>
+                        handleClickHeart(storyData[currentIndex]?.story_id)
+                      }
+                    >
+                      <lord-icon
+                        src="https://cdn.lordicon.com/ohfmmfhn.json"
+                        trigger="click"
+                        stroke="bold"
+                        state="hover-heartbeat-alt"
+                        colors="red"
+                      ></lord-icon>
+                      <p>Tặng một lượt yêu thích ngay nào</p>
                     </div>
-                     {/* Nút điều hướng Previous và Next */}
-                     <button onClick={handlePrev} className="nav-button prev-button">Previous</button>
-                    <button onClick={handleNext} className="nav-button next-button">Next</button>
-                
+                    {storyData && storyData.length > 1 && (
+                      <>
+                        <ArrowBackIosNewIcon
+                          className="nav-button prev-button"
+                          onClick={handlePrev}
+                        />
+                        <ArrowForwardIosIcon
+                          onClick={handleNext}
+                          className="nav-button next-button"
+                        />
+                      </>
+                    )}
                   </div>
                 </div>
               ) : (
-                <div className="loading-skeleton" style={{ transform: "translateX(25%)" }}>
+                <div
+                  className="loading-skeleton"
+                  style={{ transform: "translateX(25%)" }}
+                >
                   <ClassicPostLoader />
                 </div>
               )}
@@ -153,7 +263,11 @@ function StoriesPage({ titlePage }) {
           </div>
         </div>
       </div>
-      <audio style={{ display: "none" }} src={soundClickHeart} className="sound-click--heart"></audio>
+      <audio
+        style={{ display: "none" }}
+        src={soundClickHeart}
+        className="sound-click--heart"
+      ></audio>
     </React.Fragment>
   );
 }

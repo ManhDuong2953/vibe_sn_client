@@ -14,7 +14,7 @@ function StoryPageItem({ active, story }) {
           <Link to={"/story/" + story?.story_id}>
             <div className="avt-img popup">
               <PopupInfoShort user_id={story?.user_id} />
-              <img src={story?.user_avatar} alt="" />
+              <img src={story?.avatar} alt="" />
             </div>
             <div className="info">
               <p className="name">{story?.user_name}</p>

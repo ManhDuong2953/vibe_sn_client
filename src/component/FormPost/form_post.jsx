@@ -141,7 +141,6 @@ export default function FormPost() {
                         </p>
                         <select name="privacy" id="privacy-select" defaultValue="global">
                             <option value="global">&#x1F30D; Mọi người</option>
-                            <option value="friend">&#x1F465; Bạn bè</option>
                             <option value="private">&#x1F512; Chỉ mình tôi</option>
                         </select>
                     </div>
