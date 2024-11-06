@@ -297,9 +297,11 @@ function ProfileHeader({ classNameActive, userId }) {
           <Link to={`/profile/${data && data?.user_id}`}>
             <li className="profile-navigation--item post active">Bài viết</li>
           </Link>
-          <Link to={`/profile/${data && data?.user_id}/image`}>
-            <li className="profile-navigation--item image">Ảnh</li>
-          </Link>
+          {data && dataOwner && dataOwner?.user_id === data.user_id && (
+            <Link to={`/profile/${data && data?.user_id}/image`}>
+              <li className="profile-navigation--item image">Ảnh</li>
+            </Link>
+          )}
           <Link to={`/profile/${data && data?.user_id}/friends`}>
             <li className="profile-navigation--item friends">Bạn bè</li>
           </Link>

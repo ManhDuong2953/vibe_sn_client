@@ -253,10 +253,10 @@ function StoriesPage({ titlePage }) {
                 </div>
               ) : (
                 <div
-                  className="loading-skeleton"
-                  style={{ transform: "translateX(25%)" }}
+                  className="text-center"
+                  style={{ marginTop: "100px" }}
                 >
-                  <ClassicPostLoader />
+                  Rất tiếc, tin không còn tồn tại hoặc đã hết hạn.
                 </div>
               )}
             </div>

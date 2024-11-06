@@ -21,6 +21,7 @@ const API_GET_INFO_USER_PROFILE_BY_ID = (id) =>
   `${API_HOST}/users/info-profile/${id}`;
 const API_UPDATE_USER = `${API_HOST}/users/update-profile/`;
 const API_GET_INFO_OWNER_PROFILE_BY_ID = `${API_HOST}/users/info-profile/`;
+const API_GET_ALL_PROFILE_MEDIA_BY_ID = `${API_HOST}/users/profile-media/my-profile-media`;
 
 //User face recognition profile
 const API_CREATE_FACE_RECOGNITION_BY_ID = `${API_HOST}/users/face-recognition/create-face-recognition/`;
@@ -147,5 +148,6 @@ export {
   API_LIST_STORY,
   API_STORY_BY_ID,
   API_STORIES_BY_ID,
-  API_DELETE_STORY
+  API_DELETE_STORY,
+  API_GET_ALL_PROFILE_MEDIA_BY_ID
 };

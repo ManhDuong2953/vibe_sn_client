@@ -9,39 +9,63 @@ import { getData } from "../../../ultils/fetchAPI/fetch_API";
 import { API_FRIEND_LIST } from "../../../API/api_server";
 import ContactItem from "../../../layout/SideBarRight/Contact/ContactItem/contact_item";
 import { useSocket } from "../../../provider/socket_context";
+import { getURLParam } from "../../../ultils/getParamURL/get_param_URL";
+
 function ProfileFriend({ titlePage }) {
   useEffect(() => {
     document.title = titlePage;
   }, [titlePage]);
+
   const { user_id } = useParams();
+  const s = getURLParam();
+  console.log(s);
+
   const [loading, setLoading] = useState(false);
-  const [dataFriend, setDataFriend] = useState();
+  const [dataFriend, setDataFriend] = useState([]);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [filteredFriends, setFilteredFriends] = useState([]); // Danh sách đã lọc
   const socket = useSocket();
   const [listUsersOnline, setListUsersOnline] = useState([]);
 
   useEffect(() => {
-    try {
-      const fetchData = async () => {
+    const fetchData = async () => {
+      try {
         const responseFriend = await getData(API_FRIEND_LIST(user_id));
         setDataFriend(responseFriend?.data);
-        return responseFriend?.status;
-      };
-      setLoading(fetchData());
-    } catch (error) {
-      console.log(error.message);
-    }
+        setFilteredFriends(responseFriend?.data); // Đặt danh sách đã lọc bằng danh sách ban đầu
+        setLoading(false);
+      } catch (error) {
+        console.error(error.message);
+        setLoading(false);
+      }
+    };
+    setLoading(true);
+    fetchData();
   }, [user_id]);
 
   useEffect(() => {
     if (socket) {
       socket.emit("registerUser", { user_id: user_id });
-      // Đăng ký sự kiện onlineUsers
       socket.on("onlineUsers", (data) => {
         setListUsersOnline(data);
       });
     }
   }, [socket]);
-  console.log(listUsersOnline);
+
+  const handleSearch = (event) => {
+    const term = event.target.value;
+    setSearchTerm(term);
+    // Cập nhật danh sách bạn bè đã lọc dựa trên từ khóa
+    if (term.trim()) {
+      setFilteredFriends(
+        dataFriend.filter((friend) =>
+          friend?.username?.toLowerCase().includes(term.toLowerCase())
+        )
+      );
+    } else {
+      setFilteredFriends(dataFriend);
+    }
+  };
 
   return (
     <React.Fragment>
@@ -55,18 +79,22 @@ function ProfileFriend({ titlePage }) {
               <form action="" method="get">
                 <input
                   type="text"
+                  name="searchString"
                   placeholder="&#x1F50D; Nhập tên hoặc biệt danh của bạn bè"
+                  value={searchTerm} // Hiển thị từ khóa tìm kiếm
+                  onChange={handleSearch} // Gọi hàm handleSearch khi thay đổi giá trị
                 />
               </form>
             </h3>
-            {dataFriend &&
-              dataFriend?.map((friendItem, index) => (
+            {filteredFriends &&
+              filteredFriends.map((friendItem, index) => (
                 <ContactItem
-                  loading={true}
+                  key={index}
+                  loading={loading}
                   data={friendItem}
                   active={
                     listUsersOnline &&
-                    listUsersOnline?.includes(friendItem?.friend_id)
+                    listUsersOnline.includes(friendItem?.friend_id)
                   }
                 />
               ))}
