@@ -48,6 +48,8 @@ const API_FRIEND_STATUS = API_HOST + "/users/friend/status/";
 const API_FRIEND_LIST = (id) => API_HOST + "/users/friend/list/" + id;
 const API_FRIEND_LIST_REQUEST = API_HOST + "/users/friend/requests/list";
 const API_FRIEND_DELETE = API_HOST + "/users/friend/delete";
+const API_FRIEND_SUGGEST = API_HOST + "/users/friend/list-suggest";
+const API_FRIEND_DATE_OF_BIRTH = API_HOST + "/users/friend/list-dob";
 
 // Profile Heart API endpoint
 const API_PROFILE_HEART_GET = (id) =>
@@ -77,14 +79,14 @@ const API_DELETE_MESSAGE_OWNER_SIDE = (id) =>
   API_HOST + "/messenger/delete-messenger-by-owner-side/" + id;
 
 // STORY API ENDPOINT
-const API_CREATE_STORY = API_HOST + '/stories/create-story';
-const API_LIST_STORY = API_HOST + '/stories/list-story';
+const API_CREATE_STORY = API_HOST + "/stories/create-story";
+const API_LIST_STORY = API_HOST + "/stories/list-story";
+const API_LIST_MY_STORY = API_HOST + "/stories/my-list-story";
 const API_STORY_BY_ID = (id) => `${API_HOST}/stories/story-by-id/${id}`;
 const API_STORIES_BY_ID = (id) => `${API_HOST}/stories/stories-by-id/${id}`;
-const API_CREATE_HEART_STORY = (id) => `${API_HOST}/stories/create-heart-story/${id}`;
+const API_CREATE_HEART_STORY = (id) =>
+  `${API_HOST}/stories/create-heart-story/${id}`;
 const API_DELETE_STORY = (id) => `${API_HOST}/stories//delete-story/${id}`;
-
-
 
 // GROUP API ENDPOINT
 const API_GROUP_CREATE = API_HOST + "/group/channel/create";
@@ -92,6 +94,18 @@ const API_LIST_GROUP_BY_USERID = (id) =>
   API_HOST + "/group/members/list-all-group/" + id;
 const API_GROUP_DETAIL = (id) => API_HOST + "/group/channel/details/" + id;
 const API_LIST_GROUP_BY_OWNER = API_HOST + "/group/members/list-all-group/";
+const API_LIST_MEMBERS_GROUP = (id) =>
+  API_HOST + "/group/members/list-members-group/" + id;
+const API_LIST_MEMBERS_OFFICAL_GROUP = (id) =>
+  API_HOST + "/group/members/list-members-offical-group/" + id;
+const API_LIST_MEMBERS_UNAPPROVED_GROUP = (id) =>
+  API_HOST + "/group/members/list-members-unapproved-group/" + id;
+
+const API_CHECK_ROLE_MEMBER_GROUP = (id) =>
+  API_HOST + "/group/members/check-role/" + id;
+
+const API_INVITE_MEMBER_GROUP = (id) =>
+  API_HOST + "/group/members/invited-group/" + id;
 
 export {
   API_SIGNUP_POST,
@@ -149,5 +163,13 @@ export {
   API_STORY_BY_ID,
   API_STORIES_BY_ID,
   API_DELETE_STORY,
-  API_GET_ALL_PROFILE_MEDIA_BY_ID
+  API_GET_ALL_PROFILE_MEDIA_BY_ID,
+  API_LIST_MEMBERS_GROUP,
+  API_LIST_MEMBERS_OFFICAL_GROUP,
+  API_LIST_MEMBERS_UNAPPROVED_GROUP,
+  API_CHECK_ROLE_MEMBER_GROUP,
+  API_INVITE_MEMBER_GROUP,
+  API_FRIEND_SUGGEST,
+  API_LIST_MY_STORY,
+  API_FRIEND_DATE_OF_BIRTH
 };

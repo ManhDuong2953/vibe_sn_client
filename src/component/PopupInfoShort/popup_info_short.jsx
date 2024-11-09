@@ -5,17 +5,22 @@ import { FaSchoolCircleCheck, FaArrowUpRightFromSquare } from "react-icons/fa6";
 import { IoHome } from "react-icons/io5";
 import { FaUserFriends } from "react-icons/fa";
 import { IoHeartCircleSharp } from "react-icons/io5";
-import { getData } from "../../ultils/fetchAPI/fetch_API";
-import { API_GET_INFO_USER_PROFILE_BY_ID } from "../../API/api_server";
-import { getMutualFriends } from "../../services/fetch_api";
+import { deleteData, getData, postData } from "../../ultils/fetchAPI/fetch_API";
+import {
+  API_GET_INFO_USER_PROFILE_BY_ID,
+  API_PROFILE_HEART_CREATE,
+  API_PROFILE_HEART_DELETE,
+  API_PROFILE_HEART_GET,
+} from "../../API/api_server";
 import { OwnDataContext } from "../../provider/own_data";
+import { getCountMutualFriends } from "../../services/fetch_api";
 
 function PopupInfoShort({ user_id }) {
   const [hearted, setHearted] = useState(false);
+  const [countHearted, setCountHearted] = useState(0);
   const [infoUser, setInfoUser] = useState();
   const dataOwner = useContext(OwnDataContext);
-  console.log(user_id);
-  
+
   useEffect(() => {
     try {
       if (!user_id) return;
@@ -40,7 +45,10 @@ function PopupInfoShort({ user_id }) {
     const fetchFriends = async () => {
       if (dataOwner && dataOwner.user_id !== user_id) {
         try {
-          const response = await getMutualFriends(dataOwner.user_id, user_id);
+          const response = await getCountMutualFriends(
+            dataOwner.user_id,
+            user_id
+          );
 
           setCountMutual(response);
         } catch (error) {
@@ -93,10 +101,42 @@ function PopupInfoShort({ user_id }) {
     };
   }, []);
 
-  const handleHeartClick = (e) => {
+  useEffect(() => {
+    const getHeart = async () => {
+      const responseHeart = await getData(API_PROFILE_HEART_GET(user_id));
+      setCountHearted(responseHeart.data.length);
+      if (responseHeart?.status) {
+        for (let i = 0; i < responseHeart.data.length; i++) {
+          const element = responseHeart.data[i];
+          if (dataOwner && dataOwner.user_id === element.hearted_user_id) {
+            setHearted(true);
+            break;
+          }
+        }
+      }
+    };
+    getHeart();
+  }, []);
+
+  const handleHeartClick = async (e) => {
     e.preventDefault();
-    setHearted((prev) => !prev);
+    if (hearted) {
+      const responseRemove = await deleteData(
+        API_PROFILE_HEART_DELETE(user_id)
+      );
+      if (responseRemove?.status) {
+        setHearted(false);
+        setCountHearted(countHearted - 1);
+      }
+    } else {
+      const responseAdd = await postData(API_PROFILE_HEART_CREATE(user_id));
+      if (responseAdd?.status) {
+        setHearted(true);
+        setCountHearted(countHearted + 1);
+      }
+    }
   };
+
   return (
     <React.Fragment>
       {infoUser && (
@@ -127,7 +167,7 @@ function PopupInfoShort({ user_id }) {
                 </div>
                 <div className="popup-info-short--item info-quantity--fr">
                   <IoHeartCircleSharp />
-                  Có <b>{hearted ? 1000 + 1 : 1000 - 1} lượt yêu thích</b>
+                  Có <b>{countHearted} lượt yêu thích</b>
                 </div>
               </div>
             </div>

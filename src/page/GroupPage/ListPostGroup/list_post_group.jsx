@@ -8,12 +8,12 @@ import { MdOutlineGroupAdd } from "react-icons/md";
 import { FaLayerGroup } from "react-icons/fa6";
 import { getData } from "../../../ultils/fetchAPI/fetch_API";
 import { API_LIST_GROUP_BY_OWNER } from "../../../API/api_server";
+import GroupItem from "../../../component/GroupItem/group_item";
 function ListPostGroupPage({ titlePage }) {
-  
   useEffect(() => {
     document.title = titlePage;
   }, [titlePage]);
-  
+
   const [dataGroup, setDataGroup] = useState([]);
   useEffect(() => {
     const icon = document.querySelector(".icon-gr");
@@ -54,7 +54,9 @@ function ListPostGroupPage({ titlePage }) {
                 <h5>Tạo nhóm</h5>
               </Link>
               {dataGroup.length > 0 &&
-                dataGroup.map((data, index) => <SuggestItem key={index} to={`/group/${data?.group_id}`} avatar={data?.avatar_media_link} name={data?.group_name}/>)}
+                dataGroup.map((data, index) => (
+                  <GroupItem key={index} group_id={data?.group_id} />
+                ))}
             </ul>
           </div>
           <div className="side-right">

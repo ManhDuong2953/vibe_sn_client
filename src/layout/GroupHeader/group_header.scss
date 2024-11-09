@@ -4,12 +4,12 @@
       width: 100%;
       padding-bottom: 20px;
       margin-bottom: 20px;
-      svg.code-qr{
+      svg.code-qr {
         cursor: pointer;
         padding: 10px;
         margin: 0 5px;
         font-size: 50px;
-        &:hover{
+        &:hover {
           background-color: var(--hover-color);
         }
       }
@@ -45,6 +45,7 @@
             .analyst {
               display: flex;
               align-items: center;
+              justify-content: unset;
               padding: 0;
               p {
                 font-size: 13px;
@@ -137,6 +138,11 @@
                   path {
                     color: white;
                   }
+                }
+                div {
+                  display: flex;
+                  align-items: center;
+                  justify-content: center;
                 }
                 &.active {
                   color: var(--success-color);

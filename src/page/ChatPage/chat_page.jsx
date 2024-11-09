@@ -984,21 +984,25 @@ function ChatMessengerPage({ titlePage }) {
                                               <ReplayCircleFilledIcon /> Thu hồi
                                               ở phía bạn
                                             </MenuItem>
-                                            <MenuItem
-                                              onClick={() =>
-                                                handleDeleteMessage(
-                                                  msg.messenger_id
-                                                )
-                                              }
-                                              sx={{
-                                                "&:hover": {
-                                                  backgroundColor: "#555",
-                                                },
-                                                color: "#fff",
-                                              }}
-                                            >
-                                              <ReplayIcon /> Thu hồi ở mọi người
-                                            </MenuItem>
+                                            {dataOwner?.user_id ===
+                                              msg?.sender_id && (
+                                              <MenuItem
+                                                onClick={() =>
+                                                  handleDeleteMessage(
+                                                    msg.messenger_id
+                                                  )
+                                                }
+                                                sx={{
+                                                  "&:hover": {
+                                                    backgroundColor: "#555",
+                                                  },
+                                                  color: "#fff",
+                                                }}
+                                              >
+                                                <ReplayIcon /> Thu hồi ở mọi
+                                                người
+                                              </MenuItem>
+                                            )}
                                           </Menu>
                                         </div>
                                       </div>

@@ -54,7 +54,7 @@ function ListContact() {
             />
           ))
         ) : (
-          <p className="text-center">Không có bạn bè nào</p>
+          <h5 className="text-center" style={{margin: "5px 0"}}>Không có bạn bè nào</h5>
         )}
       </ul>
     </div>

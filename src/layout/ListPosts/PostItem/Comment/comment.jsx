@@ -42,14 +42,14 @@ function Comment({setShowCommentPage}) {
     };
     return (
     <React.Fragment>
-        <p className="analyst">
+        <div className="analyst">
             <p className="like">
                 <FaHandHoldingHeart /> <b>129</b>
             </p>
             <p className="comment-share" onClick={() => setShowCommentContainer(!showCommentContainer)}>
                 33 bình luận, 8 lượt chia sẻ
             </p>
-        </p>
+        </div>
         <div className="action-post--container">
             <div className="reaction-container">
                 <div className="react-icon--show">

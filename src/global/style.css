@@ -131,6 +131,14 @@ button[type="submit"]:hover {
   margin: auto;
 }
 
+.box-center{
+  display: flex;
+  width: auto;
+  height: 100%;
+  align-items: center;
+  justify-content: center;
+}
+
 input,
 select,
 option,

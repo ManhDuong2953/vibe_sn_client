@@ -5,38 +5,63 @@ import NavigativeBar from "../../../layout/NavigativeBar/navigative_bar";
 import ProfileHeader from "../../../layout/ProfileHeader/profile_header";
 import ProfileRequestItem from "./ProfileRequestItem/profile_request_item";
 import { useParams } from "react-router-dom";
+import { getData } from "../../../ultils/fetchAPI/fetch_API";
+import { API_FRIEND_LIST_REQUEST } from "../../../API/api_server";
 function ProfileRequest({ titlePage }) {
-    useEffect(() => {
-        document.title = titlePage;
-    }, [titlePage]);
-    const { user_id } = useParams();
+  useEffect(() => {
+    document.title = titlePage;
+  }, [titlePage]);
+  const { user_id } = useParams();
+  const [data, setData] = useState([]);
+  useEffect(() => {
+    try {
+      const fetchData = async () => {
+        const response = await getData(API_FRIEND_LIST_REQUEST);
+        if (response?.status) {
+          setData(response?.data);
+        }
+      };
+      fetchData();
+    } catch (error) {
+      console.error(error);
+    }
+  }, []);
 
-    return (
-        <React.Fragment>
-            <NavigativeBar />
-            <div className="profile">
-                <div className="profile-container">
-                    <ProfileHeader userId={user_id} classNameActive="request-add--fr" />
-                    <div className="profile-request--container">
-                        <h3 className="box">Yêu cầu kết bạn <form action="" method="get">
-                            <input type="text" placeholder="&#x1F50D; Nhập tên hoặc biệt danh của người yêu cầu kết bạn" />
-                        </form></h3>
+  console.log(data);
 
-                        <ul className="list-request">
+  return (
+    <React.Fragment>
+      <NavigativeBar />
+      <div className="profile">
+        <div className="profile-container">
+          <ProfileHeader userId={user_id} classNameActive="request-add--fr" />
+          <div className="profile-request--container">
+            <h3 className="box">Yêu cầu kết bạn</h3>
 
-                            <ProfileRequestItem />
-                            <ProfileRequestItem />
-                            <ProfileRequestItem />
-                            <ProfileRequestItem />
-                            <ProfileRequestItem />
-                            <ProfileRequestItem />
-                            <ProfileRequestItem />
-                        </ul>
-                    </div>
-                </div>
-            </div>
-        </React.Fragment>
-    );
+            <ul className="list-request">
+              {data?.length ? (
+                data.map((item, index) => (
+                  <ProfileRequestItem
+                    key={index}
+                    user_id={item?.requestor_id}
+                  />
+                ))
+              ) : (
+                <h5
+                  style={{
+                    margin: "10px 0",
+                  }}
+                  className="text-center"
+                >
+                  Bạn không có lời mời kết bạn nào
+                </h5>
+              )}
+            </ul>
+          </div>
+        </div>
+      </div>
+    </React.Fragment>
+  );
 }
 
 export default ProfileRequest;

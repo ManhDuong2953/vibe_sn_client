@@ -6,20 +6,21 @@ import GroupHeader from "../../../layout/GroupHeader/group_header";
 import { MdDateRange, MdGroupOff } from "react-icons/md";
 import { FaFileCircleCheck, FaPeopleGroup, FaPeopleLine } from "react-icons/fa6";
 import { RiDeleteBin5Fill } from "react-icons/ri";
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { FaInfoCircle } from "react-icons/fa";
 
 function GroupAdminPage({ titlePage }) {
     useEffect(() => {
         document.title = titlePage;
     }, [titlePage]);
+    const {group_id} = useParams();
     return (
         <React.Fragment>
             <div className="group-admin">
                 <NavigativeBar />
                 <div className="group-wrapper container">
                     <div className="group-container">
-                        <GroupHeader classNameActive={"admin"} />
+                        <GroupHeader group_id={group_id} classNameActive={"admin"} />
                         <div className="group-main">
                             <div className="group-left">
                                 <div className="title-content box">

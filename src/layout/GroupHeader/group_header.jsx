@@ -4,27 +4,62 @@ import { MdGroupAdd } from "react-icons/md";
 import { MdGroupRemove } from "react-icons/md";
 import { Link } from "react-router-dom";
 import { FaUserLock } from "react-icons/fa";
-import { AiOutlineGlobal } from "react-icons/ai";
 import { FaFacebookMessenger } from "react-icons/fa6";
-import ListSuggest from "../SideBarRight/Suggest/list_suggest";
-import { CgPushChevronLeft, CgPushChevronRight } from "react-icons/cg";
 import { IoQrCodeOutline } from "react-icons/io5";
+import { FcInvite } from "react-icons/fc";
 import QRCodePopup from "../../component/QRCode/qr_code";
-import { API_GROUP_DETAIL } from "../../API/api_server";
-import { getData } from "../../ultils/fetchAPI/fetch_API";
+import {
+  API_CHECK_ROLE_MEMBER_GROUP,
+  API_GROUP_DETAIL,
+  API_INVITE_MEMBER_GROUP,
+} from "../../API/api_server";
+import { getData, postData } from "../../ultils/fetchAPI/fetch_API";
 
 function GroupHeader({ classNameActive, group_id }) {
-  const [isFriend, setIsFriend] = useState(false);
   const [showQRCodePopup, setShowQRCodePopup] = useState(false);
+  const [statusMember, setStatusMember] = useState({
+    isInvite: false,
+    isMember: false,
+    isAdmin: false,
+  });
   const [dataGroup, setDataGroup] = useState();
   useEffect(() => {
-    const getGroupDetail = async () => {
-      const response = await getData(API_GROUP_DETAIL(group_id));
-      if (response.status) {
-        setDataGroup(response.data);
-      }
-    };
-    getGroupDetail()
+    try {
+      const getGroupDetail = async () => {
+        const response = await getData(API_GROUP_DETAIL(group_id));
+        if (response?.status) {
+          setDataGroup(response?.data);
+        }
+      };
+      const checkRole = async () => {
+        const response = await getData(API_CHECK_ROLE_MEMBER_GROUP(group_id));
+
+        if (!response?.status) {
+          return setStatusMember({
+            isInvite: false,
+            isMember: false,
+            isAdmin: false,
+          });
+        }
+        if (!response?.data) return;
+        const { member_status, member_role } = response?.data;
+
+        if (member_status === 0) {
+          setStatusMember({ isInvite: true, isMember: false, isAdmin: false });
+        } else if (member_status === 1) {
+          setStatusMember({
+            isInvite: false,
+            isMember: member_role === 0,
+            isAdmin: member_role === 1,
+          });
+        }
+      };
+
+      getGroupDetail();
+      checkRole();
+    } catch (error) {
+      console.error(error.message);
+    }
   }, [group_id]);
   const handleQRCodeClick = () => {
     setShowQRCodePopup(true);
@@ -33,8 +68,7 @@ function GroupHeader({ classNameActive, group_id }) {
   const handleClosePopup = () => {
     setShowQRCodePopup(false);
   };
-  console.log(dataGroup);
-  
+
   const currentURL = window.location.href;
   useEffect(() => {
     const listNavigation = document.querySelectorAll(".group-navigation a li");
@@ -47,22 +81,29 @@ function GroupHeader({ classNameActive, group_id }) {
       }
     });
   }, [classNameActive]);
+
+  const handleSendInvited = async () => {
+    try {
+      console.log(123123);
+
+      const response = await postData(API_INVITE_MEMBER_GROUP(group_id));
+      if (response?.status) {
+        window.location.reload();
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
   return (
     <React.Fragment>
       <div className="group-header--main">
         <div className="group-header--container">
           <div className="group-header">
             <div className="group-cover--img">
-              <img
-                src={dataGroup?.cover_media_link}
-                alt=""
-              />
+              <img src={dataGroup?.cover_media_link} alt="" />
             </div>
             <div className="group-avatar--img">
-              <img
-                src={dataGroup?.avatar_media_link}
-                alt=""
-              />
+              <img src={dataGroup?.avatar_media_link} alt="" />
               <div className="header-container">
                 <div className="info-analyst">
                   <h1 className="name">{dataGroup?.group_name}</h1>
@@ -87,23 +128,32 @@ function GroupHeader({ classNameActive, group_id }) {
                     url={currentURL}
                     onClose={handleClosePopup}
                   />
-                  <Link>
-                    <div className="btn btn-messenger">
-                      <FaFacebookMessenger /> Nhắn tin
-                    </div>
-                  </Link>
+                  {(statusMember?.isAdmin || statusMember?.isMember) && (
+                    <Link>
+                      <div className="btn btn-messenger">
+                        <FaFacebookMessenger /> Nhắn tin
+                      </div>
+                    </Link>
+                  )}
                   <div
-                    className={`btn btn-add--gr ${isFriend ? "active" : ""}`}
-                    onClick={() => setIsFriend(!isFriend)}
+                    className={`btn btn-add--gr ${
+                      statusMember.isAdmin || statusMember.isMember
+                        ? "active"
+                        : ""
+                    }`}
                   >
-                    {isFriend ? (
+                    {statusMember.isAdmin || statusMember.isMember ? (
                       <>
                         <MdGroupRemove /> Rời nhóm
                       </>
+                    ) : statusMember.isInvite ? (
+                      <div onClick={handleSendInvited}>
+                        <FcInvite/> Huỷ lời mời
+                      </div>
                     ) : (
-                      <>
+                      <div onClick={handleSendInvited}>
                         <MdGroupAdd /> Tham gia nhóm
-                      </>
+                      </div>
                     )}
                   </div>
                 </div>
@@ -111,15 +161,17 @@ function GroupHeader({ classNameActive, group_id }) {
             </div>
           </div>
           <ul className="group-navigation">
-            <Link to="/group/123">
+            <Link to={`/group/${group_id}`}>
               <li className="group-navigation--item post active">Bài viết</li>
             </Link>
-            <Link to="/group/123/members">
+            <Link to={`/group/${group_id}/members`}>
               <li className="group-navigation--item members">Thành viên</li>
             </Link>
-            <Link to="/group/123/admin">
-              <li className="group-navigation--item admin">Quản trị nhóm</li>
-            </Link>
+            {statusMember?.isAdmin && (
+              <Link to={`/group/${group_id}/admin`}>
+                <li className="group-navigation--item admin">Quản trị nhóm</li>
+              </Link>
+            )}
           </ul>
         </div>
       </div>

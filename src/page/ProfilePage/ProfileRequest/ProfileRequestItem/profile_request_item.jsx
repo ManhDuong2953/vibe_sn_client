@@ -1,43 +1,141 @@
-import React, { useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import PopupInfoShort from "../../../../component/PopupInfoShort/popup_info_short";
 import AvatarWithText from "../../../../skeleton/avatarwithtext";
 import "./profile_request_item.scss";
 import { Link } from "react-router-dom";
-function ProfileRequestItem() {
-    const [loading, setLoading] = useState(true);
+import { OwnDataContext } from "../../../../provider/own_data";
+import {
+  getData,
+  postData,
+  putData,
+} from "../../../../ultils/fetchAPI/fetch_API";
+import {
+  API_FRIEND_ACCEPT,
+  API_FRIEND_DELETE,
+  API_GET_INFO_USER_PROFILE_BY_ID,
+} from "../../../../API/api_server";
+import { getCountMutualFriends } from "../../../../services/fetch_api";
+function ProfileRequestItem({ user_id }) {
+  const [loading, setLoading] = useState(true);
+  const [countMutualFr, setCountMutualFr] = useState(0);
+  const [dataUser, setDataUser] = useState([]);
+  const dataOwner = useContext(OwnDataContext);
 
-    return (
-        <React.Fragment>
-            <Link>
-                <li className="list-suggest--item request">
-                    {
-                        loading ? (
-                            <>
-                                <div className="item-container">
-                                    <div className="avt-suggest ">
-                                        <PopupInfoShort />
-                                        <img src="https://cdn.24h.com.vn/upload/1-2023/images/2023-01-04/Ve-dep-dien-dao-chung-sinh-cua-co-gai-sinh-nam-1999-lot-top-guong-mat-dep-nhat-the-gioi-57068584_2351143488502839_871658938696715268_n-1672812988-819-width1080height1080.jpg" alt="" />
-                                    </div>
-                                    <div className="name-suggest">
-                                        <b>Dasha Taran</b>
-                                        <p>53 bạn chung</p>
-                                    </div>
-                                </div>
-                                <div className="btn-container">
-                                    <div className="btn btn-accept">Chấp nhận</div>
-                                    <div className="btn btn-refuse">Từ chối</div>
-                                </div>
-                            </>
-                        ) : (
-                            <div className="loading-skeleton">
-                                <AvatarWithText />
-                            </div>
-                        )
-                    }
-                </li>
-            </Link>
-        </React.Fragment>
-    );
+  useEffect(() => {
+    const fetchDataUser = async () => {
+      if (user_id) {
+        try {
+          const response = await getData(
+            API_GET_INFO_USER_PROFILE_BY_ID(user_id)
+          );
+          if (response?.status) {
+            setDataUser(response?.data);
+          }
+        } catch (error) {
+          console.error("Error fetching user data:", error);
+        } finally {
+          setLoading(false);
+        }
+      } else {
+        setLoading(false);
+      }
+    };
+
+    fetchDataUser();
+  }, [user_id]);
+
+  useEffect(() => {
+    const fetchMutualFriendsCount = async () => {
+      try {
+        if (dataOwner && user_id) {
+          const mutualCount = await getCountMutualFriends(
+            user_id,
+            dataOwner?.user_id
+          );
+          setCountMutualFr(mutualCount);
+        }
+      } catch (error) {
+        console.error("Error fetching mutual friends count:", error.message);
+      }
+    };
+
+    fetchMutualFriendsCount();
+  }, [user_id, dataOwner]);
+
+  const handleAcceptRequest = async () => {
+    try {
+      const response = await putData(API_FRIEND_ACCEPT(user_id));
+      if (response.status) {
+        window.location.reload();
+      }
+    } catch (error) {
+      console.error(error.message);
+    }
+  };
+
+  const handleDeleteRequest = async () => {    
+    try {
+      const confirmDelete = window.confirm("Từ chối lời mời người này chứ");
+      if (!confirmDelete) return; // Nếu người dùng không xác nhận thì không làm gì
+  
+      // Kiểm tra dữ liệu và gọi API
+      console.log("Sending request to delete:", user_id, dataOwner?.user_id);
+  
+      const response = await postData(API_FRIEND_DELETE, {
+        requestor_id: user_id,
+        receiver_id: dataOwner?.user_id,
+      });
+  
+      if (response.status) {
+        console.log("API response success:", response);
+        window.location.reload();
+      } else {
+        console.error("API response failed:", response);
+      }
+    } catch (error) {
+      console.error("Error during delete request:", error.message);
+    }
+  };
+  
+  
+
+  return (
+    <React.Fragment>
+      <li className="list-suggest--item request">
+        {!loading ? (
+          <>
+            <div className="item-container">
+              <div className="avt-suggest ">
+                <PopupInfoShort user_id={user_id} />
+                <img src={dataUser?.avatar} alt="User Avatar" />
+              </div>
+              <div className="name-suggest">
+                <b>{dataUser?.user_name}</b>
+                <p>{countMutualFr} bạn chung</p>
+              </div>
+            </div>
+            <div className="btn-container">
+              <Link to={`/profile/${dataUser?.user_id}`}>
+                <div className="btn btn-info">
+                  Xem trang cá nhân
+                </div>
+              </Link>
+              <div className="btn btn-accept" onClick={handleAcceptRequest}>
+                Chấp nhận
+              </div>
+              <div className="btn btn-refuse" onClick={()=>handleDeleteRequest()}>
+                Từ chối
+              </div>
+            </div>
+          </>
+        ) : (
+          <div className="loading-skeleton">
+            <AvatarWithText />
+          </div>
+        )}
+      </li>
+    </React.Fragment>
+  );
 }
 
 export default ProfileRequestItem;

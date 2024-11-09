@@ -7,19 +7,20 @@ import { MdAdminPanelSettings, MdDateRange, MdOutlineGroupOff } from "react-icon
 import { FaAngleLeft, FaFileCircleCheck, FaPeopleGroup } from "react-icons/fa6";
 import { RiDeleteBin5Fill } from "react-icons/ri";
 import SuggestItem from "../../../layout/SideBarRight/Suggest/SuggestItem/suggest_item";
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 
 function GroupAdminMemberPage({ titlePage }) {
     useEffect(() => {
         document.title = titlePage;
     }, [titlePage]);
+    const {group_id} = useParams();
     return (
         <React.Fragment>
             <div className="group-admin-members">
                 <NavigativeBar />
                 <div className="group-wrapper container">
                     <div className="group-container">
-                        <GroupHeader classNameActive={"admin"} />
+                        <GroupHeader group_id={group_id} classNameActive={"admin"} />
                         <div className="group-main">
                             <div className="group-left">
                                 <Link to="/group/123/admin">

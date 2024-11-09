@@ -10,26 +10,6 @@
   form {
     margin: 10px 0 0;
 
-    input[type="text"] {
-      width: 100%;
-      padding: 10px;
-      font-size: 13px;
-      border: 1px solid #ccc;
-      border-radius: 4px;
-      outline: none;
-      color: var(--text-color);
-
-      background-color: var(--bg-color);
-
-      &::placeholder {
-        color: var(--text-color);
-      }
-
-      &:focus {
-        border-color: var(--active-color);
-        box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
-      }
-    }
   }
 
   ul.list-request {

@@ -95,13 +95,13 @@ function StoriesPage({ titlePage }) {
 
   const handleNext = () => {
     setCurrentIndex((prevIndex) =>
-      prevIndex < storyData.length - 1 ? prevIndex + 1 : 0
+      prevIndex < storyData?.length - 1 ? prevIndex + 1 : 0
     );
   };
 
   const handlePrev = () => {
     setCurrentIndex((prevIndex) =>
-      prevIndex > 0 ? prevIndex - 1 : storyData.length - 1
+      prevIndex > 0 ? prevIndex - 1 : storyData?.length - 1
     );
   };
 
@@ -148,7 +148,7 @@ function StoriesPage({ titlePage }) {
               </ul>
             </div>
             <div className="content-story--main">
-              {contentLoaded && storyData.length > 0 ? (
+              {contentLoaded && storyData?.length > 0 ? (
                 <div
                   className="content-story--container"
                   style={{
@@ -237,7 +237,7 @@ function StoriesPage({ titlePage }) {
                       ></lord-icon>
                       <p>Tặng một lượt yêu thích ngay nào</p>
                     </div>
-                    {storyData && storyData.length > 1 && (
+                    {storyData && storyData?.length > 1 && (
                       <>
                         <ArrowBackIosNewIcon
                           className="nav-button prev-button"
@@ -253,8 +253,7 @@ function StoriesPage({ titlePage }) {
                 </div>
               ) : (
                 <div
-                  className="text-center"
-                  style={{ marginTop: "100px" }}
+                  className="box-center"
                 >
                   Rất tiếc, tin không còn tồn tại hoặc đã hết hạn.
                 </div>

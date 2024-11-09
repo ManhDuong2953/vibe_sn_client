@@ -25,15 +25,14 @@ import {
   putData,
 } from "../../ultils/fetchAPI/fetch_API";
 import { OwnDataContext } from "../../provider/own_data";
-import Spinner from "../../component/Spinner/spinner";
-import { BsFillPatchCheckFill } from "react-icons/bs";
-import { getAllFriends, getMutualFriends } from "../../services/fetch_api";
+import { getCountMutualFriends } from "../../services/fetch_api";
 function ProfileHeader({ classNameActive, userId }) {
   const [isHearted, setIsHearted] = useState(false);
   const [showQRCodePopup, setShowQRCodePopup] = useState(false);
   const [loading, setLoading] = useState(false);
   const [loadingReq, setLoadingReq] = useState(true);
   const [data, setData] = useState();
+  const [countHearted, setCountHearted] = useState(0);
   const [statusFr, setStatusFr] = useState();
   const dataOwner = useContext(OwnDataContext);
   useEffect(() => {
@@ -54,7 +53,7 @@ function ProfileHeader({ classNameActive, userId }) {
     const fetchFriends = async () => {
       if (dataOwner && dataOwner.user_id !== userId) {
         try {
-          const response = await getMutualFriends(dataOwner.user_id, userId);
+          const response = await getCountMutualFriends(dataOwner.user_id, userId);
           setCountMutual(response);
         } catch (error) {
           console.error("Failed to fetch friends:", error);
@@ -71,10 +70,9 @@ function ProfileHeader({ classNameActive, userId }) {
         receiver_id: userId,
       });
       const responseHeart = await getData(API_PROFILE_HEART_GET(userId));
-      console.log(responseHeart);
-      console.log(isHearted);
 
       if (responseHeart?.status) {
+        setCountHearted(responseHeart?.data.length);
         for (let i = 0; i < responseHeart.data.length; i++) {
           const element = responseHeart.data[i];
           if (dataOwner && dataOwner.user_id === element.hearted_user_id) {
@@ -193,12 +191,12 @@ function ProfileHeader({ classNameActive, userId }) {
               <div className="header-container">
                 <div className="info-analyst">
                   <h1 className="name">
-                    {data && data?.user_name}{" "}
+                    {data && data?.user_name}
                     <TbRosetteDiscountCheckFilled className="icon-checked" />
                   </h1>
                   <p className="nickname">@{data && data?.user_nickname}</p>
                   <div className="analyst">
-                    <p className="quantity-like">1002 lượt thích</p>
+                    <p className="quantity-like">{countHearted} lượt thích</p>
                     {data &&
                       dataOwner &&
                       dataOwner?.user_id !== data.user_id && (
