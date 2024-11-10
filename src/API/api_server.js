@@ -93,6 +93,8 @@ const API_GROUP_CREATE = API_HOST + "/group/channel/create";
 const API_LIST_GROUP_BY_USERID = (id) =>
   API_HOST + "/group/members/list-all-group/" + id;
 const API_GROUP_DETAIL = (id) => API_HOST + "/group/channel/details/" + id;
+const API_UPDATE_GROUP = (id) => API_HOST + "/group/channel/update/" + id;
+const API_DELETE_GROUP = (id) => API_HOST + "/group/channel/delete/" + id;
 const API_LIST_GROUP_BY_OWNER = API_HOST + "/group/members/list-all-group/";
 const API_LIST_MEMBERS_GROUP = (id) =>
   API_HOST + "/group/members/list-members-group/" + id;
@@ -100,12 +102,16 @@ const API_LIST_MEMBERS_OFFICAL_GROUP = (id) =>
   API_HOST + "/group/members/list-members-offical-group/" + id;
 const API_LIST_MEMBERS_UNAPPROVED_GROUP = (id) =>
   API_HOST + "/group/members/list-members-unapproved-group/" + id;
-
 const API_CHECK_ROLE_MEMBER_GROUP = (id) =>
   API_HOST + "/group/members/check-role/" + id;
-
 const API_INVITE_MEMBER_GROUP = (id) =>
   API_HOST + "/group/members/invited-group/" + id;
+const API_ACCEPT_INVITE_MEMBER_GROUP = (id) =>
+  API_HOST + "/group/members/accept-invited-group/" + id;
+const API_REFUSE_INVITE_MEMBER_GROUP = (id) =>
+  API_HOST + "/group/members/refuse-invited-group/" + id;
+const API_SET_ADMIN_MEMBER_GROUP = (id) =>
+  API_HOST + "/group/members/set-admin-group/" + id;
 
 export {
   API_SIGNUP_POST,
@@ -171,5 +177,10 @@ export {
   API_INVITE_MEMBER_GROUP,
   API_FRIEND_SUGGEST,
   API_LIST_MY_STORY,
-  API_FRIEND_DATE_OF_BIRTH
+  API_FRIEND_DATE_OF_BIRTH,
+  API_ACCEPT_INVITE_MEMBER_GROUP,
+  API_REFUSE_INVITE_MEMBER_GROUP,
+  API_SET_ADMIN_MEMBER_GROUP,
+  API_DELETE_GROUP,
+  API_UPDATE_GROUP
 };

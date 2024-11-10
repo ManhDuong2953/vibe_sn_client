@@ -24,7 +24,7 @@ const fetchData = async (url, options = {}) => {
       } catch (e) {
         toast.error(response.statusText);
       }
-      toast.error(errorResponse?.message || "An error occurred");
+      errorResponse?.message && toast.error(errorResponse?.message);
     }
 
     // Kiểm tra xem phản hồi có phải là JSON không

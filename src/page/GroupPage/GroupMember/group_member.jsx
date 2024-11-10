@@ -19,9 +19,9 @@ function GroupMemberPage({ titlePage }) {
   useEffect(() => {
     const fetchMembers = async () => {
       try {
-        const response = await getData(API_LIST_MEMBERS_OFFICAL_GROUP);
+        const response = await getData(API_LIST_MEMBERS_OFFICAL_GROUP(group_id));
         if (response.status) {
-          setMembers(response.data);
+          setMembers(response?.data);
         } else {
           console.error("Failed to fetch members");
         }
@@ -31,6 +31,7 @@ function GroupMemberPage({ titlePage }) {
     };
     fetchMembers();
   }, []);
+ 
 
   // Tách riêng quản trị viên và thành viên nhóm
   const adminMembers = members?.filter(item => item?.member_role === 1) || [];
@@ -45,19 +46,13 @@ function GroupMemberPage({ titlePage }) {
             <GroupHeader group_id={group_id} classNameActive={"members"} />
             <div className="group-main">
               <h3 className="title">Thành viên nhóm</h3>
-              <form action="" method="get">
-                <input
-                  type="text"
-                  placeholder="&#x1F50D; Nhập tên hoặc biệt danh của thành viên"
-                />
-              </form>
 
               {members?.length > 0 ? (
                 <>
                   {/* Hiển thị quản trị viên và số lượng */}
-                  {adminMembers.length > 0 && (
+                  {adminMembers?.length > 0 && (
                     <>
-                      <h3 className="box">Quản trị viên ({adminMembers.length})</h3>
+                      <h3 className="box">Quản trị viên ({adminMembers?.length ?? 0})</h3>
                       <ul className="list-members">
                         {adminMembers.map((item, index) => (
                           <SuggestItem key={index} user_id={item?.member_id} />
@@ -67,9 +62,9 @@ function GroupMemberPage({ titlePage }) {
                   )}
 
                   {/* Hiển thị thành viên nhóm và số lượng */}
-                  {regularMembers.length > 0 && (
+                  {regularMembers?.length > 0 && (
                     <>
-                      <h3 className="box">Thành viên nhóm ({regularMembers.length})</h3>
+                      <h3 className="box">Thành viên nhóm ({regularMembers?.length ?? 0})</h3>
                       <ul className="list-members">
                         {regularMembers.map((item, index) => (
                           <SuggestItem key={index} user_id={item?.member_id} />

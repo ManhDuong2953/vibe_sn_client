@@ -80,12 +80,10 @@ function GroupHeader({ classNameActive, group_id }) {
         navigation.classList.add("active");
       }
     });
-  }, [classNameActive]);
+  }, [classNameActive, statusMember]);
 
   const handleSendInvited = async () => {
     try {
-      console.log(123123);
-
       const response = await postData(API_INVITE_MEMBER_GROUP(group_id));
       if (response?.status) {
         window.location.reload();
@@ -94,6 +92,9 @@ function GroupHeader({ classNameActive, group_id }) {
       console.error(error);
     }
   };
+
+  console.log(dataGroup);
+
   return (
     <React.Fragment>
       <div className="group-header--main">
@@ -108,14 +109,17 @@ function GroupHeader({ classNameActive, group_id }) {
                 <div className="info-analyst">
                   <h1 className="name">{dataGroup?.group_name}</h1>
                   <div className="analyst">
-                    <p className="private">
+                    <p
+                      className="private"
+                      style={{
+                        margin: "5px 0",
+                      }}
+                    >
                       <FaUserLock />
-                      Nhóm công khai
+                      {dataGroup?.group_privacy === 1
+                        ? "Nhóm công khai"
+                        : "Nhóm riêng tư"}
                     </p>
-                    <i>•</i>
-                    <p className="quantity-member">1002 thành viên</p>
-                    <i>•</i>
-                    <p className="quantity-same--fr">43 bạn chung</p>
                   </div>
                 </div>
                 <div className="btn-action">
@@ -148,7 +152,7 @@ function GroupHeader({ classNameActive, group_id }) {
                       </>
                     ) : statusMember.isInvite ? (
                       <div onClick={handleSendInvited}>
-                        <FcInvite/> Huỷ lời mời
+                        <FcInvite /> Huỷ lời mời
                       </div>
                     ) : (
                       <div onClick={handleSendInvited}>
