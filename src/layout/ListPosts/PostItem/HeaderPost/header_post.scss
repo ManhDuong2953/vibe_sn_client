@@ -43,6 +43,7 @@
     a {
       p.name {
         font-weight: 600;
+        color: var(--text-color);
         &:hover {
           text-decoration: underline;
         }
@@ -51,11 +52,12 @@
     p.react{
       margin-left: 4px;
       font-size: 14px;
+      margin-bottom: 1px;
     }
     p.subname {
       font-size: 14px;
       font-weight: 500;
-      color: var(--text-blur-color);
+      color: var(--text-color);
       margin-right: 1px;
     }
     p.time {
@@ -70,7 +72,7 @@
       font-size: 14px;
     }
     i {
-      margin: 3px 1px 0px;
+      margin: 3px 3px 0px;
     }
   }
 }

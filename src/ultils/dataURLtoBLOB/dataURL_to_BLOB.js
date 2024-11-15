@@ -9,6 +9,18 @@ export const dataURLtoBlob = (dataURL) => {
   }
   return new Blob([new Uint8Array(array)], { type: mime });
 };
+
+export const urlToBlob = async (url) => {
+  try {
+    const response = await fetch(url);
+    const blob = await response.blob();
+    return blob;
+  } catch (error) {
+    console.error("Lỗi khi tải hình ảnh:", error);
+    return null;
+  }
+};
+
 // Hàm chuyển chuỗi Base64 thành Blob
 export function base64ToBlob(base64) {
     // Tách mimeType từ tiền tố của chuỗi Base64

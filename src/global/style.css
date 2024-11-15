@@ -131,7 +131,7 @@ button[type="submit"]:hover {
   margin: auto;
 }
 
-.box-center{
+.box-center {
   display: flex;
   width: auto;
   height: 100%;
@@ -273,6 +273,7 @@ a.filepond--credits {
   .container {
     width: calc(100vw - 5px) !important;
     margin: auto;
+    padding: 0 25px;
   }
 }
 

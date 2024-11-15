@@ -113,6 +113,14 @@ const API_REFUSE_INVITE_MEMBER_GROUP = (id) =>
 const API_SET_ADMIN_MEMBER_GROUP = (id) =>
   API_HOST + "/group/members/set-admin-group/" + id;
 
+// POST API ENDPOINT
+const API_CREATE_POST = API_HOST + "/post/create-post";
+const API_DELETE_POST = (id) => `${API_HOST}/post/delete-post/${id}`;
+const API_UPDATE_POST = (id) => `${API_HOST}/post/edit-post/${id}`;
+const API_POST_DETAIL = (id) => `${API_HOST}/post/post-detail/${id}`;
+const API_GET_POSTS = API_HOST + "/post/list-post";
+const API_GET_POSTS_BY_ID = (id) => `${API_HOST}/post/list-post-by-user/${id}`;
+
 export {
   API_SIGNUP_POST,
   API_SIGNUP_SOCIALNETWORK_POST,
@@ -182,5 +190,11 @@ export {
   API_REFUSE_INVITE_MEMBER_GROUP,
   API_SET_ADMIN_MEMBER_GROUP,
   API_DELETE_GROUP,
-  API_UPDATE_GROUP
+  API_UPDATE_GROUP,
+  API_CREATE_POST,
+  API_DELETE_POST,
+  API_UPDATE_POST,
+  API_POST_DETAIL,
+  API_GET_POSTS,
+  API_GET_POSTS_BY_ID,
 };

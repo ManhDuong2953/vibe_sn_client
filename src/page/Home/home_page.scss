@@ -10,5 +10,9 @@
     display: flex;
     margin: 0 !important;
   }
-  
+}
+@media (max-width: 800px) {
+  #content {
+    padding: 0 25px 25px;
+  }
 }

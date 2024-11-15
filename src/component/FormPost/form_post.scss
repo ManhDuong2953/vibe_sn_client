@@ -290,5 +290,9 @@
       opacity: 0.8;
       cursor: pointer;
     }
+    &:disabled:hover{
+      cursor: not-allowed;
+      background-color: var(--hover-color);
+    }
   }
 }
