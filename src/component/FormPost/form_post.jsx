@@ -17,8 +17,9 @@ import FilePondPluginImageExifOrientation from "filepond-plugin-image-exif-orien
 import TextEditor from "../../ultils/textEditor/react_draft_wysiwyg";
 import { OwnDataContext } from "../../provider/own_data";
 import { postData } from "../../ultils/fetchAPI/fetch_API";
-import { API_CREATE_POST } from "../../API/api_server";
+import { API_CREATE_POST, API_GROUP_POST_CREATE } from "../../API/api_server";
 import { LoadingIcon } from "../../ultils/icons/loading";
+import { toast } from "react-toastify";
 
 FilePond.registerPlugin(
   FilePondPluginFileEncode,
@@ -31,7 +32,7 @@ FilePond.setOptions({
   labelIdle: "Kéo & Thả tập tin hoặc Duyệt",
 });
 
-export default function FormPost() {
+export default function FormPost({ group_id = undefined }) {
   const [showEmotion, setShowEmotion] = useState(false);
   const [showImage, setShowImage] = useState(false);
   const [text, setText] = useState(false);
@@ -106,6 +107,14 @@ export default function FormPost() {
     setPrivacy(event.target.value);
   };
 
+  const handleCreatePostGroup = async (post_id) => {
+    const response = await postData(API_GROUP_POST_CREATE(group_id), {
+      post_id,
+    });
+
+    return response?.status;
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
@@ -126,6 +135,14 @@ export default function FormPost() {
         headers: { "Content-Type": "multipart/form-data" },
       });
       if (response?.status) {
+        if (group_id) {
+          const statusPostgr = await handleCreatePostGroup(response?.post_id); // Thêm bài viết vào nhóm
+          if (statusPostgr) {
+            toast.success(
+              "Bài viết đã đăng thành công, chờ quản trị viên xét duyệt!"
+            );
+          }
+        }
         setShowPopup(false);
         window.location.reload();
       }
@@ -141,8 +158,6 @@ export default function FormPost() {
     // Disable button if text is empty, no files selected, and no emoji
     setIsDisabled(text.html === "<p></p>" && selectedFiles.length === 0);
   }, [text, selectedFiles, selectedEmoji]);
-
-  console.log(isDisabled);
 
   const PopupContent = (
     <form
@@ -161,7 +176,7 @@ export default function FormPost() {
           <div className="privacy-container">
             <p className="name">
               <b>{dataOwner && dataOwner?.user_name} </b>
-              {showEmotion && (
+              {showEmotion && !group_id && (
                 <>
                   đang cảm thấy{" "}
                   <select
@@ -229,15 +244,17 @@ export default function FormPost() {
                 </>
               )}
             </p>
-            <select
-              name="privacy"
-              id="privacy-select"
-              value={privacy}
-              onChange={handlePrivacyChange}
-            >
-              <option value={1}>&#x1F30D; Mọi người</option>
-              <option value={0}>&#x1F512; Chỉ mình tôi</option>
-            </select>
+            {!group_id && (
+              <select
+                name="privacy"
+                id="privacy-select"
+                value={privacy}
+                onChange={handlePrivacyChange}
+              >
+                <option value={1}>&#x1F30D; Mọi người</option>
+                <option value={0}>&#x1F512; Chỉ mình tôi</option>
+              </select>
+            )}
           </div>
         </div>
         {!showImage && (
@@ -245,7 +262,7 @@ export default function FormPost() {
             <FaImages /> Thêm ảnh
           </div>
         )}
-        {!showEmotion && (
+        {!showEmotion && !group_id && (
           <div
             className="func btn-create--react handle"
             onClick={toggleEmotion}
@@ -303,33 +320,35 @@ export default function FormPost() {
               {dataOwner && dataOwner?.user_name} ơi, bạn đang nghĩ gì thế?
             </div>
           </div>
-          <div className="row row-func">
-            <Link to="/story/create">
-              <div className="func btn-create--story">
-                <IoNewspaperSharp /> Đăng tin
+          {!group_id && (
+            <div className="row row-func">
+              <Link to="/story/create">
+                <div className="func btn-create--story">
+                  <IoNewspaperSharp /> Đăng tin
+                </div>
+              </Link>
+              <div
+                onClick={() => {
+                  setShowPopup(true);
+                  setShowImage(true);
+                  setShowEmotion(false);
+                }}
+                className="func btn-create--img"
+              >
+                <FaImages /> Đăng ảnh
               </div>
-            </Link>
-            <div
-              onClick={() => {
-                setShowPopup(true);
-                setShowImage(true);
-                setShowEmotion(false);
-              }}
-              className="func btn-create--img"
-            >
-              <FaImages /> Đăng ảnh
+              <div
+                onClick={() => {
+                  setShowPopup(true);
+                  setShowImage(false);
+                  setShowEmotion(true);
+                }}
+                className="func btn-create--react"
+              >
+                <BsEmojiLaughingFill /> Bày tỏ cảm xúc
+              </div>
             </div>
-            <div
-              onClick={() => {
-                setShowPopup(true);
-                setShowImage(false);
-                setShowEmotion(true);
-              }}
-              className="func btn-create--react"
-            >
-              <BsEmojiLaughingFill /> Bày tỏ cảm xúc
-            </div>
-          </div>
+          )}
         </div>
       </div>
       <div id="overlay">

@@ -1,10 +1,4 @@
-import React, {
-  useState,
-  useEffect,
-  useCallback,
-  useRef,
-  useContext,
-} from "react";
+import React, { useState, useEffect, useCallback, useRef, useContext } from "react";
 import { Editor } from "react-draft-wysiwyg";
 import {
   EditorState,
@@ -19,7 +13,6 @@ import "./react_draft_wysiwyg.scss";
 import { getData } from "../fetchAPI/fetch_API";
 import { API_FRIEND_LIST } from "../../API/api_server";
 import { OwnDataContext } from "../../provider/own_data";
-import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 
 const TextEditor = ({ initialContent, getText }) => {
   const [editorState, setEditorState] = useState(
@@ -29,6 +22,7 @@ const TextEditor = ({ initialContent, getText }) => {
   const editorRef = useRef(null); // Khai báo editorRef để sử dụng trong editor
   const [dataFriends, setDataFriends] = useState([]);
   const dataOwner = useContext(OwnDataContext);
+
   useEffect(() => {
     try {
       if (!dataOwner) return;
@@ -45,13 +39,10 @@ const TextEditor = ({ initialContent, getText }) => {
       console.error(error);
     }
   }, [dataOwner]);
-  // Set editorState từ initialContent nếu có
+
+  // Hàm xử lý initialContent khi nhận được nội dung ban đầu
   useEffect(() => {
-    if (
-      initialContent &&
-      typeof initialContent === "string" &&
-      editorState.getCurrentContent().hasText() === false
-    ) {
+    if (initialContent && typeof initialContent === "string") {
       const blocksFromHTML = convertFromHTML(initialContent.trim());
       const contentState = ContentState.createFromBlockArray(
         blocksFromHTML.contentBlocks,
@@ -59,7 +50,7 @@ const TextEditor = ({ initialContent, getText }) => {
       );
       setEditorState(EditorState.createWithContent(contentState));
     }
-  }, [initialContent, editorState]);
+  }, [initialContent]);
 
   useEffect(() => {
     if (editorRef.current) {
@@ -74,11 +65,11 @@ const TextEditor = ({ initialContent, getText }) => {
       const textArray = [];
       const mentions = [];
       const hashtags = [];
-
+  
       content.blocks.forEach((block) => {
         const text = block.text;
         textArray.push(text);
-
+  
         const words = text.split(" ");
         words.forEach((word) => {
           if (word.startsWith("@")) {
@@ -88,25 +79,71 @@ const TextEditor = ({ initialContent, getText }) => {
           }
         });
       });
-
-      const html = convertToHTML(editorState.getCurrentContent());
-
+  
+      // Tạo mentionMap từ danh sách suggestions
+      const mentionMap = dataFriends?.reduce((acc, item) => {
+        acc[`@${item.user_nickname}`] = `/profile/${item.friend_id}`;
+        return acc;
+      }, {}) || {};
+  
+      // Lưu mentions vào một biến để sử dụng sau này
+      const mentionList = dataFriends?.map((item) => ({
+        value: `@${item.user_nickname}`,
+        url: `/profile/${item.friend_id}`,
+        nickname: item.user_name,
+      })) || [];
+  
+      // Chuyển đổi nội dung thành HTML với thẻ <a> cho mentions
+      let html = convertToHTML({
+        blockToHTML: (block) => {
+          let formattedText = block.text;
+  
+          // Thay thế các mention trong text thành <a> tags
+          const mentionRegex = /(@[a-zA-Z0-9_]+)/g;
+          formattedText = formattedText.replace(mentionRegex, (match) => {
+            const userUrl = mentionMap[match]; // Lấy URL từ mentionMap
+            return userUrl ? `<a href="${userUrl}">${match}</a>` : match;
+          });
+  
+          // Thêm hashtag vào HTML nếu cần
+          const hashtagRegex = /(#\w+)/g;
+          formattedText = formattedText.replace(hashtagRegex, (match) => {
+            const hashtag = match.substring(1); // Lấy hashtag bỏ ký tự #
+            return `<a href="/search/${hashtag}">${match}</a>`;
+          });
+  
+          return {
+            start: `<span>`,
+            end: `</span>`,
+            html: formattedText,
+          };
+        },
+      })(editorState.getCurrentContent());
+  
+      // Trước khi gọi getText, thay thế những mention trong html
+      mentionList.forEach((mention) => {
+        const regex = new RegExp(`(${mention.value})`, "g");
+        html = html.replace(regex, `<a href="${mention.url}">${mention.nickname}</a>`);
+      });
+  
       const result = {
         text: textArray.join(" "),
-        html: html,
+        html: html,  // HTML với các thẻ <a> đã được thay thế
         mentions: mentions,
         hashtags: hashtags,
       };
 
-      // Kiểm tra xem html có thay đổi so với lần trước không
+      console.log(result);
+  
+      // Kiểm tra xem HTML có thay đổi so với lần trước không
       if (html !== prevHtmlContent.current) {
-        getText(result);
+        getText(result);  // Truyền cả text và html
         prevHtmlContent.current = html; // Cập nhật nội dung trước đó
       }
     }, 500),
-    [editorState]
+    [editorState, dataFriends]  // Thêm dataFriends vào dependency list
   );
-
+  
   useEffect(() => {
     logContent(); // Gọi lại hàm logContent mỗi khi editorState thay đổi
   }, [editorState, logContent]);
@@ -123,8 +160,8 @@ const TextEditor = ({ initialContent, getText }) => {
             "list",
             "textAlign",
             "history",
-            "fontSize", // Ensure fontSize is added to options
-            "colorPicker", // Ensure colorPicker is added to options
+            "fontSize", 
+            "colorPicker", 
           ],
           inline: {
             inDropdown: false,
@@ -143,15 +180,15 @@ const TextEditor = ({ initialContent, getText }) => {
           },
           colorPicker: {
             colors: [
-              "rgb(0, 0, 0)", // Black
-              "rgb(255, 0, 0)", // Red
-              "rgb(0, 255, 0)", // Green
-              "rgb(0, 0, 255)", // Blue
-              "rgb(255, 255, 0)", // Yellow
-              "rgb(255, 165, 0)", // Orange
-              "rgb(255, 192, 203)", // Pink
-              "rgb(128, 128, 128)", // Gray
-              "rgb(255, 255, 255)", // White
+              "rgb(0, 0, 0)", 
+              "rgb(255, 0, 0)", 
+              "rgb(0, 255, 0)", 
+              "rgb(0, 0, 255)", 
+              "rgb(255, 255, 0)", 
+              "rgb(255, 165, 0)", 
+              "rgb(255, 192, 203)", 
+              "rgb(128, 128, 128)", 
+              "rgb(255, 255, 255)", 
             ],
           },
         }}

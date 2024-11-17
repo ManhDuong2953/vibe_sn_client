@@ -12,8 +12,18 @@ import {
 import { RiDeleteBin5Fill } from "react-icons/ri";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { FaInfoCircle } from "react-icons/fa";
-import { deleteData } from "../../../ultils/fetchAPI/fetch_API";
-import { API_DELETE_GROUP } from "../../../API/api_server";
+import {
+  deleteData,
+  getData,
+  postData,
+} from "../../../ultils/fetchAPI/fetch_API";
+import {
+  API_ACCEPT_GROUP_POST,
+  API_DELETE_GROUP,
+  API_LIST_GROUP_UNAPPROVED_POST,
+  API_REFUSE_GROUP_POST,
+  API_UPDATE_GROUP_POST,
+} from "../../../API/api_server";
 import { toast } from "react-toastify";
 
 function GroupAdminPage({ titlePage }) {
@@ -36,6 +46,44 @@ function GroupAdminPage({ titlePage }) {
     }
   };
 
+  const [listPostGroup, setListPostGroup] = useState([]);
+  useEffect(() => {
+    const getAllGroupPost = async () => {
+      try {
+        const response = await getData(
+          API_LIST_GROUP_UNAPPROVED_POST(group_id)
+        );
+        if (response?.status) {
+          setListPostGroup(response?.data);
+        }
+      } catch (error) {
+        console.error("Error fetching group detail:", error);
+      }
+    };
+    getAllGroupPost();
+  }, [group_id]);
+
+  const handleUpdateGroupPost = async (group_post_id, action) => {
+    try {
+      const apiUri =
+        action === "accepted"
+          ? API_ACCEPT_GROUP_POST(group_id)
+          : API_REFUSE_GROUP_POST(group_id);
+      const response = await postData(apiUri, {
+        group_post_id,
+      });
+      if (response.status) {
+        // Xoá phần tử trong mảng listpostgroup mà có group_post_id là có group_post_id tham chiếu truyền vào
+        const newListPostGroup = listPostGroup.filter(
+          (item) => item.group_post_id !== group_post_id
+        );
+        setListPostGroup(newListPostGroup);
+      }
+    } catch (error) {
+      console.error("Cập nhật nhóm thất bại!");
+    }
+  };
+
   return (
     <React.Fragment>
       <div className="group-admin">
@@ -55,33 +103,43 @@ function GroupAdminPage({ titlePage }) {
                   />
                 </form>
 
-                <div className="action-post--admin">
-                  <div className="action-post">
-                    <div className="btn-action btn-accept">
-                      <FaFileCircleCheck />
-                      <p>Phê duyệt</p>
+                {listPostGroup ? (
+                  listPostGroup?.map((data, index) => (
+                    <div className="action-post--admin" key={index}>
+                      <div className="action-post">
+                        <div
+                          className="btn-action btn-accept"
+                          onClick={() =>
+                            handleUpdateGroupPost(
+                              data?.group_post_id,
+                              "accepted"
+                            )
+                          }
+                        >
+                          <FaFileCircleCheck />
+                          <p>Phê duyệt</p>
+                        </div>
+                        <div
+                          className="btn-action btn-delete"
+                          onClick={() =>
+                            handleUpdateGroupPost(
+                              data?.group_post_id,
+                              "refused"
+                            )
+                          }
+                        >
+                          <RiDeleteBin5Fill />
+                          <p>Xóa bài</p>
+                        </div>
+                      </div>
+                      <PostItem data={data} />
                     </div>
-                    <div className="btn-action btn-delete">
-                      <RiDeleteBin5Fill />
-                      <p>Xóa bài</p>
-                    </div>
-                  </div>
-                  <PostItem />
-                </div>
-
-                <div className="action-post--admin">
-                  <div className="action-post">
-                    <div className="btn-action btn-accept">
-                      <FaFileCircleCheck />
-                      <p>Phê duyệt</p>
-                    </div>
-                    <div className="btn-action btn-delete">
-                      <RiDeleteBin5Fill />
-                      <p>Xóa bài</p>
-                    </div>
-                  </div>
-                  <PostItem />
-                </div>
+                  ))
+                ) : (
+                  <h4 className="box-center">
+                    Nhóm chưa có bài viết nào. Hãy thêm bài viết trao đổi nào!!
+                  </h4>
+                )}
               </div>
               <div className="group-right">
                 <div className="title-intro box">
@@ -108,10 +166,13 @@ function GroupAdminPage({ titlePage }) {
                   </div>
                 </Link>
 
-                  <div className="title-direct-member delete box" onClick={()=>handleDeleteGroup()}>
-                    <p>Giải tán nhóm</p>
-                    <MdGroupOff />
-                  </div>
+                <div
+                  className="title-direct-member delete box"
+                  onClick={() => handleDeleteGroup()}
+                >
+                  <p>Giải tán nhóm</p>
+                  <MdGroupOff />
+                </div>
               </div>
             </div>
           </div>

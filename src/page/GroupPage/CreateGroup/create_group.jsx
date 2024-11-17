@@ -11,6 +11,7 @@ import { toast } from "react-toastify";
 import { postData } from "../../../ultils/fetchAPI/fetch_API";
 import { API_GROUP_CREATE } from "../../../API/api_server";
 import { fetchBlob } from "../../../ultils/fetchBlob/fetchBlob";
+import { LoadingIcon } from "../../../ultils/icons/loading";
 function CreateGroupPage({ titlePage }) {
   const [isShowCropContainer, setIsShowCropContainer] = useState(false);
   const [groupName, setGroupName] = useState(null);
@@ -25,7 +26,7 @@ function CreateGroupPage({ titlePage }) {
   const [crop, setCrop] = useState({ x: 0, y: 0 });
   const [zoom, setZoom] = useState(1);
   const [croppedAreaPixels, setCroppedAreaPixels] = useState(null);
-
+  const [loading, setLoading] = useState(false);
   useEffect(() => {
     document.title = titlePage;
   }, [titlePage]);
@@ -78,6 +79,7 @@ function CreateGroupPage({ titlePage }) {
   const handleSubmit = async (e) => {
     try {
       e.preventDefault();
+      setLoading(true);
       // TODO: Create group API call
       const payload = new FormData();
       payload.append("group_name", groupName);
@@ -89,10 +91,13 @@ function CreateGroupPage({ titlePage }) {
       const response = await postData(API_GROUP_CREATE, payload);
       if (response?.status) {
         toast.success("Tạo nhóm thành công");
+        window.location.href = "/group/" + response?.data?.group_id;
       }
     } catch (error) {
       console.error(error);
       toast.error("Có lỗi xảy ra, vui lòng thử lại sau");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -171,7 +176,7 @@ function CreateGroupPage({ titlePage }) {
               </div>
             </div>
           </div>
-          <button type="submit">Tạo nhóm</button>
+          {loading ? <LoadingIcon /> : <button type="submit">Tạo nhóm</button>}
         </form>
         {isShowCropContainer && (
           <div className="crop-img-container">

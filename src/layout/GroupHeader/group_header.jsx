@@ -93,8 +93,6 @@ function GroupHeader({ classNameActive, group_id }) {
     }
   };
 
-  console.log(dataGroup);
-
   return (
     <React.Fragment>
       <div className="group-header--main">

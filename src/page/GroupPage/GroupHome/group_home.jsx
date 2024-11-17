@@ -6,55 +6,122 @@ import GroupHeader from "../../../layout/GroupHeader/group_header";
 import { MdDateRange } from "react-icons/md";
 import { FaPeopleGroup } from "react-icons/fa6";
 import FormPost from "../../../component/FormPost/form_post";
-import ListSuggest from "../../../layout/SideBarRight/Suggest/list_suggest";
-import { CgPushChevronLeft, CgPushChevronRight } from "react-icons/cg";
 import { useParams } from "react-router-dom";
 import { getData } from "../../../ultils/fetchAPI/fetch_API";
-import { API_GROUP_DETAIL } from "../../../API/api_server";
-
+import {
+  API_GROUP_DETAIL,
+  API_LIST_GROUP_ACCEPTED_POST,
+  API_LIST_MEMBERS_OFFICAL_GROUP,
+} from "../../../API/api_server";
+import { formatDate } from "../../../ultils/formatDate/format_date";
 
 function GroupHomePage({ titlePage }) {
-    useEffect(() => {
-        document.title = titlePage;
-    }, [titlePage]);
-    const {group_id} = useParams();
-   
-    return (
-        <React.Fragment>
-            <div className="group-dom">
-                <NavigativeBar />
-                <div className="group-wrapper container">
-                    <div className="group-container">
-                        <GroupHeader group_id={group_id} classNameActive={"post"} />
-                        <div className="group-main">
-                            <div className="group-left">
-                                <FormPost />
-                                <div className="title-content box">
-                                    <h3>
-                                        Bài viết
-                                    </h3>
+  useEffect(() => {
+    document.title = titlePage;
+  }, [titlePage]);
+  const { group_id } = useParams();
 
-                                </div>
-                                <PostItem />
-                                <PostItem />
-                            </div>
-                            <div className="group-right">
-                                <div className="title-intro box">
-                                    <h3>
-                                        Giới thiệu
-                                    </h3>
-                                    <div className="slogan">Tuyền Văn Hóa - Vlogger với những góc nhìn độc đáo về bóng đá trong nước & Quốc tế</div>
-                                    <div className="info-short--item info-school"><MdDateRange />Tạo ngày: <b>29/05/2024</b></div>
-                                    <div className="info-short--item info-address"><FaPeopleGroup />Thành viên nhóm: <b> 100.000 </b> thành viên</div>
+  const [listPostGroup, setListPostGroup] = useState([]);
+  useEffect(() => {
+    const getAllGroupPost = async () => {
+      try {
+        const response = await getData(API_LIST_GROUP_ACCEPTED_POST(group_id));
+        if (response?.status) {
+          setListPostGroup(response?.data);
+        }
+      } catch (error) {
+        console.error("Error fetching group detail:", error);
+      }
+    };
+    getAllGroupPost();
+  }, [group_id]);
 
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+  const [dataGroup, setDataGroup] = useState();
+  useEffect(() => {
+    try {
+      if (!group_id) return;
+      const getGroupDetail = async () => {
+        const response = await getData(API_GROUP_DETAIL(group_id));
+        if (response?.status) {
+          setDataGroup(response?.data);
+        }
+      };
+
+      getGroupDetail();
+    } catch (error) {
+      console.error(error.message);
+    }
+  }, [group_id]);
+
+  const [members, setMembers] = useState([]);
+
+  useEffect(() => {
+    const fetchMembers = async () => {
+      try {
+        const response = await getData(
+          API_LIST_MEMBERS_OFFICAL_GROUP(group_id)
+        );
+        if (response.status) {
+          setMembers(response?.data);
+        } else {
+          console.error("Failed to fetch members");
+        }
+      } catch (error) {
+        console.error(error.message);
+      }
+    };
+    fetchMembers();
+  }, [group_id]);
+
+  return (
+    <React.Fragment>
+      <div className="group-dom">
+        <NavigativeBar />
+        <div className="group-wrapper container">
+          <div className="group-container">
+            <GroupHeader group_id={group_id} classNameActive={"post"} />
+            <div className="group-main">
+              <div className="group-left">
+                <FormPost group_id={group_id} />
+                <div className="title-content box">
+                  <h3>Bài viết</h3>
                 </div>
+                {listPostGroup ? (
+                  listPostGroup?.map((data, index) => (
+                    <PostItem key={index} data={data} />
+                  ))
+                ) : (
+                  <h4 className="box-center">
+                    Nhóm chưa có bài viết nào. Hãy thêm bài viết trao đổi nào!!
+                  </h4>
+                )}
+              </div>
+              <div className="group-right">
+                <div className="title-intro box">
+                  <h3>Giới thiệu</h3>
+                  {dataGroup && (
+                    <div className="slogan">{dataGroup?.group_slogan}</div>
+                  )}
+                  {dataGroup?.created_at && (
+                    <div className="info-short--item info-school">
+                      <MdDateRange />
+                      Tạo ngày:{" "}
+                      <b>{formatDate(dataGroup?.created_at, "dd/mm/yy")}</b>
+                    </div>
+                  )}
+
+                  <div className="info-short--item info-address">
+                    <FaPeopleGroup />
+                    Thành viên nhóm: <b> {members.length} </b> thành viên
+                  </div>
+                </div>
+              </div>
             </div>
-        </React.Fragment>
-    );
+          </div>
+        </div>
+      </div>
+    </React.Fragment>
+  );
 }
 
 export default GroupHomePage;

@@ -12,6 +12,7 @@ import { getData } from "../../../ultils/fetchAPI/fetch_API";
 import {
   API_FRIEND_LIST,
   API_GET_INFO_USER_PROFILE_BY_ID,
+  API_GET_POSTS_BY_ID,
 } from "../../../API/api_server";
 import { OwnDataContext } from "../../../provider/own_data";
 import { formatDateVN } from "../../../ultils/formatDate/format_date";
@@ -38,6 +39,21 @@ function ProfilePage({ titlePage }) {
         return response?.status;
       };
       setLoading(fetchData());
+    } catch (error) {
+      console.log(error.message);
+    }
+  }, [user_id]);
+
+  const [listPost, setListPost] = useState([]);
+  useEffect(() => {
+    try {
+      const fetchData = async () => {
+        const response = await getData(API_GET_POSTS_BY_ID(user_id));
+        if (response.status) {
+          setListPost(response.data);
+        }
+      };
+      fetchData();
     } catch (error) {
       console.log(error.message);
     }
@@ -129,8 +145,11 @@ function ProfilePage({ titlePage }) {
               >
                 <h3>Bài viết</h3>
               </div>
-              <PostItem />
-              <PostItem />
+              {listPost ? (
+                listPost?.map((item) => <PostItem data={item} />)
+              ) : (
+                <h4 className="box-center">Không có bài viết nào</h4>
+              )}
             </div>
           </div>
         </div>

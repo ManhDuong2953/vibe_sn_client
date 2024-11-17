@@ -27,7 +27,7 @@ function SideBarRight() {
     <React.Fragment>
       <div id="sidebar-right--container">
         <span className="sidebar-right--span">
-          {data && (
+          {data.length > 0 && (
             <>
               <h4>Sinh nhật</h4>
               <div className="dob-container">

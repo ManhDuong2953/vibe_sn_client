@@ -7,14 +7,14 @@ import { Link } from "react-router-dom";
 import { MdOutlineGroupAdd } from "react-icons/md";
 import { FaLayerGroup } from "react-icons/fa6";
 import { getData } from "../../../ultils/fetchAPI/fetch_API";
-import { API_LIST_GROUP_BY_OWNER } from "../../../API/api_server";
+import { API_LIST_GROUP_BY_OWNER, API_LIST_GROUP_UNAPPROVED_POST } from "../../../API/api_server";
 import GroupItem from "../../../component/GroupItem/group_item";
 function ListPostGroupPage({ titlePage }) {
   useEffect(() => {
     document.title = titlePage;
   }, [titlePage]);
 
-  const [dataGroup, setDataGroup] = useState([]);
+  const [listPostGroup, setListPostGroup] = useState([]);
   useEffect(() => {
     const icon = document.querySelector(".icon-gr");
     const sideLeft = document.querySelector(".side-left");
@@ -28,7 +28,8 @@ function ListPostGroupPage({ titlePage }) {
       }
     };
   }, []);
-
+  
+  const [dataGroup, setDataGroup] = useState([]);
   useEffect(() => {
     const getAllGroupByOwner = async () => {
       const response = await getData(API_LIST_GROUP_BY_OWNER);
@@ -38,6 +39,22 @@ function ListPostGroupPage({ titlePage }) {
     };
     getAllGroupByOwner();
   }, []);
+  
+  // useEffect(() => {
+  //   const getAllGroupPost = async () => {
+  //     try {
+  //       const response = await getData(
+  //         API_LIST_GROUP_UNAPPROVED_POST(group_id)
+  //       );
+  //       if (response?.status) {
+  //         setListPostGroup(response?.data);
+  //       }
+  //     } catch (error) {
+  //       console.error("Error fetching group detail:", error);
+  //     }
+  //   };
+  //   getAllGroupPost();
+  // }, [group_id]);
 
   return (
     <React.Fragment>
@@ -61,12 +78,15 @@ function ListPostGroupPage({ titlePage }) {
           </div>
           <div className="side-right">
             <ul className="list-gr">
-              <PostItem />
-              <PostItem />
-              <PostItem />
-              <PostItem />
-              <PostItem />
-              <PostItem />
+              {/* {listPostGroup ? (
+                listPostGroup?.map((data, index) => {
+                  return <PostItem dataPost={data} />;
+                })
+              ) : (
+                <h4 className="box-center">
+                  Nhóm chưa có bài viết nào. Hãy thêm bài viết trao đổi nào!!
+                </h4>
+              )} */}
             </ul>
           </div>
         </div>

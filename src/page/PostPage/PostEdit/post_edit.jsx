@@ -21,6 +21,7 @@ import {
   urlToBlob,
 } from "../../../ultils/dataURLtoBLOB/dataURL_to_BLOB";
 import { toast } from "react-toastify";
+import { LoadingIcon } from "../../../ultils/icons/loading";
 
 // Register plugins
 registerPlugin(
@@ -79,7 +80,9 @@ export default function EditPost({ titlePage }) {
   }, [post_id]);
 
   const toggleEmotion = () => setShowEmotion(!showEmotion);
-  const handleContentChange = (newContent) => setContent(newContent);
+  const handleContentChange = (newContent) => {
+    setContent(newContent); // Lưu HTML vào state
+  };
 
   useEffect(() => {
     if (showEmotion) {
@@ -273,12 +276,16 @@ export default function EditPost({ titlePage }) {
             allowImagePreview={true} // Cho phép xem trước ảnh
           />
 
-          <div
-            className="func btn-save-edit handle"
-            onClick={() => handleSave()}
-          >
-            {loading ? "Đang cập nhật..." : "Lưu"}
-          </div>
+          {loading ? (
+            <LoadingIcon />
+          ) : (
+            <div
+              className="func btn-save-edit handle"
+              onClick={() => handleSave()}
+            >
+              Lưu
+            </div>
+          )}
         </div>
       </div>
     </React.Fragment>
