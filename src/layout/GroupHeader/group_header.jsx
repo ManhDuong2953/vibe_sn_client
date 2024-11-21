@@ -10,6 +10,7 @@ import { FcInvite } from "react-icons/fc";
 import QRCodePopup from "../../component/QRCode/qr_code";
 import {
   API_CHECK_ROLE_MEMBER_GROUP,
+  API_DELETE_INVITE_MEMBER_GROUP,
   API_GROUP_DETAIL,
   API_INVITE_MEMBER_GROUP,
 } from "../../API/api_server";
@@ -93,6 +94,17 @@ function GroupHeader({ classNameActive, group_id }) {
     }
   };
 
+  const handleDeleteInvited = async () => {
+    try {
+      const response = await postData(API_DELETE_INVITE_MEMBER_GROUP(group_id));
+      if (response?.status) {
+        window.location.reload();
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   return (
     <React.Fragment>
       <div className="group-header--main">
@@ -146,10 +158,10 @@ function GroupHeader({ classNameActive, group_id }) {
                   >
                     {statusMember.isAdmin || statusMember.isMember ? (
                       <>
-                        <MdGroupRemove /> Rời nhóm
+                        <MdGroupRemove onClick={handleDeleteInvited}/> Rời nhóm
                       </>
                     ) : statusMember.isInvite ? (
-                      <div onClick={handleSendInvited}>
+                      <div onClick={handleDeleteInvited}>
                         <FcInvite /> Huỷ lời mời
                       </div>
                     ) : (

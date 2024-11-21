@@ -258,8 +258,6 @@ const VideoCall = ({ isVideoCall = true, titlePage }) => {
         handleEndCall();
       }
       socket.on("statusCallToUser", (data) => {
-        console.log(">>>: ", data);
-
         setStateRemote(data);
         if (statusCall && !data.isCallRemoteAccepted) {
           handleEndCall();

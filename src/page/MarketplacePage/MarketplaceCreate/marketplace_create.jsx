@@ -26,7 +26,6 @@ function CreateProductPage({ titlePage }) {
     const handleSubmit = (e) => {
         e.preventDefault();
         // Logic to handle product creation
-        console.log("Product created with files:", files);
     };
 
     return (

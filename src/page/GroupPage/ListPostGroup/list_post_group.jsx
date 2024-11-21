@@ -7,7 +7,11 @@ import { Link } from "react-router-dom";
 import { MdOutlineGroupAdd } from "react-icons/md";
 import { FaLayerGroup } from "react-icons/fa6";
 import { getData } from "../../../ultils/fetchAPI/fetch_API";
-import { API_LIST_GROUP_BY_OWNER, API_LIST_GROUP_UNAPPROVED_POST } from "../../../API/api_server";
+import {
+  API_LIST_GROUP_BY_OWNER,
+  API_LIST_GROUP_UNAPPROVED_POST,
+  API_LIST_MY_GROUP_POST,
+} from "../../../API/api_server";
 import GroupItem from "../../../component/GroupItem/group_item";
 function ListPostGroupPage({ titlePage }) {
   useEffect(() => {
@@ -28,7 +32,7 @@ function ListPostGroupPage({ titlePage }) {
       }
     };
   }, []);
-  
+
   const [dataGroup, setDataGroup] = useState([]);
   useEffect(() => {
     const getAllGroupByOwner = async () => {
@@ -39,22 +43,21 @@ function ListPostGroupPage({ titlePage }) {
     };
     getAllGroupByOwner();
   }, []);
-  
-  // useEffect(() => {
-  //   const getAllGroupPost = async () => {
-  //     try {
-  //       const response = await getData(
-  //         API_LIST_GROUP_UNAPPROVED_POST(group_id)
-  //       );
-  //       if (response?.status) {
-  //         setListPostGroup(response?.data);
-  //       }
-  //     } catch (error) {
-  //       console.error("Error fetching group detail:", error);
-  //     }
-  //   };
-  //   getAllGroupPost();
-  // }, [group_id]);
+
+  const [dataListPost, setDataListPost] = useState([]);
+  useEffect(() => {
+    const getAllGroupPost = async () => {
+      try {
+        const response = await getData(API_LIST_MY_GROUP_POST);
+        if (response?.status) {
+          setDataListPost(response?.data);
+        }
+      } catch (error) {
+        console.error("Error fetching group detail:", error);
+      }
+    };
+    getAllGroupPost();
+  }, []);
 
   return (
     <React.Fragment>
@@ -78,15 +81,16 @@ function ListPostGroupPage({ titlePage }) {
           </div>
           <div className="side-right">
             <ul className="list-gr">
-              {/* {listPostGroup ? (
-                listPostGroup?.map((data, index) => {
-                  return <PostItem dataPost={data} />;
+              {dataListPost ? (
+                dataListPost?.map((data, index) => {
+                  return <PostItem key={index} data={data} />;
                 })
               ) : (
                 <h4 className="box-center">
-                  Nhóm chưa có bài viết nào. Hãy thêm bài viết trao đổi nào!!
+                  Bạn chưa tham gia nhóm nào, hãy bắt đầu bằng việc tìm kiếm
+                  nhóm ở thanh tìm kiếm.
                 </h4>
-              )} */}
+              )}
             </ul>
           </div>
         </div>

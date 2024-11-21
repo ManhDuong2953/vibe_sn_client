@@ -63,11 +63,6 @@ const ForgotPasswordPage = ({ titlePage }) => {
           user_email: email,
           user_password: newPassword,
         });
-        console.log({
-          user_email: email,
-          user_password: newPassword,
-        });
-        console.log(response);
       }
     } catch (err) {
       console.error(err.message);

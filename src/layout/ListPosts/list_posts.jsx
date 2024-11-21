@@ -21,7 +21,6 @@ function ListPosts() {
       console.error(error);
     }
   }, []);
-  console.log(listPost);
   return (
     <React.Fragment>
       <div id="list-post--container">

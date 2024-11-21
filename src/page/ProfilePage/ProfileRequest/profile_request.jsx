@@ -27,8 +27,6 @@ function ProfileRequest({ titlePage }) {
     }
   }, []);
 
-  console.log(data);
-
   return (
     <React.Fragment>
       <NavigativeBar />

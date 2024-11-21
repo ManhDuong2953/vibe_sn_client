@@ -41,9 +41,7 @@ const SignupPage = ({ titlePage }) => {
     };
 
     const handleOtpVerifySuccess = async () => {
-        setShowOtpPopup(false);
-        console.log(payloadSignup);
-        
+        setShowOtpPopup(false);        
         const responseSignup = await postData(API_SIGNUP_POST, payloadSignup);
         if (responseSignup?.status) {
             navigate("/login");

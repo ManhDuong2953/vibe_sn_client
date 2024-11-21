@@ -132,8 +132,6 @@ const TextEditor = ({ initialContent, getText }) => {
         mentions: mentions,
         hashtags: hashtags,
       };
-
-      console.log(result);
   
       // Kiểm tra xem HTML có thay đổi so với lần trước không
       if (html !== prevHtmlContent.current) {

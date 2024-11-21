@@ -105,7 +105,6 @@ export default function EditPost({ titlePage }) {
     setMedia(files); // Update media with new files
   };
 
-  console.log(isMediaChanged);
   const handleSave = async () => {
     setLoading(true); // Show loading spinner
 

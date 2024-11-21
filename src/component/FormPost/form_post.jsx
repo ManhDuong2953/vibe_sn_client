@@ -120,14 +120,19 @@ export default function FormPost({ group_id = undefined }) {
     setLoading(true);
     const formData = new FormData();
 
-    if (text?.html !== "<p></p>") {
+    if (
+      text?.html !== "<p></p>" ||
+      text?.html !== "<span></span>" ||
+      text?.html !== ""
+    ) {
       formData.append("post_text", text?.html);
     }
 
     if (showEmotion) {
       formData.append("react_emoji", selectedEmoji);
     }
-    formData.append("post_privacy", privacy);
+    formData.append("post_privacy", group_id ? 1 : privacy);
+  
     selectedFiles.forEach((file) => formData.append("files", file));
 
     try {
@@ -285,9 +290,6 @@ export default function FormPost({ group_id = undefined }) {
             multiple
             data-max-file-size="100MB"
             data-max-files="10"
-            onChange={(e) => {
-              console.log([e.target.files]);
-            }}
           />
         )}
       </div>

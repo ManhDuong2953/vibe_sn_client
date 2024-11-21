@@ -65,8 +65,6 @@ const LoginPage = ({ titlePage }) => {
           );
         }
       } else {
-        console.log("đăng ký");
-
         const responseSignup = await postData(
           API_SIGNUP_SOCIALNETWORK_POST,
           payload

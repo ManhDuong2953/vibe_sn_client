@@ -6,8 +6,8 @@ import ProfileHeader from "../../../layout/ProfileHeader/profile_header";
 import ListSuggest from "../../../layout/SideBarRight/Suggest/list_suggest";
 import { useParams } from "react-router-dom";
 import { getData } from "../../../ultils/fetchAPI/fetch_API";
-import { API_LIST_GROUP_BY_OWNER } from "../../../API/api_server";
 import GroupItem from "../../../component/GroupItem/group_item";
+import { API_LIST_GROUP_BY_USERID } from "../../../API/api_server";
 function ProfileGroup({ titlePage }) {
   useEffect(() => {
     document.title = titlePage;
@@ -17,13 +17,14 @@ function ProfileGroup({ titlePage }) {
   const [dataGroup, setDataGroup] = useState([]);
   useEffect(() => {
     const getAllGroupByOwner = async () => {
-      const response = await getData(API_LIST_GROUP_BY_OWNER);
+      if (!user_id) return;
+      const response = await getData(API_LIST_GROUP_BY_USERID(user_id));
       if (response.status) {
         setDataGroup(response.data);
       }
     };
     getAllGroupByOwner();
-  }, []);
+  }, [user_id]);
 
   return (
     <React.Fragment>

@@ -7,7 +7,6 @@ const QRCodePopup = ({ show, url, onClose }) => {
   if (!show) {
     return null;
   }
-  console.log({ show, url, onClose });
 
   return (
     <div className="qr-code-popup-overlay" onClick={onClose}>

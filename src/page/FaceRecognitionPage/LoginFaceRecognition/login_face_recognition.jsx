@@ -35,14 +35,12 @@ const LoginFaceRecognition = ({ titlePage }) => {
 
       labeledFaceDescriptors = await loadLabeledImages(); // Load labeled images
       setLoading(true);
-      console.log("Face API models loaded");
     };
 
     const loadLabeledImages = async () => {
       try {
         const response = await getData(API_ALL_FACE_RECOGNITION);
         const data = response.data;
-        console.log(data);
 
         const descriptors = [];
         for (const record of data) {

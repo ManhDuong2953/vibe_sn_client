@@ -22,7 +22,6 @@ function MarketplaceDetail({ titlePage }) {
     useEffect(() => {
         const btnFunc = document.querySelector(".btn-func");
         const iconMore = document.querySelector(".icon-more");
-        console.log(btnFunc, iconMore);
         function handleClick() {
             btnFunc.classList.toggle("active");
         }

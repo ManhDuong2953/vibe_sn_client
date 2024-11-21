@@ -19,7 +19,9 @@
   --disable-status-color: #787878;
   --primary-color: rgb(4, 196, 224);
   --bg-color: #181820;
-  --navbar-color: #242526;
+  /* --navbar-color: #242526; */
+  --navbar-color: #292e33;
+  
   --border-color: #5b5c5e;
   --text-color: #e4e6eb;
   --text-black-color: #161616;

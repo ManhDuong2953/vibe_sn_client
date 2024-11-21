@@ -137,7 +137,7 @@ function GroupAdminPage({ titlePage }) {
                   ))
                 ) : (
                   <h4 className="box-center">
-                    Nhóm chưa có bài viết nào. Hãy thêm bài viết trao đổi nào!!
+                    Nhóm chưa có bài viết nào hoặc nhóm đang để chế độ riêng tư. 
                   </h4>
                 )}
               </div>

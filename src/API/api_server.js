@@ -110,16 +110,25 @@ const API_ACCEPT_INVITE_MEMBER_GROUP = (id) =>
   API_HOST + "/group/members/accept-invited-group/" + id;
 const API_REFUSE_INVITE_MEMBER_GROUP = (id) =>
   API_HOST + "/group/members/refuse-invited-group/" + id;
+
+
+const API_DELETE_INVITE_MEMBER_GROUP = (id) =>
+  API_HOST + "/group/members/delete-invited-group/" + id;
 const API_SET_ADMIN_MEMBER_GROUP = (id) =>
   API_HOST + "/group/members/set-admin-group/" + id;
 // api bài viết nhóm
-const API_GROUP_POST_CREATE = (post_id) => API_HOST + "/group/posts/create/" + post_id;
-const API_LIST_GROUP_ACCEPTED_POST = (group_id) => API_HOST + "/group/posts/list-post-accepted/" + group_id;
-const API_LIST_GROUP_UNAPPROVED_POST = (group_id) => API_HOST + "/group/posts/list-post-unapproved/" + group_id;
-const API_ACCEPT_GROUP_POST = (group_id) => API_HOST + "/group/posts/accepted-post/" + group_id;
-const API_REFUSE_GROUP_POST = (group_id) => API_HOST + "/group/posts/refused-post/" + group_id;
-
-
+const API_GROUP_POST_CREATE = (post_id) =>
+  API_HOST + "/group/posts/create/" + post_id;
+const API_LIST_GROUP_ACCEPTED_POST = (group_id) =>
+  API_HOST + "/group/posts/list-post-accepted/" + group_id;
+const API_LIST_GROUP_UNAPPROVED_POST = (group_id) =>
+  API_HOST + "/group/posts/list-post-unapproved/" + group_id;
+const API_ACCEPT_GROUP_POST = (group_id) =>
+  API_HOST + "/group/posts/accepted-post/" + group_id;
+const API_REFUSE_GROUP_POST = (group_id) =>
+  API_HOST + "/group/posts/refused-post/" + group_id;
+const API_LIST_MY_GROUP_POST = 
+  API_HOST + "/group/posts/list-post-all-group";
 
 // POST API ENDPOINT
 const API_CREATE_POST = API_HOST + "/post/create-post";
@@ -128,7 +137,9 @@ const API_UPDATE_POST = (id) => `${API_HOST}/post/edit-post/${id}`;
 const API_POST_DETAIL = (id) => `${API_HOST}/post/post-detail/${id}`;
 const API_GET_POSTS = API_HOST + "/post/list-post";
 const API_GET_POSTS_BY_ID = (id) => `${API_HOST}/post/list-post-by-user/${id}`;
-
+const API_POST_REACT_BY_ID = (id) => `${API_HOST}/post/create-react-post/${id}`;
+const API_DELETE_REACT_BY_ID = (id) =>
+  `${API_HOST}/post/delete-react-post/${id}`;
 
 export {
   API_SIGNUP_POST,
@@ -197,6 +208,7 @@ export {
   API_FRIEND_DATE_OF_BIRTH,
   API_ACCEPT_INVITE_MEMBER_GROUP,
   API_REFUSE_INVITE_MEMBER_GROUP,
+  API_DELETE_INVITE_MEMBER_GROUP,
   API_SET_ADMIN_MEMBER_GROUP,
   API_DELETE_GROUP,
   API_UPDATE_GROUP,
@@ -210,5 +222,8 @@ export {
   API_LIST_GROUP_ACCEPTED_POST,
   API_LIST_GROUP_UNAPPROVED_POST,
   API_ACCEPT_GROUP_POST,
-  API_REFUSE_GROUP_POST
+  API_REFUSE_GROUP_POST,
+  API_POST_REACT_BY_ID,
+  API_DELETE_REACT_BY_ID,
+  API_LIST_MY_GROUP_POST
 };

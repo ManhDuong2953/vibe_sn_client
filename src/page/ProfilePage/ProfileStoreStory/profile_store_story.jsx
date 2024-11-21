@@ -21,7 +21,6 @@ function ProfileStoreStory({ titlePage }) {
         const response = await getData(API_LIST_MY_STORY);
         if (response.status) {
           setData(response.data);
-          console.log(response.data);
         }
       };
       fetchData();
