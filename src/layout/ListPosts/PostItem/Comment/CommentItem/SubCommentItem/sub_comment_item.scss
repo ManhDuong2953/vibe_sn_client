@@ -4,6 +4,8 @@
     padding: 10px;
     display: flex;
     align-items: center;
+    position: relative;
+    
     .input-control--container {
       width: 100%;
       border: 1px solid var(--text-blur-color);
@@ -12,7 +14,8 @@
       display: flex;
       padding: 5px 15px;
       align-items: center;
-
+      position: relative;
+     
       input[type="text"] {
         padding: 5px;
         color: var(--text-color);

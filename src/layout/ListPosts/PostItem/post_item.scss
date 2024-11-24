@@ -16,7 +16,6 @@
     align-items: center;
     justify-content: space-between;
     position: relative;
-    
   }
 
   .content-container {
@@ -32,5 +31,13 @@
         height: 300px;
       }
     }
+  }
+}
+h5.detail-post {
+  cursor: pointer;
+  color: var(--blue-link);
+  padding: 5px 15px 0;
+  &:hover {
+    text-decoration: underline;
   }
 }

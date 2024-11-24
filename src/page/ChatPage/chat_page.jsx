@@ -58,6 +58,7 @@ import { toast } from "react-toastify";
 import {
   formatDate,
   formatSecondsToTime,
+  timeAgo,
 } from "../../ultils/formatDate/format_date";
 import ToolTipCustom from "../../component/ToolTip/tool_tip";
 import { LoadingIcon } from "../../ultils/icons/loading";
@@ -143,6 +144,10 @@ function ChatMessengerPage({ titlePage }) {
   useEffect(() => {
     if (id_receiver_param) {
       setIDReceiver(id_receiver_param);
+      setShowReply(false);
+      setContentReply(null);
+      setMessage("");
+      setFiles([]);
     }
   }, [id_receiver_param]);
 
@@ -828,189 +833,205 @@ function ChatMessengerPage({ titlePage }) {
                       {groupedMessages[date].map((msg, index) => {
                         if (msg && msg.content_text) {
                           return (
-                            <li
-                              key={index}
-                              className={`message${
-                                msg.sender_id === dataOwner?.user_id
-                                  ? " sender"
-                                  : ""
-                              }`}
-                              onMouseEnter={() =>
-                                setHoveredIndex(msg.messenger_id)
-                              }
-                              onMouseLeave={() => setHoveredIndex(null)}
+                            <div
+                              style={{
+                                display: "flex",
+                                flexDirection: "column",
+                              }}
                             >
-                              <div className="message-container">
-                                {msg.reply_messenger_id && (
-                                  <p
-                                    className="message-reply"
-                                    onClick={() =>
-                                      scrollToMessage(msg.reply_messenger_id)
-                                    }
-                                  >
-                                    {
-                                      <div
-                                        dangerouslySetInnerHTML={{
-                                          __html:
-                                            document.querySelector(
-                                              `.message-${msg.reply_messenger_id}`
-                                            )?.outerHTML ?? null,
-                                        }}
-                                      />
-                                    }
-                                  </p>
-                                )}
-                                <span>
-                                  <div
-                                    className={`message-content message-${msg.messenger_id}`}
-                                  >
-                                    {msg.content_type === "text" && (
-                                      <p className="message-text">
-                                        {msg.content_text}
-                                      </p>
-                                    )}
-                                    {msg.content_type === "link" && (
-                                      <p
-                                        dangerouslySetInnerHTML={{
-                                          __html: msg.content_text,
-                                        }}
-                                      ></p>
-                                    )}
-                                    {msg.content_type === "image" && (
-                                      <img
-                                        src={msg.content_text}
-                                        alt="content"
-                                      />
-                                    )}
-                                    {msg.content_type === "video" && (
-                                      <video
-                                        controls
-                                        muted
-                                        src={msg.content_text}
-                                        alt="content"
-                                      />
-                                    )}
-                                    {msg.content_type === "audio" && (
-                                      <Waveform audioUrl={msg.content_text} />
-                                    )}
-                                    {msg.content_type === "other" && (
-                                      <div className="file-container">
-                                        <FaFileDownload />
-                                        <a href={msg.content_text} download>
-                                          {msg.name_file}
-                                        </a>
-                                      </div>
-                                    )}
-                                    {msg.content_type?.includes("call") && (
-                                      <div className="call-container">
-                                        {msg.content_type?.includes(
-                                          "missed"
-                                        ) && (
-                                          <>
-                                            <div className="missed-container">
-                                              <MdPhoneMissed className="missed" />
-                                              <p>Cuộc gọi nhỡ</p>
-                                            </div>
+                              <li
+                                key={index}
+                                className={`message${
+                                  msg.sender_id === dataOwner?.user_id
+                                    ? " sender"
+                                    : ""
+                                }`}
+                                onMouseEnter={() =>
+                                  setHoveredIndex(msg.messenger_id)
+                                }
+                                onMouseLeave={() => setHoveredIndex(null)}
+                              >
+                                <div className="message-container">
+                                  {msg.reply_messenger_id && (
+                                    <p
+                                      className="message-reply"
+                                      onClick={() =>
+                                        scrollToMessage(msg.reply_messenger_id)
+                                      }
+                                    >
+                                      {
+                                        <div
+                                          dangerouslySetInnerHTML={{
+                                            __html:
+                                              document.querySelector(
+                                                `.message-${msg.reply_messenger_id}`
+                                              )?.outerHTML ?? null,
+                                          }}
+                                        />
+                                      }
+                                    </p>
+                                  )}
+                                  <span>
+                                    <div
+                                      className={`message-content message-${msg.messenger_id}`}
+                                    >
+                                      {msg.content_type === "text" && (
+                                        <p className="message-text">
+                                          {msg.content_text}
+                                        </p>
+                                      )}
+                                      {msg.content_type === "link" && (
+                                        <p
+                                          dangerouslySetInnerHTML={{
+                                            __html: msg.content_text,
+                                          }}
+                                        ></p>
+                                      )}
+                                      {msg.content_type === "image" && (
+                                        <img
+                                          src={msg.content_text}
+                                          alt="content"
+                                        />
+                                      )}
+                                      {msg.content_type === "video" && (
+                                        <video
+                                          controls
+                                          muted
+                                          src={msg.content_text}
+                                          alt="content"
+                                        />
+                                      )}
+                                      {msg.content_type === "audio" && (
+                                        <Waveform audioUrl={msg.content_text} />
+                                      )}
+                                      {msg.content_type === "other" && (
+                                        <div className="file-container">
+                                          <FaFileDownload />
+                                          <a href={msg.content_text} download>
+                                            {msg.name_file}
+                                          </a>
+                                        </div>
+                                      )}
+                                      {msg.content_type?.includes("call") && (
+                                        <div className="call-container">
+                                          {msg.content_type?.includes(
+                                            "missed"
+                                          ) && (
+                                            <>
+                                              <div className="missed-container">
+                                                <MdPhoneMissed className="missed" />
+                                                <p>Cuộc gọi nhỡ</p>
+                                              </div>
 
-                                            <button
-                                              onClick={() =>
-                                                handleClickCall("video-call")
-                                              }
-                                            >
-                                              GỌI LẠI
-                                            </button>
-                                          </>
-                                        )}
-                                        {msg.content_type?.includes(
-                                          "accepted"
-                                        ) && (
-                                          <>
-                                            <MdPhoneCallback className="accepted" />
-                                            <p>
-                                              Cuộc gọi thoại{" "}
-                                              <b>
-                                                {formatSecondsToTime(
-                                                  msg.content_text
-                                                )}
-                                              </b>
-                                            </p>
-                                          </>
-                                        )}
-                                      </div>
-                                    )}
-                                  </div>
-                                  {hoveredIndex === msg.messenger_id && (
-                                    <div className="icon-container">
-                                      <div
-                                        className="reply-icon-message"
-                                        onClick={() => {
-                                          setShowReply(true);
-                                          setIdRepLy(msg.messenger_id);
-                                          handleSetReply(msg.messenger_id);
-                                        }}
-                                      >
-                                        <ImReply />
-                                      </div>
-                                      <div className="delete_icon">
-                                        <div>
-                                          <IconButton onClick={handleClick}>
-                                            <DeleteOutlineRoundedIcon />
-                                          </IconButton>
-                                          <Menu
-                                            anchorEl={anchorEl}
-                                            open={Boolean(anchorEl)}
-                                            onClick={handleClose}
-                                            sx={{
-                                              "& .MuiPaper-root": {
-                                                backgroundColor: "#333", // Màu nền menu
-                                                color: "#fff", // Màu chữ
-                                              },
-                                            }}
-                                          >
-                                            <MenuItem
-                                              onClose={handleClose}
-                                              sx={{
-                                                "&:hover": {
-                                                  backgroundColor: "#555",
-                                                }, // Màu khi hover
-                                                color: "#fff", // Màu chữ
-                                              }}
-                                              onClick={() =>
-                                                handleDeleteMessageOwnSide(
-                                                  msg.messenger_id
-                                                )
-                                              }
-                                            >
-                                              <ReplayCircleFilledIcon /> Thu hồi
-                                              ở phía bạn
-                                            </MenuItem>
-                                            {dataOwner?.user_id ===
-                                              msg?.sender_id && (
-                                              <MenuItem
+                                              <button
                                                 onClick={() =>
-                                                  handleDeleteMessage(
-                                                    msg.messenger_id
-                                                  )
+                                                  handleClickCall("video-call")
                                                 }
+                                              >
+                                                GỌI LẠI
+                                              </button>
+                                            </>
+                                          )}
+                                          {msg.content_type?.includes(
+                                            "accepted"
+                                          ) && (
+                                            <>
+                                              <MdPhoneCallback className="accepted" />
+                                              <p>
+                                                Cuộc gọi thoại{" "}
+                                                <b>
+                                                  {formatSecondsToTime(
+                                                    msg.content_text
+                                                  )}
+                                                </b>
+                                              </p>
+                                            </>
+                                          )}
+                                        </div>
+                                      )}
+                                    </div>
+                                    {hoveredIndex === msg.messenger_id && (
+                                      <div className="icon-container">
+                                        <div
+                                          className="reply-icon-message"
+                                          onClick={() => {
+                                            setShowReply(true);
+                                            setIdRepLy(msg.messenger_id);
+                                            handleSetReply(msg.messenger_id);
+                                          }}
+                                        >
+                                          <ImReply />
+                                        </div>
+                                        <div className="delete_icon">
+                                          <div>
+                                            <IconButton onClick={handleClick}>
+                                              <DeleteOutlineRoundedIcon />
+                                            </IconButton>
+                                            <Menu
+                                              anchorEl={anchorEl}
+                                              open={Boolean(anchorEl)}
+                                              onClick={handleClose}
+                                              sx={{
+                                                "& .MuiPaper-root": {
+                                                  backgroundColor: "#333", // Màu nền menu
+                                                  color: "#fff", // Màu chữ
+                                                },
+                                              }}
+                                            >
+                                              <MenuItem
+                                                onClose={handleClose}
                                                 sx={{
                                                   "&:hover": {
                                                     backgroundColor: "#555",
-                                                  },
-                                                  color: "#fff",
+                                                  }, // Màu khi hover
+                                                  color: "#fff", // Màu chữ
                                                 }}
+                                                onClick={() =>
+                                                  handleDeleteMessageOwnSide(
+                                                    msg.messenger_id
+                                                  )
+                                                }
                                               >
-                                                <ReplayIcon /> Thu hồi ở mọi
-                                                người
+                                                <ReplayCircleFilledIcon /> Thu
+                                                hồi ở phía bạn
                                               </MenuItem>
-                                            )}
-                                          </Menu>
+                                              {dataOwner?.user_id ===
+                                                msg?.sender_id && (
+                                                <MenuItem
+                                                  onClick={() =>
+                                                    handleDeleteMessage(
+                                                      msg.messenger_id
+                                                    )
+                                                  }
+                                                  sx={{
+                                                    "&:hover": {
+                                                      backgroundColor: "#555",
+                                                    },
+                                                    color: "#fff",
+                                                  }}
+                                                >
+                                                  <ReplayIcon /> Thu hồi ở mọi
+                                                  người
+                                                </MenuItem>
+                                              )}
+                                            </Menu>
+                                          </div>
                                         </div>
                                       </div>
-                                    </div>
-                                  )}
-                                </span>
+                                    )}
+                                  </span>
+                                </div>
+                              </li>
+                              <div
+                                className={`time_message ${
+                                  msg.sender_id === dataOwner?.user_id
+                                    ? " sender"
+                                    : ""
+                                }`}
+                              >
+                                {timeAgo(msg.created_at)}
                               </div>
-                            </li>
+                            </div>
                           );
                         }
                       })}

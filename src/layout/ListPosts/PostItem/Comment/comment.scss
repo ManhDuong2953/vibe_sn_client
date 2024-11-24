@@ -1,326 +1,314 @@
-.input-wrapper--post {
-  position: relative;
-  width: 100%;
-  .media-preview {
-    margin-bottom: 10px;
-    position: absolute;
-    bottom: 30px;
-    right: 0;
-    img,
-    video {
-      height: 120px;
-      border-radius: 8px;
-      object-fit: cover;
-    }
+#comment-main {
+  .input-wrapper--post {
+    position: relative;
+    width: 100%;
 
-    .remove-media {
-      position: absolute;
-      top: 5px;
-      right: 5px;
-      background: #ff4d4d;
-      color: white;
-      border: none;
-      border-radius: 50%;
-      width: 25px;
-      height: 25px;
+    .input-control--container {
       display: flex;
       align-items: center;
-      justify-content: center;
-      cursor: pointer;
-    }
-  }
-
-  .input-control--container {
-    display: flex;
-    align-items: center;
-    position: relative;
-
-    input {
-      flex: 1;
-      padding: 8px 25px 8px 12px;
-      border: 1px solid #ccc;
-      border-radius: 8px;
-      margin: 10px;
-    }
-
-    .input-media {
-      position: absolute;
-      right: 15px;
-      background-color: transparent;
+      position: relative;
       label {
-        cursor: pointer;
+        position: absolute;
+        right: 20px;
+        &:hover {
+          cursor: pointer;
+          opacity: 0.6;
+        }
+      }
+      input {
+        flex: 1;
+        padding: 8px 25px 8px 12px;
+        border: 1px solid #ccc;
+        border-radius: 8px;
+        margin: 10px;
+      }
+
+      .input-media {
+        position: absolute;
+        right: 15px;
+        background-color: transparent;
+        label {
+          cursor: pointer;
+        }
       }
     }
   }
-}
-.analyst {
-  padding: 15px 15px 5px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-
-  p.like {
-    font-size: 14px;
-    font-weight: 500;
+  .analyst {
+    padding: 15px 15px 5px;
     display: flex;
     align-items: center;
-    svg {
-      margin-left: 2px;
-      font-size: 17px;
-      path {
-        color: red;
-      }
-    }
-  }
-  p.comment-share {
-    font-size: 13px;
-  }
-  &:hover {
-    text-decoration: underline;
-  }
-}
-.action-post--container {
-  border-top: 1px solid var(--border-color);
-  display: flex;
-  width: calc(100% - 30px);
-  margin: auto;
-  align-items: center;
-  .reaction-container {
-    position: relative;
-    cursor: pointer;
-    flex: 1;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    svg {
-      margin: 0 4px;
-      font-size: 30px;
-      transform: scale(1);
-      transition: 0.3s ease-out;
-      filter: drop-shadow(0px 1px 1px black);
-      &:hover {
-        cursor: pointer;
-        transform: scale(1.5);
-      }
-    }
-    .reaction-wrapper {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-    }
+    justify-content: space-between;
 
-    .reaction-count {
-      font-size: 12px;
-      color: var(--text-color);
-    }
-
-    svg.reaction-icon--heart {
-      path {
-        color: red;
-      }
-    }
-    svg.reaction-icon--sweat {
-      path {
-        color: #fff12a;
-      }
-    }
-    svg.reaction-icon--tears {
-      path {
-        color: #fff12a;
-      }
-    }
-    svg.reaction-icon--tear {
-      path {
-        color: #fff12a;
-      }
-    }
-    svg.reaction-icon--cry {
-      path {
-        color: #fff12a;
-      }
-    }
-    svg.reaction-icon--angry {
-      path {
-        color: rgb(150, 0, 0);
-      }
-    }
-    svg.reaction-icon--smile {
-      path {
-        color: #fff12a;
-      }
-    }
-    svg.reaction-icon--rollingeyes {
-      path {
-        color: #5b3ede;
-      }
-    }
-    .reaction-title--heart {
-      color: red;
-    }
-
-    .reaction-title--sweat {
-      color: #fff12a;
-    }
-
-    .reaction-title--tears {
-      color: #fff12a;
-    }
-
-    .reaction-title--tear {
-      color: #fff12a;
-    }
-
-    .reaction-title--cry {
-      color: #fff12a;
-    }
-
-    .reaction-title--angry {
-      color: rgb(150, 0, 0);
-    }
-
-    .reaction-title--smile {
-      color: #fff12a;
-    }
-
-    .reaction-title--rollingeyes {
-      color: #5b3ede;
-    }
-
-    .react-icon--show {
+    p.like {
+      font-size: 14px;
+      font-weight: 500;
       display: flex;
       align-items: center;
-      padding: 10px;
-      &:hover {
-        background-color: var(--hover-color);
-      }
       svg {
-        filter: drop-shadow(0px 1px 1px black);
-        font-size: 20px;
+        margin-left: 2px;
+        font-size: 17px;
+        path {
+          color: red;
+        }
       }
     }
-    .react-icon--hide {
-      background-color: var(--bg-color);
-      padding: 10px;
-      border-radius: 10px;
-      position: absolute;
-      left: 0;
-      bottom: 35px;
-      display: none;
+    p.comment-share {
+      font-size: 13px;
     }
-    &:hover {
-      .react-icon--hide {
-        display: flex;
-      }
-    }
-  }
-
-  .comment-container {
-    flex: 1;
-    display: flex;
-    align-items: center;
-    padding: 10px;
-    justify-content: center;
-    border-left: 0.5px solid var(--hover-color);
-    border-right: 0.5px solid var(--hover-color);
-    &:hover {
-      cursor: pointer;
-      background-color: var(--hover-color);
-    }
-    svg {
-      margin-right: 4px;
-      font-size: 20px;
-    }
-  }
-  .share-container {
-    flex: 1;
-    display: flex;
-    align-items: center;
-    padding: 10px;
-    justify-content: center;
-    &:hover {
-      cursor: pointer;
-      background-color: var(--hover-color);
-    }
-    svg {
-      margin-right: 4px;
-      font-size: 20px;
-    }
-  }
-}
-
-.comment-container--main {
-  .avt-img {
-    img {
-      width: 36px;
-      height: 36px;
-      border-radius: 50%;
-      aspect-ratio: 1;
-      object-fit: cover;
-    }
-  }
-  p.load-more--comment {
-    font-size: 14px;
-    padding: 10px 15px 0;
-    cursor: pointer;
-    border-top: 1px solid var(--border-color);
     &:hover {
       text-decoration: underline;
     }
   }
-  ul.comment-container {
-    .comment-content--wrapper--container {
-      display: flex;
-      flex-direction: column;
-    }
-  }
-  .comment-action--reply {
+  .action-post--container {
+    border-top: 1px solid var(--border-color);
+    border-bottom: 1px solid var(--border-color);
     display: flex;
-    width: 100%;
-    margin: 3px 0 10px;
+    width: calc(100% - 30px);
+    margin: auto;
     align-items: center;
-    justify-content: space-between;
-    .action {
+    .reaction-container {
+      position: relative;
+      cursor: pointer;
+      flex: 1;
       display: flex;
       align-items: center;
-      .heart,
-      .reply {
-        font-size: 10px;
-        margin-left: 5px;
-        margin-top: 5px;
+      justify-content: center;
+      svg {
+        margin: 0 4px;
+        font-size: 30px;
+        transform: scale(1);
+        transition: 0.3s ease-out;
+        filter: drop-shadow(0px 1px 1px black);
+        &:hover {
+          cursor: pointer;
+          transform: scale(1.5);
+        }
+      }
+      .reaction-wrapper {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+
+      .reaction-count {
+        font-size: 12px;
+        color: var(--text-color);
+      }
+
+      svg.reaction-icon--heart {
+        path {
+          color: red;
+        }
+      }
+      svg.reaction-icon--sweat {
+        path {
+          color: #fff12a;
+        }
+      }
+      svg.reaction-icon--tears {
+        path {
+          color: #fff12a;
+        }
+      }
+      svg.reaction-icon--tear {
+        path {
+          color: #fff12a;
+        }
+      }
+      svg.reaction-icon--cry {
+        path {
+          color: #fff12a;
+        }
+      }
+      svg.reaction-icon--angry {
+        path {
+          color: rgb(150, 0, 0);
+        }
+      }
+      svg.reaction-icon--smile {
+        path {
+          color: #fff12a;
+        }
+      }
+      svg.reaction-icon--rollingeyes {
+        path {
+          color: #5b3ede;
+        }
+      }
+      .reaction-title--heart {
+        color: red;
+      }
+
+      .reaction-title--sweat {
+        color: #fff12a;
+      }
+
+      .reaction-title--tears {
+        color: #fff12a;
+      }
+
+      .reaction-title--tear {
+        color: #fff12a;
+      }
+
+      .reaction-title--cry {
+        color: #fff12a;
+      }
+
+      .reaction-title--angry {
+        color: rgb(150, 0, 0);
+      }
+
+      .reaction-title--smile {
+        color: #fff12a;
+      }
+
+      .reaction-title--rollingeyes {
+        color: #5b3ede;
+      }
+
+      .react-icon--show {
         display: flex;
         align-items: center;
-        b {
-          color: var(--text-blur-color);
+        padding: 10px;
+        &:hover {
+          background-color: var(--hover-color);
         }
         svg {
-          font-size: 13px;
-          margin-right: 2px;
-          path {
-            color: var(--text-blur-color);
-          }
+          filter: drop-shadow(0px 1px 1px black);
+          font-size: 20px;
         }
-        &:hover {
-          opacity: 0.8;
-          cursor: pointer;
-          text-decoration: underline;
+      }
+      .react-icon--hide {
+        background-color: var(--bg-color);
+        padding: 10px;
+        border-radius: 10px;
+        position: absolute;
+        left: 0;
+        bottom: 35px;
+        display: none;
+      }
+      &:hover {
+        .react-icon--hide {
+          display: flex;
         }
       }
     }
-    p.time {
-      margin-top: 3px;
-      font-size: 10px;
-      padding-left: 10px;
-      color: var(--text-blur-color);
+
+    .comment-container {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      padding: 10px;
+      justify-content: center;
+      border-left: 0.5px solid var(--hover-color);
+      border-right: 0.5px solid var(--hover-color);
+      &:hover {
+        cursor: pointer;
+        background-color: var(--hover-color);
+      }
+      svg {
+        margin-right: 4px;
+        font-size: 20px;
+      }
+    }
+    .share-container {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      padding: 10px;
+      justify-content: center;
+      &:hover {
+        cursor: pointer;
+        background-color: var(--hover-color);
+      }
+      svg {
+        margin-right: 4px;
+        font-size: 20px;
+      }
     }
   }
-  .input-container {
-    margin-top: 10px;
+
+  .comment-container--main {
+    .avt-img {
+      img {
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        aspect-ratio: 1;
+        object-fit: cover;
+      }
+    }
+    p.load-more--comment {
+      font-size: 14px;
+      padding: 10px 15px;
+      cursor: pointer;
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+    ul.comment-container {
+      .comment-content--wrapper--container {
+        display: flex;
+        flex-direction: column;
+      }
+      margin-bottom: 10px;
+    }
+    .comment-action--reply {
+      display: flex;
+      width: 100%;
+      margin: 3px 0 10px;
+      align-items: center;
+      justify-content: space-between;
+      .action {
+        display: flex;
+        align-items: center;
+        .heart,
+        .reply {
+          font-size: 10px;
+          margin-left: 5px;
+          margin-top: 5px;
+          display: flex;
+          align-items: center;
+          b {
+            color: var(--text-blur-color);
+          }
+          svg {
+            font-size: 13px;
+            margin-right: 2px;
+            path {
+              color: var(--text-blur-color);
+            }
+          }
+          &:hover {
+            opacity: 0.8;
+            cursor: pointer;
+            text-decoration: underline;
+          }
+        }
+      }
+      p.time {
+        margin-top: 3px;
+        font-size: 10px;
+        padding-left: 10px;
+        color: var(--text-blur-color);
+      }
+    }
+
+    .filepond--root {
+      margin-bottom: 0;
+    }
+  }
+
+  .input-container,
+  .input-container-sub-comment {
     width: 100%;
-    height: 45px;
+    // height: 45px;
     display: flex;
-    align-items: center;
+    align-items: end;
     padding: 5px 15px;
     cursor: pointer;
+    background-color: var(--navbar-color);
     .avt-img {
       flex: 1;
       img {
@@ -371,6 +359,7 @@
       }
     }
     button {
+      margin: 0 10px 10px 0;
       flex: 1;
       background: transparent;
       outline: unset;
@@ -381,10 +370,23 @@
           color: #0074f8;
         }
       }
+
+      &:disabled {
+        filter: brightness(0.6);
+        cursor: not-allowed;
+      }
       &:hover {
         cursor: pointer;
         opacity: 0.8;
       }
     }
+  }
+
+  .input-container-sub-comment {
+    width: 100%;
+    height: auto;
+    display: flex;
+    align-items: center;
+    padding: 5px 0 40px 70px;
   }
 }

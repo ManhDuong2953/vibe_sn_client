@@ -65,9 +65,8 @@ function PostDetail({ titlePage }) {
               </div>
             )}
             <div className="content-media--main">
-              {data.media &&
-                data.media.length > 0 &&
-                (data.media[currentImageIndex]?.media_type === "image" ? (
+              {data.media && data.media.length > 0 ? (
+                data.media[currentImageIndex]?.media_type === "image" ? (
                   <img
                     src={data.media[currentImageIndex]?.media_link}
                     alt={`media-${currentImageIndex}`}
@@ -82,7 +81,12 @@ function PostDetail({ titlePage }) {
                   </video>
                 ) : (
                   <p>Unsupported media type</p>
-                ))}
+                )
+              ) : (
+                <h4 style={{ height: "100%" }} className="box-center">
+                  Bài viết không có file phương tiện
+                </h4>
+              )}
             </div>
 
             {data.media && data.media.length > 1 && (

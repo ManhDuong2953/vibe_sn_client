@@ -6,7 +6,7 @@
   @media (max-width: 800px) {
     overflow-y: auto;
   }
-  .container.post-detail--container {
+  .post-detail--container {
     display: flex;
     height: 100%;
     align-items: center;
@@ -15,7 +15,7 @@
     }
     .post-detail--media {
       position: relative;
-      padding-right: 25px;
+      margin: 0 10px;
       flex: 2;
       width: 100%;
       height: 100%;
@@ -72,10 +72,10 @@
         }
 
         &.btn-prev {
-          left: 0;
+          left: 10px;
         }
         &.btn-next {
-          right: 25px;
+          right: 10px;
         }
       }
       &:hover {
@@ -90,12 +90,17 @@
       background-color: var(--navbar-color);
       width: 100%;
       height: 100%;
+      position: relative;
       ul.comment-container {
         height: 415px;
         overflow-y: auto;
       }
       .comment-container--main p.load-more--comment {
         padding: 5px 15px;
+      }
+      .input-container {
+        position: absolute;
+        bottom: 0;
       }
     }
   }

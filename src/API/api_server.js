@@ -111,7 +111,6 @@ const API_ACCEPT_INVITE_MEMBER_GROUP = (id) =>
 const API_REFUSE_INVITE_MEMBER_GROUP = (id) =>
   API_HOST + "/group/members/refuse-invited-group/" + id;
 
-
 const API_DELETE_INVITE_MEMBER_GROUP = (id) =>
   API_HOST + "/group/members/delete-invited-group/" + id;
 const API_SET_ADMIN_MEMBER_GROUP = (id) =>
@@ -127,19 +126,41 @@ const API_ACCEPT_GROUP_POST = (group_id) =>
   API_HOST + "/group/posts/accepted-post/" + group_id;
 const API_REFUSE_GROUP_POST = (group_id) =>
   API_HOST + "/group/posts/refused-post/" + group_id;
-const API_LIST_MY_GROUP_POST = 
-  API_HOST + "/group/posts/list-post-all-group";
+const API_LIST_MY_GROUP_POST = API_HOST + "/group/posts/list-post-all-group";
 
 // POST API ENDPOINT
 const API_CREATE_POST = API_HOST + "/post/create-post";
 const API_DELETE_POST = (id) => `${API_HOST}/post/delete-post/${id}`;
 const API_UPDATE_POST = (id) => `${API_HOST}/post/edit-post/${id}`;
 const API_POST_DETAIL = (id) => `${API_HOST}/post/post-detail/${id}`;
+const API_SHARE_POST = (id) => `${API_HOST}/post/share-post/${id}`;
+
 const API_GET_POSTS = API_HOST + "/post/list-post";
 const API_GET_POSTS_BY_ID = (id) => `${API_HOST}/post/list-post-by-user/${id}`;
+const API_HEART_COMMENT_BY_COMMENT_ID = (id) =>
+  `${API_HOST}/post/heart-comment/${id}`;
+
+const API_HEART_SUB_COMMENT_BY_COMMENT_ID = (id) =>
+  `${API_HOST}/post/heart-sub-comment/${id}`;
 const API_POST_REACT_BY_ID = (id) => `${API_HOST}/post/create-react-post/${id}`;
 const API_DELETE_REACT_BY_ID = (id) =>
   `${API_HOST}/post/delete-react-post/${id}`;
+const API_CREATE_COMMENT_POST_BY_POST_ID = (id) =>
+  `${API_HOST}/post/create-comment-post/${id}`;
+const API_CREATE_SUB_COMMENT_BY_COMMENT_ID = (id) =>
+  `${API_HOST}/post/create-sub-comment-post/${id}`;
+
+const API_LIST_COMMENT_POST = (id) =>
+  `${API_HOST}/post/list-comment-post/${id}`;
+
+const API_DELETE_COMMENT_POST_BY_COMMENT_ID = (id) =>
+  `${API_HOST}/post/delete-comment/${id}`;
+
+const API_DELETE_SUB_COMMENT_POST_BY_SUB_COMMENT_ID = (id) =>
+  `${API_HOST}/post/delete-sub-comment/${id}`;
+
+// API ENDPOINT MARKETPLACE
+const API_MARKETPLACE_CREATE = API_HOST + "/marketplace/create-product/";
 
 export {
   API_SIGNUP_POST,
@@ -225,5 +246,14 @@ export {
   API_REFUSE_GROUP_POST,
   API_POST_REACT_BY_ID,
   API_DELETE_REACT_BY_ID,
-  API_LIST_MY_GROUP_POST
+  API_LIST_MY_GROUP_POST,
+  API_CREATE_COMMENT_POST_BY_POST_ID,
+  API_CREATE_SUB_COMMENT_BY_COMMENT_ID,
+  API_LIST_COMMENT_POST,
+  API_SHARE_POST,
+  API_HEART_COMMENT_BY_COMMENT_ID,
+  API_HEART_SUB_COMMENT_BY_COMMENT_ID,
+  API_DELETE_COMMENT_POST_BY_COMMENT_ID,
+  API_DELETE_SUB_COMMENT_POST_BY_SUB_COMMENT_ID,
+  API_MARKETPLACE_CREATE,
 };

@@ -21,7 +21,7 @@
   --bg-color: #181820;
   /* --navbar-color: #242526; */
   --navbar-color: #292e33;
-  
+
   --border-color: #5b5c5e;
   --text-color: #e4e6eb;
   --text-black-color: #161616;
@@ -86,6 +86,13 @@ svg {
     color: var(--icon-color);
   }
 }
+
+.filepond--root .filepond--drop-label {
+  background-color: var(--navbar-color);
+  border: 2px solid var(--border-color);
+  border-radius: 10px;
+}
+
 .text-ellipsis {
   white-space: nowrap; /* Không cho ngắt dòng */
   overflow: hidden; /* Ẩn phần chữ thừa */

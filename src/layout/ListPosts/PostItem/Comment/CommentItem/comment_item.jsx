@@ -1,4 +1,10 @@
-import React, { useCallback, useContext, useRef, useState } from "react";
+import React, {
+  useCallback,
+  useContext,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import "./comment_item.scss";
 import { FaCamera, FaHeart } from "react-icons/fa6";
 import { ImReply } from "react-icons/im";
@@ -10,190 +16,326 @@ import { IoMdMore } from "react-icons/io";
 import { MdBugReport, MdDelete } from "react-icons/md";
 import { toast } from "react-toastify";
 import { OwnDataContext } from "../../../../../provider/own_data";
+import { FilePond, registerPlugin } from "react-filepond";
+import FilePondPluginImagePreview from "filepond-plugin-image-preview";
+import { timeAgo } from "../../../../../ultils/formatDate/format_date";
+import { getData, postData } from "../../../../../ultils/fetchAPI/fetch_API";
+import {
+  API_CREATE_SUB_COMMENT_BY_COMMENT_ID,
+  API_DELETE_COMMENT_POST_BY_COMMENT_ID,
+  API_GET_USER_BY_ID,
+  API_HEART_COMMENT_BY_COMMENT_ID,
+} from "../../../../../API/api_server";
+import { LoadingIcon } from "../../../../../ultils/icons/loading";
+registerPlugin(FilePondPluginImagePreview);
 
-export default function CommentItem() {
+export default function CommentItem({ data, user_id, fetchData }) {
   const [showInputComment, setShowInputComment] = useState(false);
   const [showSubComment, setShowSubComment] = useState(false);
   const [idReply, setIdReply] = useState(null);
+  const [userNameReply, setUserNameReply] = useState(null);
   const [textRawReply, setTextRawReply] = useState("Trả lời default: ");
-  const [textReply, setTextReply] = useState("");
+  const [contentReply, setContentReply] = useState("");
   const [isActive, setIsActive] = useState(false);
-  const [mediaPreviewSubComment, setMediaPreviewSubComment] = useState(null); // Trạng thái lưu media
   const dataOwner = useContext(OwnDataContext);
+  const [showFilePond, setShowFilePond] = useState(false);
+  const [files, setFiles] = useState([]); // Quản lý file từ FilePond
+  const inputRef = useRef(null); // Tạo ref cho input
+  const [loading, setLoading] = useState(false); //
+  const [loadingSend, setLoadingSend] = useState(false); //
+  const [sending, setSending] = useState(false);
+  //Loading
+  useEffect(() => {
+    if (data) setLoading(true);
+  }, [data]);
+
+  // lấy id người phản hồi
   const getSupplyID = useCallback(
-    (id) => {
+    async (id) => {
       setIdReply(id);
-      setTextReply(`Trả lời ${id}: `);
-      setTextRawReply(`<a href="http://">${id}</a><p>${textReply}</p>`);
+      const user = await fetchUser(id);
+      setUserNameReply(user?.user_name);
+
+      const updatedTextRawReply = `<a href="/profile/${id}">${user?.user_name}</a><p>${contentReply}</p>`;
+
+      setTextRawReply(updatedTextRawReply); // Cập nhật đồng thời
     },
-    [idReply, textReply]
+    [contentReply]
   );
 
-  const handleChangeReply = (e) => {
-    setTextReply(e);
+  //Lấy thông tin người phản hồi
+  const fetchUser = async (id_user) => {
+    try {
+      const response = await getData(API_GET_USER_BY_ID(id_user));
+      if (response?.status) {
+        return response?.data;
+      } else {
+        throw new Error("Không tìm thấy người dùng");
+      }
+    } catch (error) {
+      toast.error("L��i: Không tìm thấy người dùng");
+      return null;
+    }
+  };
+
+  //Kiểm tra có giá trị value input k
+  useEffect(() => {
+    if (contentReply || files.length > 0) {
+      setSending(true);
+    } else {
+      setSending(false);
+    }
+  }, [contentReply, files]);
+
+  //Kiểm tra nhập liệu
+  const handleChangeReply = (value) => {
+    setContentReply(value);
+
+    // Đồng bộ hóa nội dung raw
+    setTextRawReply(
+      `<a href="/profile/${idReply}">${userNameReply}</a><p>${value}</p>`
+    );
   };
 
   const handleToggle = () => {
     setIsActive(!isActive);
   };
 
-  const handleFileChange = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      const fileURL = URL.createObjectURL(file);
-      setMediaPreviewSubComment({
-        url: fileURL,
-        type: file.type.startsWith("image") ? "image" : "video",
-      });
+  const handleFilesChange = (newFiles) => {
+    setFiles(newFiles); // Update the files state
+    if (newFiles.length > 0 && inputRef.current) {
+      inputRef.current.focus(); // Automatically focus the input if there are files
     }
   };
 
-  const removeMedia = () => {
-    setMediaPreviewSubComment(null);
+  const [heartCmt, setHeartCmt] = useState(data?.comment_count_comment_heart);
+  const handleHeartComment = async () => {
+    try {
+      const response = await postData(
+        API_HEART_COMMENT_BY_COMMENT_ID(data?.comment_id)
+      );
+
+      if (response?.status) {
+        setHeartCmt((prev) => prev + 1);
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  // console.log(data);
+
+  // Đăng subcomment
+  const handleSubmitComment = async (e) => {
+    try {
+      e.preventDefault();
+      setLoadingSend(true);
+      const formData = new FormData();
+      textRawReply && formData.append("comment_text", textRawReply);
+      if (files.length > 0) {
+        // Thêm tệp tin nếu có
+        files.forEach((file) => {
+          formData.append("media_type", file.file.type);
+          formData.append("file", file.file); // `file.file` là tệp tin thực tế từ FilePond
+        });
+      }
+
+      // Gửi formData tới API
+      const response = await postData(
+        API_CREATE_SUB_COMMENT_BY_COMMENT_ID(data?.comment_id),
+        formData
+      );
+
+      if (response.status) {
+        await fetchData();
+      }
+      // Xóa dữ liệu sau khi gửi thành công
+    } catch (error) {
+      console.error("Lỗi khi gửi bình luận:", error);
+    } finally {
+      setSending(false); // Hide loading spinner
+      setLoadingSend(false);
+      setContentReply("");
+      setTextRawReply("");
+      setFiles([]);
+      setShowFilePond(false);
+    }
+  };
+
+  const handleDeleteComment = async () => {
+    try {
+      const response = await postData(
+        API_DELETE_COMMENT_POST_BY_COMMENT_ID(data?.comment_id),
+        {
+          post_id: data?.post_id,
+        }
+      );
+      if (response.status) {
+        await fetchData();
+      }
+    } catch (error) {
+      console.error("Lỗi khi xóa bình luận:", error);
+    }
   };
 
   return (
     <React.Fragment>
-      <li className="container-item">
-        <div className="container-item-main active">
-          <div className={`action-container ${isActive ? "active" : ""}`}>
-            <IoMdMore className="icon-more" onClick={handleToggle} />
-            <div className="action-func">
-              <div className="row">
-                <MdDelete />
-                Xóa
-              </div>
-              <div
-                className="row"
-                onClick={() => {
-                  toast.success(
-                    "Bình luận này đã bị xem xét do Tiêu chuẩn Cộng đồng"
-                  );
-                }}
-              >
-                <MdBugReport />
-                Báo cáo vi phạm
+      {loading && (
+        <li className="container-item">
+          <div className="container-item-main active">
+            <div className={`action-container ${isActive ? "active" : ""}`}>
+              <IoMdMore className="icon-more" onClick={handleToggle} />
+              <div className="action-func">
+                {(data?.commenting_user_id === dataOwner?.user_id ||
+                  user_id === dataOwner?.user_id) && (
+                  <div className="row" onClick={() => handleDeleteComment()}>
+                    <MdDelete />
+                    Xóa
+                  </div>
+                )}
+                <div
+                  className="row"
+                  onClick={() => {
+                    toast.success(
+                      "Bình luận này đã bị xem xét do Tiêu chuẩn Cộng đồng"
+                    );
+                  }}
+                >
+                  <MdBugReport />
+                  Báo cáo vi phạm
+                </div>
               </div>
             </div>
-          </div>
-          <div className="avt-img">
-            <PopupInfoShort />
-            <img
-              src="https://cdn.24h.com.vn/upload/1-2023/images/2023-01-04/Ve-dep-dien-dao-chung-sinh-cua-co-gai-sinh-nam-1999-lot-top-guong-mat-dep-nhat-the-gioi-57068584_2351143488502839_871658938696715268_n-1672812988-819-width1080height1080.jpg"
-              alt=""
-            />
-          </div>
-          <div className="comment-content--wrapper--container">
-            <div className="comment-content--wrapper">
-              <div className="comment-content">
-                <p className="name">Dasha Taran</p>
-                <p className="comment-content--text">
-                  Chia sẻ hữu ích, tuyệt vời!
-                </p>
-                <div className="comment-content--img">
-                  <img
-                    src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcShQW135Us68ieCIzf0BiOVCddMygPvAcIRIg&s"
-                    alt=""
-                  />
-                </div>
-                <p className="quantity-heart">
-                  <FaHeart />
-                  <b>12</b>
-                </p>
-              </div>
-              <div className="comment-action--reply">
-                <div className="action">
-                  <div className="heart">
+            <div className="avt-img popup">
+              <PopupInfoShort user_id={data?.commenting_user_id} />
+              <img src={data?.avatar} alt="" />
+            </div>
+            <div className="comment-content--wrapper--container">
+              <div className="comment-content--wrapper">
+                <div className="comment-content">
+                  <p className="name">{data?.commenting_user_name}</p>
+                  {data?.comment_text && (
+                    <p className="comment-content--text">
+                      {data?.comment_text}
+                    </p>
+                  )}
+                  {data?.media_link && (
+                    <div className="comment-content--img">
+                      {data?.media_type === "image" && (
+                        <img src={data?.media_link} alt="" />
+                      )}
+                      {data?.media_type === "video" && (
+                        <video controls loop src={data?.media_link} />
+                      )}
+                    </div>
+                  )}
+                  <p className="quantity-heart">
                     <FaHeart />
-                    <b>Yêu thích</b>
+                    <b>{heartCmt}</b>
+                  </p>
+                </div>
+                <div className="comment-action--reply">
+                  <div className="action">
+                    <div className="heart" onClick={() => handleHeartComment()}>
+                      <FaHeart />
+                      <b>Yêu thích</b>
+                    </div>
+                    <div
+                      className="reply"
+                      onClick={() => {
+                        setShowInputComment(!showInputComment);
+                        setShowSubComment(true);
+                        getSupplyID(data?.commenting_user_id);
+                      }}
+                    >
+                      <ImReply />
+                      <b>Phản hồi</b>
+                    </div>
                   </div>
+                  <p className="time">{timeAgo(data?.created_at)}</p>
+                </div>
+                {!showSubComment && data?.sub_comments?.length > 0 && (
                   <div
-                    className="reply"
+                    className="see-more--subcomment"
                     onClick={() => {
                       setShowInputComment(!showInputComment);
                       setShowSubComment(true);
                     }}
                   >
-                    <ImReply />
-                    <b>Phản hồi</b>
+                    <p>Xem thêm {data?.sub_comments?.length} phản hồi</p>
+                    <LiaReplySolid />
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+          {showSubComment && (
+            <>
+              {data?.sub_comments?.map((item, index) => (
+                <SubCommentItem
+                  post_id={data?.post_id}
+                  handleGetSupplyID={getSupplyID}
+                  commenting_user_id={data?.commenting_user_id}
+                  user_id={user_id}
+                  data={item}
+                  fetchData={fetchData}
+                />
+              ))}
+            </>
+          )}
+          {showInputComment && (
+            <form
+              className="input-container-sub-comment"
+              onSubmit={(e) => handleSubmitComment(e)}
+            >
+              <div className="avt-img">
+                <img src={dataOwner?.avatar} alt="" />
+              </div>
+              <div className="input-wrapper">
+                {showFilePond && (
+                  <FilePond
+                    files={files}
+                    acceptedFileTypes={["image/*", "video/*"]} // Chỉ chấp nhận ảnh và video
+                    allowMultiple={false}
+                    onupdatefiles={handleFilesChange}
+                    labelIdle='Kéo và Thả tệp phương tiện or <span className="filepond--label-action">Duyệt</span>'
+                  />
+                )}
+                <div className="input-control--container">
+                  <input
+                    type="text"
+                    value={contentReply}
+                    onChange={(e) => handleChangeReply(e.target.value)}
+                    placeholder={"Phản hồi cho " + userNameReply}
+                    autoFocus={true}
+                  />
+                  <div className="input-media">
+                    <label
+                      htmlFor="input-img"
+                      onClick={() =>
+                        setShowFilePond((showFilePond) => !showFilePond)
+                      }
+                    >
+                      <FaCamera />
+                    </label>
                   </div>
                 </div>
-                <p className="time">7 giờ trước</p>
               </div>
-              {!showSubComment && (
-                <div
-                  className="see-more--subcomment"
-                  onClick={() => {
-                    setShowInputComment(!showInputComment);
-                    setShowSubComment(true);
-                  }}
-                >
-                  <p>Xem thêm 5 phản hồi với Dasha Taran</p>
-                  <LiaReplySolid />
-                </div>
-              )}
-            </div>
-          </div>
-        </div>
-        {showSubComment && (
-          <>
-            <SubCommentItem handleGetSupplyID={getSupplyID} ID={1} />
-          </>
-        )}
-        {showInputComment && (
-          <div className="input-container sub-comment">
-            <div className="avt-img">
-              <img
-                src="https://cdn.24h.com.vn/upload/1-2023/images/2023-01-04/Ve-dep-dien-dao-chung-sinh-cua-co-gai-sinh-nam-1999-lot-top-guong-mat-dep-nhat-the-gioi-57068584_2351143488502839_871658938696715268_n-1672812988-819-width1080height1080.jpg"
-                alt=""
-              />
-            </div>
-            <div className="input-wrapper">
-              {mediaPreviewSubComment && (
-                <div className="media-preview-sub-cmt">
-                  {mediaPreviewSubComment.type === "image" ? (
-                    <img src={mediaPreviewSubComment.url} alt="Preview" />
-                  ) : (
-                    <video controls>
-                      <source
-                        src={mediaPreviewSubComment.url}
-                        type="video/mp4"
-                      />
-                    </video>
-                  )}
-                  <button className="remove-media" onClick={removeMedia}>
-                    X
+              {!loadingSend ? (
+                sending && (
+                  <button style={{ margin: "0" }} type="submit">
+                    <IoSendSharp />
                   </button>
+                )
+              ) : (
+                <div>
+                  <LoadingIcon />
                 </div>
               )}
-              <div className="input-control--container">
-                <input
-                  type="text"
-                  value={textReply}
-                  onChange={(e) => handleChangeReply(e.target.value)}
-                  placeholder="Viết phản hồi..."
-                  required
-                />
-                <div className="input-media">
-                  <label htmlFor="input-img">
-                    <FaCamera />
-                  </label>
-                  <input
-                    type="file"
-                    id="input-img"
-                    hidden
-                    accept="image/*,video/*"
-                    onChange={handleFileChange}
-                  />
-                </div>
-              </div>
-            </div>
-            <button type="submit">
-              <IoSendSharp />
-            </button>
-          </div>
-        )}
-      </li>
+            </form>
+          )}
+        </li>
+      )}
     </React.Fragment>
   );
 }
