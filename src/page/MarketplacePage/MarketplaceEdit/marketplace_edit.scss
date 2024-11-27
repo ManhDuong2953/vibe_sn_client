@@ -9,7 +9,11 @@
     margin-bottom: 20px;
     text-align: center;
   }
-
+  select.form-control {
+    width: -webkit-fill-available;
+    height: 40px;
+    padding: 10px;
+  }
   .product-form {
     .side-container {
       margin: 0 -10px;

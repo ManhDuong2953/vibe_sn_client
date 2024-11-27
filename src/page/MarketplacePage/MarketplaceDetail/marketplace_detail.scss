@@ -3,7 +3,64 @@
   height: calc(100vh - 56px);
   width: 100vw;
   overflow: hidden;
-
+  .header-container--detail {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .header-post--item {
+    display: flex;
+    align-items: center;
+    padding: 15px 15px 0 15px;
+    .row {
+      display: flex;
+      align-items: center;
+    }
+    a:hover {
+      text-decoration: underline;
+    }
+    .avt-img {
+      img {
+        width: 50px;
+        height: 50px;
+        aspect-ratio: 1;
+        border-radius: 50%;
+        object-fit: cover;
+        cursor: pointer;
+      }
+      img.avt-member--group.avt-user {
+        width: 50px;
+        height: 50px;
+        margin-left: 0;
+        margin-bottom: 0;
+        border: 3px solid var(--navbar-color);
+      }
+    }
+    .info-header {
+      margin-left: 10px;
+      margin-bottom: 3px;
+      a {
+        p.name {
+          font-weight: 600;
+          color: var(--text-color);
+          &:hover {
+            text-decoration: underline;
+          }
+        }
+      }
+      p.time {
+        margin: 2px 0 0;
+        font-size: 11px;
+        color: var(--text-blur-color);
+        &:hover {
+          text-decoration: underline;
+        }
+      }
+      i {
+        margin: 3px 3px 0px;
+      }
+    }
+  }
   .container.marketplace-detail--container {
     display: flex;
     height: 100%;
@@ -83,15 +140,15 @@
         position: relative;
         .header-detail {
           padding-right: 15px;
+          width: -webkit-fill-available;
           display: flex;
           align-items: center;
           justify-content: space-between;
-          .icon-more{
+          .icon-more {
             padding: 4px;
             font-size: 30px;
             border-radius: 5px;
-            &:hover{
-             
+            &:hover {
               background-color: var(--hover-color);
             }
           }
@@ -101,12 +158,10 @@
           top: 40px;
           right: 0;
           padding: 10px 15px;
-          display: none;
+          display: flex;
           align-items: center;
           margin: 3px;
-          &.active{
-            display: flex;
-          }
+         
           svg {
             margin-right: 4px;
             font-size: 20px;
@@ -124,7 +179,7 @@
                 background-color: var(--accent-color);
               }
             }
-            &:hover{
+            &:hover {
               opacity: 0.8;
               cursor: pointer;
             }
@@ -169,9 +224,8 @@
           justify-content: center;
           svg {
             margin-right: 4px;
-            path{
+            path {
               color: white;
-
             }
           }
         }

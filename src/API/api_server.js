@@ -161,6 +161,15 @@ const API_DELETE_SUB_COMMENT_POST_BY_SUB_COMMENT_ID = (id) =>
 
 // API ENDPOINT MARKETPLACE
 const API_MARKETPLACE_CREATE = API_HOST + "/marketplace/create-product/";
+const API_MARKETPLACE_GET_ALL = API_HOST + "/marketplace/get-all-product/";
+const API_MARKETPLACE_SEARCH = API_HOST + "/marketplace/search-product/";
+const API_MARKETPLACE_GET_BY_ID = (id) =>
+  API_HOST + "/marketplace/get-product-by-id/" + id;
+const API_MARKETPLACE_DELETE_BY_ID = (id) =>
+  API_HOST + "/marketplace/delete-product-by-id/" + id;
+
+const API_MARKETPLACE_UPDATE_BY_ID = (id) =>
+  API_HOST + "/marketplace/update-product-by-id/" + id;
 
 export {
   API_SIGNUP_POST,
@@ -256,4 +265,9 @@ export {
   API_DELETE_COMMENT_POST_BY_COMMENT_ID,
   API_DELETE_SUB_COMMENT_POST_BY_SUB_COMMENT_ID,
   API_MARKETPLACE_CREATE,
+  API_MARKETPLACE_GET_ALL,
+  API_MARKETPLACE_GET_BY_ID,
+  API_MARKETPLACE_DELETE_BY_ID,
+  API_MARKETPLACE_UPDATE_BY_ID,
+  API_MARKETPLACE_SEARCH,
 };

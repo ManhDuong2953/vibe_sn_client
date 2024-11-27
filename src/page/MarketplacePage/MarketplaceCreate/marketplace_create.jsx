@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { FilePond, registerPlugin } from "react-filepond";
 import "filepond/dist/filepond.min.css";
 import FilePondPluginImagePreview from "filepond-plugin-image-preview";
@@ -31,6 +31,7 @@ function CreateProductPage({ titlePage }) {
   const [longitude, setLongitude] = useState(null);
   const [files, setFiles] = useState([]);
   const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
   useEffect(() => {
     document.title = titlePage;
 
@@ -75,7 +76,11 @@ function CreateProductPage({ titlePage }) {
     formData.append("product_location", location);
     formData.append("product_latitude", latitude);
     formData.append("product_longitude", longitude);
-
+    if (files.length <= 0) {
+      toast.error("Vui lòng thêm ảnh sản phẩm");
+      setLoading(false);
+      return;
+    }
     // Thêm từng file vào FormData
     files.forEach((file) => {
       formData.append(`files`, file.file);
@@ -87,6 +92,7 @@ function CreateProductPage({ titlePage }) {
 
       if (response.status) {
         toast.success("Sản phẩm đã được tạo thành công!");
+        navigate("/marketplace");
       } else {
         console.error("Error creating product:", response.statusText);
       }
