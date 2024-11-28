@@ -21,7 +21,7 @@ function App() {
   useEffect(() => {
     const handleOnline = () => {
       toast.success("Trình duyệt đã trực tuyến", {
-        duration: 10000,
+        duration: 60000,
         icon: <MdSignalWifiStatusbar4Bar />,
         position: "bottom-left",
       });
@@ -29,7 +29,7 @@ function App() {
 
     const handleOffline = () => {
       toast.error("Trình duyệt đang ngoại tuyến", {
-        duration: 10000,
+        duration: 60000,
         icon: <MdSignalWifiStatusbarConnectedNoInternet />,
         position: "bottom-left",
       });

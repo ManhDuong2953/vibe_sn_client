@@ -90,11 +90,11 @@ function CreateProductPage({ titlePage }) {
       // Gửi dữ liệu qua API (thay URL bằng endpoint thực tế)
       const response = await postData(API_MARKETPLACE_CREATE, formData);
 
-      if (response.status) {
+      if (response?.status) {
         toast.success("Sản phẩm đã được tạo thành công!");
         navigate("/marketplace");
       } else {
-        console.error("Error creating product:", response.statusText);
+        console.error("Error creating product:", response?.statusText);
       }
     } catch (error) {
       console.error("Error:", error);

@@ -14,8 +14,13 @@ function SuggestItem({ user_id, data = {} }) {
   const [dataUser, setDataUser] = useState(data);
   const dataOwner = useContext(OwnDataContext);
 
-
   useEffect(() => {
+    console.log(data);
+
+    if (data) setLoading(false);
+  }, [data]);
+
+    useEffect(() => {
     const fetchDataUser = async () => {
       if (!user_id) return;
       if (user_id && Object.keys(data).length === 0) {

@@ -5,7 +5,7 @@ export async function fetchBlob(url) {
       
       // Kiểm tra nếu response không thành công
       if (!response.ok) {
-        throw new Error(`Failed to fetch: ${response.statusText}`);
+        throw new Error(`Failed to fetch: ${response?.statusText}`);
       }
   
       // Trả về Blob của file đã tải

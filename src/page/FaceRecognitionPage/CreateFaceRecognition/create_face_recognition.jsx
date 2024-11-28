@@ -132,7 +132,7 @@ const CreateFaceRecognitionPage = ({ titlePage }) => {
         formData.append('images_face_recognition', blob, `image_${index}.jpg`);
       });
       const response = await postData(API_CREATE_FACE_RECOGNITION_BY_ID, formData);
-      if (response.status) {
+      if (response?.status) {
         window.location.href = "/setting/";
       }
     };

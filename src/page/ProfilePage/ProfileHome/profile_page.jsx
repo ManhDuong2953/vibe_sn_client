@@ -49,7 +49,7 @@ function ProfilePage({ titlePage }) {
     try {
       const fetchData = async () => {
         const response = await getData(API_GET_POSTS_BY_ID(user_id));
-        if (response.status) {
+        if (response?.status) {
           setListPost(response.data);
         }
       };

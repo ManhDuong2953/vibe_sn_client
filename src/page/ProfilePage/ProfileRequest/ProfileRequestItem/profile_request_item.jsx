@@ -65,7 +65,7 @@ function ProfileRequestItem({ user_id }) {
   const handleAcceptRequest = async () => {
     try {
       const response = await putData(API_FRIEND_ACCEPT(user_id));
-      if (response.status) {
+      if (response?.status) {
         window.location.reload();
       }
     } catch (error) {
@@ -86,7 +86,7 @@ function ProfileRequestItem({ user_id }) {
         receiver_id: dataOwner?.user_id,
       });
   
-      if (response.status) {
+      if (response?.status) {
         console.log("API response success:", response);
         window.location.reload();
       } else {

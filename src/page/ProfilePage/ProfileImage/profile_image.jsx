@@ -16,7 +16,7 @@ function ProfileImage({ titlePage }) {
   useEffect(() => {
     const fetchData = async () => {
       const response = await getData(API_GET_ALL_PROFILE_MEDIA_BY_ID);
-      if (response.status) {
+      if (response?.status) {
         setImages(response.data);
       }
     };

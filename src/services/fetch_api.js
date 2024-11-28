@@ -11,7 +11,7 @@ const fetchDataFE = async (url) => {
   try {
     const response = await fetch(url);
     if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
+      throw new Error(`HTTP error! status: ${response?.status}`);
     }
     const data = await response.json();
     return data;
@@ -37,10 +37,10 @@ export const getDataInfoCountry = async (name_country) => {
 export const getAllFriends = async (user_id) => {
   try {
     const response = await getData(API_FRIEND_LIST(user_id));
-    if (response.status) {
+    if (response?.status) {
       return response;
     }
-    throw new Error(`HTTP error! status: ${response.status}`);
+    throw new Error(`HTTP error! status: ${response?.status}`);
   } catch (error) {
     console.log(error);
   }

@@ -20,7 +20,7 @@ function GroupMemberPage({ titlePage }) {
     const fetchMembers = async () => {
       try {
         const response = await getData(API_LIST_MEMBERS_OFFICAL_GROUP(group_id));
-        if (response.status) {
+        if (response?.status) {
           setMembers(response?.data);
         } else {
           console.error("Failed to fetch members");

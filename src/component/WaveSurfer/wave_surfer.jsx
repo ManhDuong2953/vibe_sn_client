@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import WaveSurfer from "wavesurfer.js";
 import { FaPlayCircle, FaPause } from "react-icons/fa";
-import './wave_surfer.scss';
+import "./wave_surfer.scss";
 
 const Waveform = ({ audioUrl }) => {
   const [playing, setPlaying] = useState(false);
@@ -25,7 +25,7 @@ const Waveform = ({ audioUrl }) => {
         progressColor: "#66ff33",
         responsive: true,
         waveColor: "#C4C4C4",
-        cursorColor: "transparent"
+        cursorColor: "transparent",
       });
 
       const loadAudio = async () => {
@@ -34,15 +34,15 @@ const Waveform = ({ audioUrl }) => {
           const audioDuration = wavesurferRef.current.getDuration();
           setDuration(audioDuration);
         } catch (error) {
-          console.error('Error loading audio:', error);
+          console.error("Error loading audio:", error);
         }
       };
 
-      wavesurferRef.current.on('audioprocess', () => {
+      wavesurferRef.current.on("audioprocess", () => {
         setCurrentTime(wavesurferRef.current.getCurrentTime());
       });
 
-      wavesurferRef.current.on('finish', () => {
+      wavesurferRef.current.on("finish", () => {
         setPlaying(false); // Đặt lại trạng thái khi audio chạy hết
         setCurrentTime(0); // Đặt lại thời gian hiện tại về 0
       });
@@ -68,15 +68,17 @@ const Waveform = ({ audioUrl }) => {
     <div className="waveform-container">
       <button className="play-button" onClick={handlePlay}>
         {!playing ? (
-          <FaPlayCircle color="white" fontSize="10em" />
+          <FaPlayCircle fontSize="10em" />
         ) : (
-          <FaPause color="white" fontSize="10em" />
+          <FaPause fontSize="10em" />
         )}
       </button>
       <div className="wave" ref={waveformRef} />
       <audio ref={trackRef} src={audioUrl} />
       <div className="time-container">
-        <span>{formatTime(currentTime)} / {formatTime(duration)}</span>
+        <span>
+          {formatTime(currentTime)} / {formatTime(duration)}
+        </span>
       </div>
     </div>
   );
@@ -86,7 +88,10 @@ const Waveform = ({ audioUrl }) => {
 const formatTime = (time) => {
   const minutes = Math.floor(time / 60);
   const seconds = Math.floor(time % 60);
-  return `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+  return `${String(minutes).padStart(2, "0")}:${String(seconds).padStart(
+    2,
+    "0"
+  )}`;
 };
 
 export default Waveform;

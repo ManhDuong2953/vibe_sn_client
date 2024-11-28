@@ -217,7 +217,7 @@ function ChatMessengerPage({ titlePage }) {
         code: PIN.join(""),
       });
       setLoading(false);
-      if (response.status) {
+      if (response?.status) {
         setIsHasCode(true);
       } else {
         alert("Có lỗi xảy ra, vui lòng thử lại sau.");
@@ -268,7 +268,7 @@ function ChatMessengerPage({ titlePage }) {
       const checkExistKeyPair = async () => {
         try {
           const response = await getData(API_CHECK_KEYSPAIR(id_receiver));
-          if (response?.status === true || response.status === false) {
+          if (response?.status === true || response?.status === false) {
             setIsHasKeysPairReceiver(response?.status);
           }
         } catch (error) {
@@ -441,7 +441,7 @@ function ChatMessengerPage({ titlePage }) {
         },
       });
 
-      if (response.status) {
+      if (response?.status) {
         setLoading(false);
       }
     } catch (error) {
@@ -702,7 +702,7 @@ function ChatMessengerPage({ titlePage }) {
   const handleDeleteAllMessage = async () => {
     try {
       const response = await deleteData(API_DELETE_ALL_MESSAGE(id_receiver));
-      if (response.status) {
+      if (response?.status) {
         toast.success("Xóa đoạn chat thành công!");
         window.location.href = "/messenger/" + id_receiver;
       }
@@ -715,7 +715,7 @@ function ChatMessengerPage({ titlePage }) {
   const handleDeleteMessage = async (messageId) => {
     try {
       const response = await deleteData(API_DELETE_MESSAGE(messageId));
-      if (response.status) {
+      if (response?.status) {
         setMessages((prevMessages) =>
           prevMessages.filter((message) => message.messenger_id !== messageId)
         );
@@ -731,7 +731,7 @@ function ChatMessengerPage({ titlePage }) {
       const response = await deleteData(
         API_DELETE_MESSAGE_OWNER_SIDE(messageId)
       );
-      if (response.status) {
+      if (response?.status) {
         setMessages((prevMessages) =>
           prevMessages.filter((message) => message.messenger_id !== messageId)
         );

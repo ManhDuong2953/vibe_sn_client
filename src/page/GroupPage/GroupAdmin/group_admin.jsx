@@ -35,7 +35,7 @@ function GroupAdminPage({ titlePage }) {
   const handleDeleteGroup = async () => {
     try {
       const response = await deleteData(API_DELETE_GROUP(group_id));
-      if (response.status) {
+      if (response?.status) {
         toast.success("Xóa nhóm thành công!");
         navigate("/group");
       } else {
@@ -72,7 +72,7 @@ function GroupAdminPage({ titlePage }) {
       const response = await postData(apiUri, {
         group_post_id,
       });
-      if (response.status) {
+      if (response?.status) {
         // Xoá phần tử trong mảng listpostgroup mà có group_post_id là có group_post_id tham chiếu truyền vào
         const newListPostGroup = listPostGroup.filter(
           (item) => item.group_post_id !== group_post_id

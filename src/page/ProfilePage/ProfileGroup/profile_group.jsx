@@ -19,7 +19,7 @@ function ProfileGroup({ titlePage }) {
     const getAllGroupByOwner = async () => {
       if (!user_id) return;
       const response = await getData(API_LIST_GROUP_BY_USERID(user_id));
-      if (response.status) {
+      if (response?.status) {
         setDataGroup(response.data);
       }
     };

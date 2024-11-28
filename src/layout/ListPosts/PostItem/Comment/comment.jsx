@@ -192,7 +192,7 @@ function Comment({ setShowCommentPage, data }) {
         formData
       );
 
-      if (response.status) {
+      if (response?.status) {
         await fetchData();
       }
       // Xóa dữ liệu sau khi gửi thành công
@@ -219,7 +219,7 @@ function Comment({ setShowCommentPage, data }) {
   const sharePostHandle = async () => {
     try {
       const response = await postData(API_SHARE_POST(data?.post_id));
-      if (response.status) {
+      if (response?.status) {
         toast.success("Bài viết đã được lưu vào trang cá nhân của bạn!");
       }
     } catch (error) {

@@ -24,7 +24,7 @@ function PostDetail({ titlePage }) {
   useEffect(() => {
     const fetchData = async () => {
       const response = await getData(API_POST_DETAIL(post_id));
-      if (response.status) {
+      if (response?.status) {
         setData(response.data);
       }
     };
@@ -54,7 +54,7 @@ function PostDetail({ titlePage }) {
     <React.Fragment>
       <NavigativeBar />
       <div className="post-detail">
-        <div className="container post-detail--container">
+        <div className="post-detail--container">
           <div className="post-detail--media">
             <div className="close" onClick={() => navigate(-1)}>
               <MdOutlineClose />
@@ -72,16 +72,13 @@ function PostDetail({ titlePage }) {
                     alt={`media-${currentImageIndex}`}
                   />
                 ) : data.media[currentImageIndex]?.media_type === "video" ? (
-                  <video controls autoPlay loop>
-                    <source
-                      src={data.media[currentImageIndex]?.media_link}
-                      type="video/mp4"
-                    />
-                    Your browser does not support the video tag.
-                  </video>
-                ) : (
-                  <p>Unsupported media type</p>
-                )
+                  <video
+                    src={data.media[currentImageIndex]?.media_link}
+                    controls
+                    autoPlay
+                    loop
+                  />
+                ) : null
               ) : (
                 <h4 style={{ height: "100%" }} className="box-center">
                   Bài viết không có file phương tiện

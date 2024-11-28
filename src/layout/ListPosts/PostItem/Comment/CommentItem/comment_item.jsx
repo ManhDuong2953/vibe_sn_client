@@ -146,7 +146,7 @@ export default function CommentItem({ data, user_id, fetchData }) {
         formData
       );
 
-      if (response.status) {
+      if (response?.status) {
         await fetchData();
       }
       // Xóa dữ liệu sau khi gửi thành công
@@ -170,7 +170,7 @@ export default function CommentItem({ data, user_id, fetchData }) {
           post_id: data?.post_id,
         }
       );
-      if (response.status) {
+      if (response?.status) {
         await fetchData();
       }
     } catch (error) {

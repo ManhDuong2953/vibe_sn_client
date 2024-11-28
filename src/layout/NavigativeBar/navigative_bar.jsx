@@ -19,6 +19,8 @@ import { darkHandle, lightHandle } from "../../redux/Reducer/reducer";
 import { IoListOutline, IoSettingsSharp } from "react-icons/io5";
 import { OwnDataContext } from "../../provider/own_data";
 import { useSocket } from "../../provider/socket_context";
+import { getData } from "../../ultils/fetchAPI/fetch_API";
+import { API_LIST_NOTIFICATION } from "../../API/api_server";
 
 function NavigativeBar() {
   const navigate = useNavigate();
@@ -83,6 +85,33 @@ function NavigativeBar() {
       iconToggleNavbar.removeEventListener("click", handleToggle);
     };
   }, []);
+
+  const [listNotifications, setListNotifications] = useState([]);
+  const fetchNotifications = async () => {
+    const response = await getData(API_LIST_NOTIFICATION);
+    if (response?.status) {
+      setListNotifications(response.data);
+    }
+  };
+
+  useEffect(() => {
+    try {
+      if (!dataOwner?.user_id) return;
+      fetchNotifications();
+    } catch (error) {
+      console.error(error.message);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (socket) {
+      socket.on("send_notice", (data) => {
+        console.log(data);
+      });
+    }
+  }, [socket]);
+
+  console.log(listNotifications);
 
   return (
     <React.Fragment>

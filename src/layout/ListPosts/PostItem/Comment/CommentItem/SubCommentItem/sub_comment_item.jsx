@@ -48,7 +48,7 @@ function SubCommentItem({
           post_id
         }
       );
-      if (response.status) {
+      if (response?.status) {
         await fetchData();
       }
     } catch (error) {

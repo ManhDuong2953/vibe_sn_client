@@ -26,7 +26,7 @@ export default function AuthenticationClient() {
       .then(response => {
         // Kiểm tra nếu yêu cầu không thành công
         if (!response.ok) {
-          console.error(`Request failed with status: ${response.status}`);
+          console.error(`Request failed with status: ${response?.status}`);
           reject('Request failed');
         }
         return response.json();

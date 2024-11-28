@@ -60,7 +60,7 @@ function HeaderPost({ data }) {
     try {
       if (window.confirm("Bài viết sẽ bị xoá vĩnh viễn. Tiếp tục tác vụ?")) {
         const response = await deleteData(API_DELETE_POST(data?.post_id));
-        if (response.status) {
+        if (response?.status) {
           window.location.reload();
         }
       }

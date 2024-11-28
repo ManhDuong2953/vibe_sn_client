@@ -19,7 +19,7 @@ function ProfileStoreStory({ titlePage }) {
       const fetchData = async () => {
         setLoading(true);
         const response = await getData(API_LIST_MY_STORY);
-        if (response.status) {
+        if (response?.status) {
           setData(response.data);
         }
       };

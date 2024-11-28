@@ -42,7 +42,7 @@ const ForgotPasswordPage = ({ titlePage }) => {
       if (inputCode && email) {
         try {
           const response = await postData(API_VERIFY_OTP, { user_email: email, input_code_otp: inputCode });
-          if (response.status) {
+          if (response?.status) {
             setIsVerify(true);
           } else {
             setIsVerify(false);

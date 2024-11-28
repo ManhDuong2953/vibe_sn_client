@@ -84,7 +84,7 @@
 
   .right-panel {
     flex: 3;
-    padding: 0 100px 20px;
+    padding: 0 200px 20px;
 
     background-color: var(--bg-color);
     box-shadow: 0 2px 4px var(--shadow-1);
@@ -98,7 +98,7 @@
       padding: 20px;
       border-radius: 10px;
       i {
-        color: var(--active-color);
+        color: var(--success-color);
       }
       #group-container {
         li.list-suggest--item {

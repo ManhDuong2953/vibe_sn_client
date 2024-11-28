@@ -34,7 +34,7 @@ function EditProductPage({ titlePage }) {
     const fetchProductDetail = async () => {
       try {
         const response = await getData(API_MARKETPLACE_GET_BY_ID(id_product));
-        if (response.status) {
+        if (response?.status) {
           const product = response?.data;
           setFormData({
             product_name: product?.product.product_name || "",

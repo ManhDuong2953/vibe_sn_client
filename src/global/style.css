@@ -22,7 +22,7 @@
   /* --navbar-color: #242526; */
   --navbar-color: #292e33;
 
-  --border-color: #5b5c5e;
+  --border-color: #5b5c5e85;
   --text-color: #e4e6eb;
   --text-black-color: #161616;
   --icon-color: #e4e6eb;
@@ -106,6 +106,9 @@ svg {
 .Toastify__toast-theme--light {
   background-color: #000000 !important;
 }
+.Toastify__toast-body > * {
+  color: white;
+}
 .popup-info--container {
   display: none;
 }
@@ -144,6 +147,7 @@ button[type="submit"]:hover {
   display: flex;
   width: auto;
   height: 100%;
+  min-height: 200px;
   align-items: center;
   justify-content: center;
 }

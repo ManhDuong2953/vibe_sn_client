@@ -109,7 +109,7 @@ function StoriesPage({ titlePage }) {
     try {
       if (window.confirm("Bạn chắc chắn muốn xoá tin này chứ?")) {
         const response = await deleteData(API_DELETE_STORY(story_id));
-        if (response.status) {
+        if (response?.status) {
           navigate("/");
         }
       }

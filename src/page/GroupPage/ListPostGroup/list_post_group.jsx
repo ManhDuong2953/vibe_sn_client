@@ -37,7 +37,7 @@ function ListPostGroupPage({ titlePage }) {
   useEffect(() => {
     const getAllGroupByOwner = async () => {
       const response = await getData(API_LIST_GROUP_BY_OWNER);
-      if (response.status) {
+      if (response?.status) {
         setDataGroup(response.data);
       }
     };
@@ -71,7 +71,7 @@ function ListPostGroupPage({ titlePage }) {
               <h2>Nhóm của bạn</h2>
               <Link className="create-gr" to="/group/create">
                 <MdOutlineGroupAdd />
-                <h5>Tạo nhóm</h5>
+                <h5 style={{ marginLeft: "5px" }}>Tạo nhóm</h5>
               </Link>
               {dataGroup.length > 0 &&
                 dataGroup.map((data, index) => (

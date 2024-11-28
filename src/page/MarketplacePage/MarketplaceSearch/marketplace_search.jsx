@@ -49,7 +49,7 @@ function MarketplaceSearchPage({ titlePage }) {
         location: filters.location,
         myProducts: filters.myProducts,
       });
-      if (response.status) {
+      if (response?.status) {
         setData(response.data);
         setOriginalData(response.data); // Lưu dữ liệu gốc để xử lý sắp xếp
       }

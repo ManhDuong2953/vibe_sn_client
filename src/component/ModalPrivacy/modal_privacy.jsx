@@ -81,7 +81,7 @@ const PrivacyModal = ({ image, audio, open, handleClose }) => {
       }
       payload.append("story_privacy", privacy);
       const response = await postData(API_CREATE_STORY, payload);
-      if (response.status) {
+      if (response?.status) {
         setLoading(false);
         navigate("/");
       }

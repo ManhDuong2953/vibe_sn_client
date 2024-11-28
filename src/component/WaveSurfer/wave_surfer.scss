@@ -40,5 +40,8 @@
     background: transparent;
     padding-bottom: 3px;
     margin-right: 10px;
+    path {
+      color: var(--icon-color);
+    }
   }
 }

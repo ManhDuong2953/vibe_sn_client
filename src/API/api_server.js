@@ -171,6 +171,20 @@ const API_MARKETPLACE_DELETE_BY_ID = (id) =>
 const API_MARKETPLACE_UPDATE_BY_ID = (id) =>
   API_HOST + "/marketplace/update-product-by-id/" + id;
 
+//SEARCH API ENDPOINT
+const API_SEARCH_USERS = API_HOST + "/search-page/users";
+const API_SEARCH_GROUP = API_HOST + "/search-page/groups";
+const API_SEARCH_POST = API_HOST + "/search-page/posts";
+
+////// NOTIFICATION API ENDPOINT
+const API_CREATE_NOTIFICATION = API_HOST + "/notices/create-notice";
+const API_DELETE_NOTIFICATION_BY_ID = (id) =>
+  API_HOST + "/notices/delete-notice/" + id;
+const API_LIST_NOTIFICATION = API_HOST + "/notices/list-notice";
+const API_DELETE_ALL_NOTIFICATION = API_HOST + "/notices/delete-all";
+const API_DELETE_ALL_NOTICE_CURRRENT =
+  API_HOST + "/notices/delete-notice-current";
+
 export {
   API_SIGNUP_POST,
   API_SIGNUP_SOCIALNETWORK_POST,
@@ -270,4 +284,12 @@ export {
   API_MARKETPLACE_DELETE_BY_ID,
   API_MARKETPLACE_UPDATE_BY_ID,
   API_MARKETPLACE_SEARCH,
+  API_SEARCH_USERS,
+  API_SEARCH_GROUP,
+  API_SEARCH_POST,
+  API_CREATE_NOTIFICATION,
+  API_DELETE_NOTIFICATION_BY_ID,
+  API_LIST_NOTIFICATION,
+  API_DELETE_ALL_NOTIFICATION,
+  API_DELETE_ALL_NOTICE_CURRRENT,
 };

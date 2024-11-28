@@ -1,7 +1,7 @@
 .list-post-group {
   margin-top: 56px;
-  
-  svg.icon-gr{
+
+  svg.icon-gr {
     display: none;
     @media (max-width: 800px) {
       display: inline;
@@ -37,7 +37,7 @@
         position: fixed;
         padding: 30px 10px;
         z-index: 90;
-        &.active{
+        &.active {
           display: inline;
         }
       }
@@ -59,7 +59,7 @@
         justify-content: center;
         padding: 10px;
         margin: 10px 0;
-        background-color: var(--bg-active-color);
+        background-color: var(--active-color);
         border-radius: 5px;
         border: 1px solid white;
         path,
@@ -76,7 +76,7 @@
       @media (max-width: 800px) {
         padding: 0;
       }
-      padding: 0 80px;
+      padding: 0 200px;
       &::-webkit-scrollbar {
         display: none;
       }

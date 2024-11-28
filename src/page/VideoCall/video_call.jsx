@@ -125,7 +125,7 @@ const VideoCall = ({ isVideoCall = true, titlePage }) => {
             )
           );
 
-          if (response.status === true && response.data?.avatar) {
+          if (response?.status === true && response.data?.avatar) {
             const data = response.data;
             setDataReceiver(data);
           }

@@ -22,7 +22,7 @@ const fetchData = async (url, options = {}) => {
       try {
         errorResponse = await response.json();
       } catch (e) {
-        toast.error(response.statusText);
+        toast.error(response?.statusText);
       }
       errorResponse?.message && toast.error(errorResponse?.message);
     }

@@ -21,7 +21,7 @@ function OwnDataProvider({ children }) {
         const fetchData = async () => {
             try {
                 const response = await getData(API_GET_INFO_OWNER_PROFILE_BY_ID);
-                if (response.status) {
+                if (response?.status) {
                     setData(response.data);
                 }
             } catch (error) {

@@ -137,7 +137,7 @@ export default function EditPost({ titlePage }) {
       // Make API call to update the post
       const response = await postData(API_UPDATE_POST(data?.post_id), formData);
 
-      if (response.status) {
+      if (response?.status) {
         window.location.href = "/";
       }
     } catch (error) {

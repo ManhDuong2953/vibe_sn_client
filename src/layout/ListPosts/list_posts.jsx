@@ -12,7 +12,7 @@ function ListPosts() {
     try {
       const fetchData = async () => {
         const response = await getData(API_GET_POSTS);
-        if (response.status) {
+        if (response?.status) {
           setListPost(response.data);
         }
       };

@@ -39,7 +39,7 @@ const SettingPage = ({ titlePage }) => {
         try {
             if (window.confirm("Bạn chắc chắn muốn xóa dữ liệu khuôn mặt hiện có chứ")) {
                 const response = await deleteData(API_DELETE_FACE_RECOGNITION_BY_ID);
-                if (response.status) {
+                if (response?.status) {
                     window.location.reload();
                 }
             }
@@ -67,7 +67,7 @@ const SettingPage = ({ titlePage }) => {
             const response = await putData(API_UPDATE_USER_SETTING, dataSetting, {
                 'Content-Type': 'application/json',
             });
-            if (response.status) {
+            if (response?.status) {
                 window.location.reload();
             }
         } catch (error) {
