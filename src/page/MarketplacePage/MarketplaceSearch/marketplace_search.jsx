@@ -10,7 +10,7 @@ import { API_MARKETPLACE_SEARCH } from "../../../API/api_server";
 
 function MarketplaceSearchPage({ titlePage }) {
   const location = useLocation();
-
+  const [currentPage, setCurrentPage] = useState(1);
   const [data, setData] = useState([]);
   const [originalData, setOriginalData] = useState([]);
   const [filters, setFilters] = useState({
@@ -48,6 +48,7 @@ function MarketplaceSearchPage({ titlePage }) {
         category: filters.category,
         location: filters.location,
         myProducts: filters.myProducts,
+        currentPage: currentPage
       });
       if (response?.status) {
         setData(response.data);
@@ -58,9 +59,15 @@ function MarketplaceSearchPage({ titlePage }) {
     }
   };
 
+
+
   useEffect(() => {
     fetchFilteredProducts();
   }, [filters]);
+
+  useEffect(() => {
+    fetchFilteredProducts();
+  }, [currentPage]);
 
   const handleFilterChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -173,7 +180,19 @@ function MarketplaceSearchPage({ titlePage }) {
                 <option value="">Chọn loại sản phẩm</option>
                 <option value="electronics">Điện tử</option>
                 <option value="furniture">Nội thất</option>
-                {/* ... Các tùy chọn khác */}
+                <option value="clothing">Thời trang</option>
+                <option value="appliances">Đồ gia dụng</option>
+                <option value="groceries">Thực phẩm</option>
+                <option value="beauty">Làm đẹp</option>
+                <option value="sports">Thể thao</option>
+                <option value="toys">Đồ chơi</option>
+                <option value="books">Sách</option>
+                <option value="automotive">Ô tô và xe máy</option>
+                <option value="health">Sức khỏe</option>
+                <option value="garden">Làm vườn</option>
+                <option value="office">Văn phòng phẩm</option>
+                <option value="jewelry">Trang sức</option>
+                <option value="pet_supplies">Đồ dùng thú cưng</option>
               </select>
 
               <h4>Lọc theo vị trí</h4>
@@ -235,7 +254,13 @@ function MarketplaceSearchPage({ titlePage }) {
               <h3 className="box-center">Không có sản phẩm phù hợp!</h3>
             )}
           </ul>
-          <Pagination totalPages={10} currentPage={1} onPageChange={() => {}} />
+          {data?.length > 0 && (
+            <Pagination
+              totalPages={Math.ceil(data?.length / 1)}
+              currentPage={currentPage}
+              onPageChange={() => setCurrentPage(currentPage + 1)}
+            />
+          )}
         </div>
       </div>
     </React.Fragment>

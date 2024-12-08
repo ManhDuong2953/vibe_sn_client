@@ -148,7 +148,6 @@
             display: none;
           }
 
-
           .messenger-icon--container {
             position: relative;
             width: fit-content;
@@ -187,6 +186,9 @@
         margin: 0 5px;
         padding: 10px;
         border-radius: 50%;
+        button {
+          background-color: transparent !important;
+        }
         .icon-notice--container {
           position: relative;
           svg {
@@ -207,7 +209,6 @@
             padding: 4px;
             border-radius: 50%;
             background-color: var(--accent-color);
-            color: white;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -215,59 +216,8 @@
             font-weight: 600;
           }
         }
-        ul.box-notice {
-          background-color: var(--navbar-color);
-          width: 450px;
-          height: calc(100vh - 70px);
-          position: absolute;
-          right: -70px;
-          top: 56px;
-          z-index: 20;
-          margin: 0 5px;
-          border: 0.1px solid var(--border-color);
-          padding: 10px;
-          display: none;
-          box-shadow: 0 2px 8px 0 rgba(99, 99, 99, 0.2);
+      }
 
-          .box-notice--header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 0 0 15px 0;
-            p.delete-all {
-              font-size: 14px;
-              padding: 10px;
-              border-radius: 50px;
-            }
-            p.delete-all:hover {
-              text-decoration: underline;
-              cursor: pointer;
-              color: var(--accent-color);
-              background-color: var(--bg-accent-color);
-            }
-          }
-          .box-notice--body {
-            height: calc(100vh - 70px - 51.8px - 20px);
-            overflow-y: scroll;
-            overflow-x: hidden;
-          }
-        }
-      }
-      .bell-notice--icon::before {
-        content: "";
-        position: absolute;
-        width: 0px;
-        height: 20px;
-        right: 0;
-        top: 24px;
-        z-index: 19;
-        border-bottom: 15px solid var(--border-color);
-        border-right: 15px solid transparent;
-        border-left: 15px solid transparent;
-        border-top: none;
-        margin: 0 10px;
-        display: none;
-      }
       .bell-notice--icon:hover {
         cursor: pointer;
         background-color: var(--hover-color);
@@ -280,13 +230,6 @@
             color: var(--active-color);
           }
         }
-        ul.box-notice {
-          display: block;
-        }
-      }
-
-      .bell-notice--icon.active::before {
-        display: block;
       }
 
       .personal-icon {
@@ -443,4 +386,46 @@
       }
     }
   }
+}
+ul.box-notice {
+  background-color: var(--navbar-color);
+  width: 450px;
+  height: calc(100vh - 70px);
+  border: 0.1px solid var(--border-color);
+  padding: 10px;
+  box-shadow: 0 2px 8px 0 rgba(99, 99, 99, 0.2);
+
+  .box-notice--header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 0 15px 0;
+    p.delete-all {
+      font-size: 14px;
+      padding: 10px;
+      border-radius: 50px;
+    }
+    p.delete-all:hover {
+      text-decoration: underline;
+      cursor: pointer;
+      color: var(--accent-color);
+      background-color: var(--bg-accent-color);
+    }
+  }
+  .box-notice--body {
+    height: calc(100vh - 70px - 51.8px - 20px);
+    overflow-y: scroll;
+    overflow-x: hidden;
+  }
+}
+div.MuiPaper-elevation:has(ul.box-notice) {
+  top: 50px !important;
+  right: 100px !important;
+  left: auto !important;
+  width: 450px;
+  background-color: var(--border-color);
+}
+.MuiBackdrop-root{
+  width: 100vw !important;
+  overflow: hidden;
 }

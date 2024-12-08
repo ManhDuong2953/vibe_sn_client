@@ -33,7 +33,7 @@ const OtpPopup = ({ email, onVerifySuccess, onClose, onResendOtp }) => {
             "user_email": email
         });
         setOtp('');
-        if (response?.status) {
+        if (response?.status === true || response?.status === 200) {
             onVerifySuccess();
         }
     };

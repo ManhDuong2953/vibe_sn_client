@@ -34,7 +34,7 @@ const Pagination = ({ totalPages, currentPage, onPageChange }) => {
         onClick={handlePrevious}
         disabled={visibleRange[0] === 1}
       >
-        Previous
+        Trang trước
       </button>
       <div className="pagination-controls">
         {Array.from({ length: totalPages }, (_, index) => index + 1)
@@ -54,7 +54,7 @@ const Pagination = ({ totalPages, currentPage, onPageChange }) => {
         onClick={handleNext}
         disabled={visibleRange[1] === totalPages}
       >
-        Next
+        Trang sau
       </button>
     </div>
   );

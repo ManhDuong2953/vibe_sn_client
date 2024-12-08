@@ -32,7 +32,6 @@ const VideoCall = ({ isVideoCall = true, titlePage }) => {
     document.title = titlePage;
   }, [titlePage]);
 
-
   const initialState = {
     isCallAccepted: true,
     isVideoMuted: !isVideoCall,
@@ -204,18 +203,25 @@ const VideoCall = ({ isVideoCall = true, titlePage }) => {
       localStreamRef.current.getTracks().forEach((track) => track.stop());
     }
     peerRef.current.destroy();
+    socket.emit('endCall', { sender_id, receiver_id });
+    if (receiver_id === dataOwner?.user_id) {
+      window.location.href = `/messenger/${
+        dataOwner?.user_id !== sender_id ? sender_id : receiver_id
+      }`;
+      return;
+    }
 
-    dispatch({ type: "END_CALL" });
     if (statusCall && !callEnded) {
       await handleSendMessage("accepted");
     } else {
       await handleSendMessage("missed");
     }
 
-    if (sender_id && receiver_id && dataOwner)
+    if (sender_id && receiver_id && dataOwner) {
       window.location.href = `/messenger/${
         dataOwner?.user_id !== sender_id ? sender_id : receiver_id
       }`;
+    }
   };
   // Call another peer by peer ID
   const callPeer = (id) => {
@@ -259,7 +265,7 @@ const VideoCall = ({ isVideoCall = true, titlePage }) => {
       }
       socket.on("statusCallToUser", (data) => {
         setStateRemote(data);
-        if (statusCall && !data.isCallRemoteAccepted) {
+        if (statusCall && !data.isCallRemoteAccepted && !state.isCallAccepted) {
           handleEndCall();
         }
       });
@@ -286,6 +292,24 @@ const VideoCall = ({ isVideoCall = true, titlePage }) => {
       }
     }
   };
+
+  useEffect(() => {
+    if (socket) {
+        // Listen for the "callEnded" event from the server
+        socket.on('callEnded', (data) => {
+            // Navigate the user back to the message screen
+            if (dataOwner.user_id === receiver_id) {
+                window.location.href = `/messages/${sender_id}`;
+            } else if (dataOwner.user_id === sender_id) {
+                window.location.href = `/messages/${receiver_id}`;
+            }
+        });
+
+        return () => {
+            socket.off('callEnded');
+        };
+    }
+}, [socket, receiver_id]);  
 
   const handleSendMessage = async (status) => {
     try {

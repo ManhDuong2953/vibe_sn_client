@@ -36,6 +36,12 @@ const fetchData = async (url, options = {}) => {
       data = response;
     }
 
+    if (data?.status === true || data?.status === 200 || data?.status === 201 || data?.status === 304) {
+      data.status = true;
+    } else {
+      data.status = false;
+    }
+
     if (data?.status === false && data?.message) {
       toast.error(data?.message);
     } else if (data?.message) {

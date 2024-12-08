@@ -15,8 +15,6 @@ function SuggestItem({ user_id, data = {} }) {
   const dataOwner = useContext(OwnDataContext);
 
   useEffect(() => {
-    console.log(data);
-
     if (data) setLoading(false);
   }, [data]);
 
@@ -49,8 +47,7 @@ function SuggestItem({ user_id, data = {} }) {
       try {
         if (dataOwner && user_id) {
           const mutualCount = await getCountMutualFriends(
-            user_id,
-            dataOwner?.user_id
+            user_id
           );
           setCountMutualFr(mutualCount);
         }

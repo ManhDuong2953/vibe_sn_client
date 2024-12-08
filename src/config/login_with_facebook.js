@@ -28,10 +28,7 @@ async function ShowPopupLoginWithFacebook() {
       type_account: "facebook",
     };
   } catch (error) {
-    const email = error.customData?.email;
-    const credential = FacebookAuthProvider.credentialFromError(error);
     toast.error("Đăng nhập thất bại. Thử lại!");
-    throw error; // Throw error to be handled by the caller
   }
 }
 

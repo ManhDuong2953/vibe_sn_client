@@ -4,9 +4,10 @@ import "./login_face_recognition.scss";
 import BackButton from "../../../component/BackButton/back_button";
 import { getData, postData } from "../../../ultils/fetchAPI/fetch_API";
 import {
-  API_ALL_FACE_RECOGNITION,
+  API_ALL_FACE_RECOGNITION_BY_USER_ID_ENCODE,
   API_LOGIN_FACE_RECOGNITION,
 } from "../../../API/api_server";
+;
 
 const LoginFaceRecognition = ({ titlePage }) => {
   const videoRef = useRef(null);
@@ -14,11 +15,47 @@ const LoginFaceRecognition = ({ titlePage }) => {
   const [loading, setLoading] = useState(false);
   const [dots, setDots] = useState(0);
   const [nameUser, setNameUser] = useState("");
-  let labeledFaceDescriptors = []; // Store labeled face descriptors
+  let labeledFaceDescriptors = [];
+  const [email, setEmail] = useState(""); // Trạng thái email
+  const [accountType, setAccountType] = useState("register"); // Trạng thái loại tài khoản
+  const [isDetect, setIsDetect] = useState(false);
+  const [images, setImages] = useState([]);
 
   useEffect(() => {
     document.title = titlePage;
   }, [titlePage]);
+
+  // Hàm gửi email và loại tài khoản để kiểm tra
+  const handleSubmitCheckEmail = async (e) => {
+    e.preventDefault(); // Ngừng hành vi mặc định của form
+    try {
+      const response = await postData(
+        API_ALL_FACE_RECOGNITION_BY_USER_ID_ENCODE,
+        {
+          user_email: email,
+          type_account: accountType,
+        }
+      );
+      console.log(response?.status);
+      
+      if (response?.status === true || response?.status === 200) {
+        setIsDetect(true);
+        setImages(response?.data);
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  // Xử lý sự kiện thay đổi email
+  const handleEmailChange = (e) => {
+    setEmail(e.target.value); // Cập nhật giá trị email
+  };
+
+  // Xử lý sự kiện thay đổi loại tài khoản
+  const handleAccountTypeChange = (e) => {
+    setAccountType(e.target.value); // Cập nhật loại tài khoản
+  };
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -29,51 +66,52 @@ const LoginFaceRecognition = ({ titlePage }) => {
   }, []);
 
   useEffect(() => {
+    if (!isDetect && images?.length <= 0) return;
     const loadFaceAPI = async () => {
-      await faceapi.nets.faceRecognitionNet.loadFromUri("/models");
-      await faceapi.nets.faceLandmark68Net.loadFromUri("/models");
-      await faceapi.nets.tinyFaceDetector.loadFromUri("/models");
-      await faceapi.nets.faceExpressionNet.loadFromUri("/models");
-      await faceapi.nets.ssdMobilenetv1.loadFromUri("/models");
+      if (!faceapi.nets.faceRecognitionNet.isLoaded) {
+        await faceapi.nets.faceRecognitionNet.loadFromUri("/models");
+      }
+      if (!faceapi.nets.faceLandmark68Net.isLoaded) {
+        await faceapi.nets.faceLandmark68Net.loadFromUri("/models");
+      }
+      if (!faceapi.nets.ssdMobilenetv1.isLoaded) {
+        await faceapi.nets.ssdMobilenetv1.loadFromUri("/models");
+      }
 
-      labeledFaceDescriptors = await loadLabeledImages(); // Load labeled images
+      labeledFaceDescriptors = await loadLabeledImages();
       setLoading(true);
     };
 
     const loadLabeledImages = async () => {
       try {
-        const response = await getData(API_ALL_FACE_RECOGNITION);
-        const data = response.data;
-
-        // Sử dụng Promise.all để tải và xử lý tất cả ảnh song song
+        const data = images;
         const descriptors = await Promise.all(
           data.map(async (record) => {
             try {
               const img = await faceapi.fetchImage(record.media_link);
-              const detections = await faceapi
+              const detection = await faceapi
                 .detectSingleFace(img)
                 .withFaceLandmarks()
                 .withFaceDescriptor();
 
-              if (detections) {
+              if (detection) {
                 return new faceapi.LabeledFaceDescriptors(
                   record.user_id_encode,
-                  [detections.descriptor]
+                  [detection.descriptor]
                 );
               } else {
                 console.warn(
                   `Không thể phát hiện khuôn mặt trong ảnh: ${record.media_link}`
                 );
-                return null; // Trả về null nếu không phát hiện được khuôn mặt
+                return null;
               }
             } catch (err) {
               console.error(`Lỗi khi xử lý ảnh ${record.media_link}:`, err);
-              return null; // Trả về null nếu có lỗi khi xử lý ảnh
+              return null;
             }
           })
         );
 
-        // Loại bỏ các giá trị null (nếu có ảnh không thể xử lý)
         return descriptors.filter((desc) => desc !== null);
       } catch (error) {
         console.error("Lỗi khi tải ảnh và phát hiện khuôn mặt:", error);
@@ -82,30 +120,34 @@ const LoginFaceRecognition = ({ titlePage }) => {
     };
 
     const getCameraStream = () => {
-      if (navigator.mediaDevices.getUserMedia) {
-        navigator.mediaDevices
-          .getUserMedia({ video: true })
-          .then((stream) => {
-            videoRef.current.srcObject = stream;
-            videoRef.current.onloadedmetadata = () => {
-              startFaceDetection(); // Start face detection after video is loaded
-            };
-          })
-          .catch((error) => {
-            console.error("Error accessing the camera: ", error);
-          });
+      navigator.mediaDevices
+        .getUserMedia({ video: { width: 640, height: 480 } })
+        .then((stream) => {
+          videoRef.current.srcObject = stream;
+          videoRef.current.onloadedmetadata = () => {
+            startFaceDetection();
+          };
+        })
+        .catch((error) => {
+          console.error("Lỗi truy cập camera: ", error);
+        });
+    };
+
+    const findBestMatch = (descriptor) => {
+      if (labeledFaceDescriptors.length === 0) return null;
+
+      const faceMatcher = new faceapi.FaceMatcher(labeledFaceDescriptors, 0.4);
+      const bestMatch = faceMatcher.findBestMatch(descriptor);
+
+      if (bestMatch.label === "unknown" || bestMatch.distance > 0.4) {
+        return null;
       }
+      return bestMatch;
     };
 
     const startFaceDetection = async () => {
       const video = videoRef.current;
       const canvas = canvasRef.current;
-      let lastDetectedUserId = null; // Lưu trữ user_id_encode của khuôn mặt trước đó
-
-      if (!video || !canvas) {
-        console.error("Video or canvas element is not defined");
-        return;
-      }
 
       faceapi.matchDimensions(canvas, {
         width: video.videoWidth,
@@ -113,13 +155,8 @@ const LoginFaceRecognition = ({ titlePage }) => {
       });
 
       const detectionInterval = setInterval(async () => {
-        if (video.videoWidth === 0 || video.videoHeight === 0) {
-          console.warn("Video dimensions are not valid");
-          return;
-        }
-
         const detections = await faceapi
-          .detectAllFaces(video, new faceapi.TinyFaceDetectorOptions())
+          .detectAllFaces(video, new faceapi.SsdMobilenetv1Options())
           .withFaceLandmarks()
           .withFaceDescriptors();
 
@@ -128,47 +165,35 @@ const LoginFaceRecognition = ({ titlePage }) => {
           height: video.videoHeight,
         });
 
-        const context = canvas.getContext("2d");
-        if (context) {
-          context.clearRect(0, 0, canvas.width, canvas.height);
-        }
+        const context = canvas.getContext("2d", { willReadFrequently: true });
+        context.clearRect(0, 0, canvas.width, canvas.height);
 
-        resizedDetections.forEach(async (detect) => {
+        let detected = false;
+        let bestDistance = null;
+
+        resizedDetections.forEach((detect) => {
           const bestMatch = findBestMatch(detect.descriptor);
-          if (context) {
-            faceapi.draw.drawFaceLandmarks(canvas, detect);
-          }
+
           if (bestMatch) {
             const user_id_encode = bestMatch.label;
 
-            if (user_id_encode !== lastDetectedUserId) {
+            if (user_id_encode !== nameUser) {
               setNameUser(user_id_encode);
-              await loginWithFaceRecognition(user_id_encode); // Fetch API vào login khi phát hiện khuôn mặt mới
-              lastDetectedUserId = user_id_encode; // Cập nhật khuôn mặt đã nhận diện
+              loginWithFaceRecognition(user_id_encode);
             }
-          } else {
-            setNameUser("");
+
+            detected = true;
           }
+
+          faceapi.draw.drawFaceLandmarks(canvas, detect);
         });
+
+        if (!detected) {
+          setNameUser("Không nhận diện được khuôn mặt phù hợp");
+        }
       }, 200);
 
-      // Cleanup function to stop detection and camera stream
-      return () => {
-        clearInterval(detectionInterval);
-        if (videoRef.current) {
-          const stream = videoRef.current.srcObject;
-          if (stream) {
-            stream.getTracks().forEach((track) => track.stop());
-          }
-        }
-      };
-    };
-
-    const findBestMatch = (descriptor) => {
-      if (labeledFaceDescriptors.length === 0) return null;
-      const faceMatcher = new faceapi.FaceMatcher(labeledFaceDescriptors);
-      const bestMatch = faceMatcher.findBestMatch(descriptor);
-      return bestMatch._label === "Chưa thể xác nhận" ? null : bestMatch; // Return null if no best match
+      return () => clearInterval(detectionInterval);
     };
 
     const loginWithFaceRecognition = async (user_id_encode) => {
@@ -190,7 +215,6 @@ const LoginFaceRecognition = ({ titlePage }) => {
     loadFaceAPI().then(getCameraStream);
 
     return () => {
-      // Cleanup function to stop camera stream
       if (videoRef.current) {
         const stream = videoRef.current.srcObject;
         if (stream) {
@@ -198,35 +222,78 @@ const LoginFaceRecognition = ({ titlePage }) => {
         }
       }
     };
-  }, [titlePage]);
+  }, [isDetect, images]);
 
   return (
     <div className="login-face-recognition">
-      <div className="login-face-recognition-container">
-        <BackButton />
-
-        <h3>Nhận Diện Khuôn Mặt để Đăng Nhập</h3>
-        {!loading ? (
-          <div className="loading text-danger">
-            Đang tải mô hình nhận diện...
-          </div>
-        ) : (
-          <>
-            <div className="video-container">
-              <div className="line"></div>
-              <video ref={videoRef} autoPlay muted></video>
-              <canvas ref={canvasRef} className="overlay"></canvas>
+      {isDetect ? (
+        <div className="login-face-recognition-container">
+          <BackButton />
+          <h3>Nhận Diện Khuôn Mặt để Đăng Nhập</h3>
+          {!loading ? (
+            <div className="loading text-danger">
+              Đang tải mô hình nhận diện...
             </div>
-            {nameUser === "" ? (
-              <h6 className="text-danger">
-                Đang kiểm tra dữ liệu khuôn mặt {".".repeat(dots)}
-              </h6>
-            ) : (
-              <h4>{nameUser}</h4>
-            )}
-          </>
-        )}
-      </div>
+          ) : (
+            <>
+              <div className="video-container">
+                <div className="line"></div>
+                <video ref={videoRef} autoPlay muted></video>
+                <canvas ref={canvasRef} className="overlay"></canvas>
+              </div>
+              {nameUser === "Không nhận diện được khuôn mặt phù hợp" ? (
+                <h6 className="text-warning">{nameUser}</h6>
+              ) : nameUser ? (
+                <h4>{nameUser}</h4>
+              ) : (
+                <h6 className="text-danger">
+                  Đang kiểm tra dữ liệu khuôn mặt {".".repeat(dots)}
+                </h6>
+              )}
+            </>
+          )}
+        </div>
+      ) : (
+        <div id="modal" class="modal">
+          <div class="modal-content">
+            <div class="header-modal">
+              <h2>Nhập email để xác thực</h2>
+            </div>
+            <div class="content-modal">
+              <div class="input-group">
+                <span class="icon">📧</span>
+                <input 
+                  type="email" 
+                  placeholder="Email" 
+                  value={email} 
+                  onChange={handleEmailChange} 
+                  required 
+                />
+              </div>
+              <div class="account-type-select">
+                <label for="accountType">Loại tài khoản</label>
+                <select 
+                  id="accountType" 
+                  value={accountType} 
+                  onChange={handleAccountTypeChange}
+                >
+                  <option value="register">Đăng ký bằng Email</option>
+                  <option value="google">Google</option>
+                  <option value="facebook">Facebook</option>
+                </select>
+              </div>
+            </div>
+            <div class="footer-modal">
+              <a href="/login">
+                <button class="cancel-btn">Huỷ</button>
+              </a>
+              <button class="submit-btn" onClick={handleSubmitCheckEmail}>
+                Xong
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

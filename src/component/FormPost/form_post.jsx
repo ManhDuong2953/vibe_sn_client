@@ -7,13 +7,6 @@ import { BsEmojiLaughingFill } from "react-icons/bs";
 import { IoIosCloseCircle } from "react-icons/io";
 import { IoNewspaperSharp } from "react-icons/io5";
 
-import * as FilePond from "filepond";
-import "filepond/dist/filepond.min.css";
-import FilePondPluginImagePreview from "filepond-plugin-image-preview";
-import "filepond-plugin-image-preview/dist/filepond-plugin-image-preview.css";
-import FilePondPluginFileEncode from "filepond-plugin-file-encode";
-import FilePondPluginFileValidateSize from "filepond-plugin-file-validate-size";
-import FilePondPluginImageExifOrientation from "filepond-plugin-image-exif-orientation";
 import TextEditor from "../../ultils/textEditor/react_draft_wysiwyg";
 import { OwnDataContext } from "../../provider/own_data";
 import { postData } from "../../ultils/fetchAPI/fetch_API";
@@ -21,16 +14,19 @@ import { API_CREATE_POST, API_GROUP_POST_CREATE } from "../../API/api_server";
 import { LoadingIcon } from "../../ultils/icons/loading";
 import { toast } from "react-toastify";
 
-FilePond.registerPlugin(
+import { FilePond, registerPlugin } from "react-filepond";
+import "filepond/dist/filepond.min.css";
+import FilePondPluginImagePreview from "filepond-plugin-image-preview";
+import "filepond-plugin-image-preview/dist/filepond-plugin-image-preview.css";
+import FilePondPluginFileEncode from "filepond-plugin-file-encode";
+import FilePondPluginFileValidateSize from "filepond-plugin-file-validate-size";
+import FilePondPluginImageExifOrientation from "filepond-plugin-image-exif-orientation";
+registerPlugin(
   FilePondPluginFileEncode,
   FilePondPluginFileValidateSize,
   FilePondPluginImageExifOrientation,
   FilePondPluginImagePreview
 );
-
-FilePond.setOptions({
-  labelIdle: "Kéo & Thả tập tin hoặc Duyệt",
-});
 
 export default function FormPost({ group_id = undefined }) {
   const [showEmotion, setShowEmotion] = useState(false);
@@ -43,7 +39,6 @@ export default function FormPost({ group_id = undefined }) {
   const [selectedFiles, setSelectedFiles] = useState([]);
   const [loading, setLoading] = useState(false); // Default
   const [isDisabled, setIsDisabled] = useState(true);
-
   useEffect(() => {
     if (dataOwner) setPrivacy(dataOwner?.post_privacy);
   }, [dataOwner]);
@@ -77,20 +72,6 @@ export default function FormPost({ group_id = undefined }) {
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, [showPopup]);
-  const filePondRef = useRef(null); // Tạo ref để quản lý FilePond
-
-  useEffect(() => {
-    if (showImage && filePondRef.current) {
-      FilePond.create(filePondRef.current, {
-        onaddfile: (err, file) => {
-          if (err) return;
-          setSelectedFiles((prevFiles) => [...prevFiles, file.file]);
-        },
-      });
-    } else if (filePondRef.current) {
-      FilePond.destroy(filePondRef.current);
-    }
-  }, [showImage]);
 
   const toggleEmotion = () => setShowEmotion(!showEmotion);
   const toggleImg = () => setShowImage(!showImage);
@@ -132,8 +113,8 @@ export default function FormPost({ group_id = undefined }) {
       formData.append("react_emoji", selectedEmoji);
     }
     formData.append("post_privacy", group_id ? 1 : privacy);
-  
-    selectedFiles.forEach((file) => formData.append("files", file));
+
+    selectedFiles.forEach((file) => formData.append("files", file.file));
 
     try {
       const response = await postData(API_CREATE_POST, formData, {
@@ -282,14 +263,14 @@ export default function FormPost({ group_id = undefined }) {
         </i>
         <TextEditor getText={handleSetText} />
         {showImage && (
-          <input
-            type="file"
-            className="filepond"
-            ref={filePondRef} // Gắn ref vào input
-            name="filepond"
-            multiple
-            data-max-file-size="100MB"
-            data-max-files="10"
+          <FilePond
+            files={selectedFiles}
+            onupdatefiles={setSelectedFiles}
+            allowMultiple={true}
+            maxFiles={10}
+            name="files"
+            labelIdle='Kéo và thả ảnh hoặc <span class="filepond--label-action">Chọn ảnh</span>'
+            acceptedFileTypes={["image/*", "video/*"]}
           />
         )}
       </div>

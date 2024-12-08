@@ -123,8 +123,6 @@ export default function CommentItem({ data, user_id, fetchData }) {
     }
   };
 
-  // console.log(data);
-
   // Đăng subcomment
   const handleSubmitComment = async (e) => {
     try {

@@ -84,11 +84,12 @@ function Comment({ setShowCommentPage, data }) {
   useEffect(() => {
     if (!data || !dataOwner) return;
     data?.reacts?.forEach((element) => {
-      if (element?.user_id === dataOwner?.user_id) {
+      if (element?.user_id === dataOwner?.user_id) {  
         setActiveIcon(element.react);
+        setActiveTitle(icons[element.react]?.props?.title)
       }
     });
-  }, [dataOwner]);
+  }, [dataOwner, data]);
 
   // Xử lý khi click icon để tym
   const handleIconClick = async (icon, title) => {
@@ -216,14 +217,24 @@ function Comment({ setShowCommentPage, data }) {
     }
   }, [showCommentContainer, data?.post_id]);
 
-  const sharePostHandle = async () => {
-    try {
-      const response = await postData(API_SHARE_POST(data?.post_id));
-      if (response?.status) {
-        toast.success("Bài viết đã được lưu vào trang cá nhân của bạn!");
+  const sharePostHandle = async (text, post_id) => {
+    const domain = `${window.location.protocol}//${window.location.host}`; // Lấy domain
+
+    if (navigator.share) {
+      try {
+        console.log(domain + "/post/" + post_id);
+        
+        await navigator.share({
+          title: "Bài viết được tạo trên nền tảng mạng xã hội Vibe",
+          text: "Bấm vào đây để truy cập bài viết",
+          url: domain + "/post/" + post_id, // Chia sẻ domain
+        });
+      } catch (error) {
+        console.error("Lỗi khi chia sẻ:", error);
+        toast.error("Chia sẻ không thành công.");
       }
-    } catch (error) {
-      console.error(error);
+    } else {
+      toast.warning("Trình duyệt không hỗ trợ chia sẻ.");
     }
   };
 
@@ -271,9 +282,9 @@ function Comment({ setShowCommentPage, data }) {
             Bình luận
           </div>
           {dataOwner?.user_id !== data?.user_id && (
-            <div className="share-container" onClick={() => sharePostHandle()}>
+            <div className="share-container" onClick={() => sharePostHandle(data?.post_text, data?.post_id)}>
               <VscShare />
-              Lưu
+              Chia sẻ
             </div>
           )}
         </div>

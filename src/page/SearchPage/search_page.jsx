@@ -144,7 +144,6 @@ const GroupResults = ({ searchTerm }) => {
   useEffect(() => {
     fetchSearchGroups();
   }, [searchTerm]);
-  console.log(data);
 
   return (
     <React.Fragment>

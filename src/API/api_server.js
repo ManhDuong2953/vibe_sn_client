@@ -28,6 +28,7 @@ const API_CREATE_FACE_RECOGNITION_BY_ID = `${API_HOST}/users/face-recognition/cr
 const API_GET_FACE_RECOGNITION_BY_ID = `${API_HOST}/users/face-recognition/get-face-recognition/`;
 const API_DELETE_FACE_RECOGNITION_BY_ID = `${API_HOST}/users/face-recognition/delete-face-recognition/`;
 const API_ALL_FACE_RECOGNITION = `${API_HOST}/users/face-recognition/get-all-face-recognition`;
+const API_ALL_FACE_RECOGNITION_BY_USER_ID_ENCODE = `${API_HOST}/users/face-recognition/get-all-face-recognition-by-id`;
 const API_LOGIN_FACE_RECOGNITION = `${API_HOST}/users/face-recognition/login-face-recognition`;
 
 //Token
@@ -46,10 +47,17 @@ const API_FRIEND_REQUEST = (id) => API_HOST + "/users/friend/request/" + id;
 const API_FRIEND_ACCEPT = (id) => API_HOST + "/users/friend/accept/" + id;
 const API_FRIEND_STATUS = API_HOST + "/users/friend/status/";
 const API_FRIEND_LIST = (id) => API_HOST + "/users/friend/list/" + id;
+const API_COUNT_MANUAL_FRIEND = (id) => API_HOST + "/users/friend/get-count-manual-friend/" + id;
 const API_FRIEND_LIST_REQUEST = API_HOST + "/users/friend/requests/list";
 const API_FRIEND_DELETE = API_HOST + "/users/friend/delete";
 const API_FRIEND_SUGGEST = API_HOST + "/users/friend/list-suggest";
 const API_FRIEND_DATE_OF_BIRTH = API_HOST + "/users/friend/list-dob";
+const API_FRIEND_CREATE_BLOCK = (id) =>
+  API_HOST + "/users/friend/create-block/" + id;
+const API_FRIEND_CHECK_BLOCK = (id) =>
+  API_HOST + "/users/friend/check-block/" + id;
+const API_FRIEND_DELETE_BLOCK = (id) =>
+  API_HOST + "/users/friend/delete-block/" + id;
 
 // Profile Heart API endpoint
 const API_PROFILE_HEART_GET = (id) =>
@@ -203,6 +211,7 @@ export {
   API_DELETE_FACE_RECOGNITION_BY_ID,
   API_LOGIN_FACE_RECOGNITION,
   API_ALL_FACE_RECOGNITION,
+  API_ALL_FACE_RECOGNITION_BY_USER_ID_ENCODE,
   API_UPDATE_USER,
   API_UPDATE_USER_PASSWORD,
   API_DELETE_USER,
@@ -292,4 +301,8 @@ export {
   API_LIST_NOTIFICATION,
   API_DELETE_ALL_NOTIFICATION,
   API_DELETE_ALL_NOTICE_CURRRENT,
+  API_FRIEND_CREATE_BLOCK,
+  API_FRIEND_CHECK_BLOCK,
+  API_FRIEND_DELETE_BLOCK,
+  API_COUNT_MANUAL_FRIEND
 };

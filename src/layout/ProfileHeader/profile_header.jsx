@@ -51,9 +51,12 @@ function ProfileHeader({ classNameActive, userId }) {
 
   useEffect(() => {
     const fetchFriends = async () => {
-      if (dataOwner && dataOwner.user_id !== userId) {
+      if (dataOwner && dataOwner?.user_id !== userId) {
+        console.log(dataOwner);
         try {
-          const response = await getCountMutualFriends(dataOwner.user_id, userId);
+          const response = await getCountMutualFriends(
+            userId
+          );
           setCountMutual(response);
         } catch (error) {
           console.error("Failed to fetch friends:", error);
@@ -120,6 +123,8 @@ function ProfileHeader({ classNameActive, userId }) {
   const handleClickSendRequest = async () => {
     try {
       const response = await postData(API_FRIEND_REQUEST(userId));
+      console.log(response);
+
       if (response?.status) {
         window.location.reload();
       }

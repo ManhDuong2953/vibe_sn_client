@@ -1,9 +1,9 @@
 [data-theme="dark"] {
-  --bg-list-chat: url("https://getwallpapers.com/wallpaper/full/f/8/5/250440.jpg");
+  --bg-list-chat: url("../../www/bg/250440.jpg");
 }
 
 [data-theme="light"] {
-  --bg-list-chat: url("https://img.freepik.com/premium-photo/simple-abstract-geometric-pattern-background-color-background-website-design-decoration_86390-7410.jpg");
+  --bg-list-chat: url("../../www/bg/simple-abstract-geometric-pattern-background-color-background-website-design-decoration_86390-7410.avif");
 }
 
 .container-PIN {
@@ -57,6 +57,10 @@
   margin-top: 56px;
   font-family: Arial, sans-serif;
   color: var(--text-color);
+  h5.text-center {
+    padding: 10px 0;
+    margin: 10px 0;
+  }
   .react-draggable {
     display: none;
     @media (max-width: 800px) {
@@ -464,7 +468,7 @@
         align-self: self-start;
         margin: 5px;
         font-size: 9px;
-        &.sender{
+        &.sender {
           align-self: self-end;
         }
       }

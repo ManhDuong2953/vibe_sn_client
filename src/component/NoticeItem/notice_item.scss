@@ -1,42 +1,51 @@
 li.notice-item {
   margin: 4px -4px;
+  position: relative; // Để delete-icon có thể dùng absolute
+
   a {
-    border-radius: 2px;
-    padding: 4px;
+    border-radius: 10px;
+    padding: 10px;
     text-decoration: none;
     display: flex;
     flex-direction: row;
     align-items: center;
+    background-color: var(--hover-color);
+
     .avt-notice {
       flex: 1;
       position: relative;
+
       img {
+        width: 50px;
+        height: 50px;
+        object-fit: cover;
         padding: 3px;
-        width: 100%;
-        height: 100%;
         aspect-ratio: 1;
         border-radius: 50%;
-        object-fit: cover;
       }
+
       .icon-notices {
         display: flex;
         position: absolute;
         bottom: 5px;
-        right: 0;
-        padding: 5px;
+        right: 10px;
+        padding: 3px;
         border-radius: 50px;
         background-color: var(--primary-color);
+
         svg {
           font-size: 16px !important;
+
           path {
             color: white !important;
           }
         }
       }
     }
+
     .content-notice {
       flex: 5;
-      margin-left: 5px;
+
       p {
         font-size: 0.8em;
         display: -webkit-box;
@@ -45,14 +54,49 @@ li.notice-item {
         overflow: hidden;
         text-overflow: ellipsis;
         white-space: normal;
+        font-weight: 500;
       }
+
       b {
-        font-size: 0.7em;
-        color: var(--active-color);
+        font-size: 0.6em;
+        color: var(--success-color);
       }
     }
   }
+
   a:hover {
     background-color: var(--border-color);
+  }
+
+  // Thêm kiểu dáng cho delete-icon
+  .delete-icon {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    right: 17px;
+    display: flex;
+    background-color: rgba(255, 0, 0, 0.1725490196);
+    border-radius: 50%;
+    padding: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, opacity 0.3s ease;
+    opacity: 0;
+    align-items: center;
+    justify-content: center;
+    svg {
+      font-size: 1.2rem;
+      path {
+        color: red !important;
+      }
+    }
+
+    // Hiển thị khi hover vào li.notice-item
+    &:hover {
+      background-color: rgba(255, 0, 0, 0.1); // Nền xám nhạt khi hover
+    }
+  }
+
+  &:hover .delete-icon {
+    opacity: 1; // Hiển thị icon khi hover vào li.notice-item
   }
 }

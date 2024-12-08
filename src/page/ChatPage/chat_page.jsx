@@ -16,6 +16,7 @@ import {
   FaMicrophone,
   FaUserLock,
   FaFileDownload,
+  FaUserAltSlash,
 } from "react-icons/fa";
 import { AiOutlineSearch } from "react-icons/ai";
 import "./chat_page.scss";
@@ -47,6 +48,9 @@ import {
   API_DELETE_KEYS_PAIR,
   API_DELETE_MESSAGE,
   API_DELETE_MESSAGE_OWNER_SIDE,
+  API_FRIEND_CHECK_BLOCK,
+  API_FRIEND_CREATE_BLOCK,
+  API_FRIEND_DELETE_BLOCK,
   API_GET_ALL_MESSAGE,
   API_GET_INFO_USER_PROFILE_BY_ID,
   API_GET_PRIVATE_KEY,
@@ -121,6 +125,7 @@ function ChatMessengerPage({ titlePage }) {
   const [isHasCode, setIsHasCode] = useState(false);
   // loading
   const [loading, setLoading] = useState(false);
+  const [blockUser, setBlockUser] = useState({});
   const [PIN, setPIN] = useState(["", "", "", "", "", ""]);
   const private_key = localStorage.getItem("private_key");
   // set tin nhắn nào đang được hover
@@ -323,6 +328,11 @@ function ChatMessengerPage({ titlePage }) {
         setListUsersOnline(data);
       });
 
+      // Đăng ký sự kiện onlineUsers
+      socket.on("receivedBlockUser", (data) => {
+        setBlockUser(data);
+      });
+
       const getDataReceiver = async () => {
         try {
           const response = await getData(
@@ -338,6 +348,9 @@ function ChatMessengerPage({ titlePage }) {
       getDataReceiver();
     }
   }, [id_receiver]);
+
+
+
   // lắng nghe sự kiện nhận tin nhắn
   useEffect(() => {
     if (socket && dataOwner && id_receiver) {
@@ -605,32 +618,36 @@ function ChatMessengerPage({ titlePage }) {
 
   // sử lý khi ấn call
   const handleClickCall = (type_call) => {
-    if (
-      socket &&
-      id_receiver &&
-      dataOwner?.user_id &&
-      listUsersOnline &&
-      listUsersOnline?.includes(id_receiver)
-    ) {
-      socket.emit("registerUser", { user_id: dataOwner?.user_id });
-      const receiver_id = id_receiver;
-      const sender_id = dataOwner?.user_id;
-      // Send call notification to the receiver
-      socket.emit("callUser", {
-        receiver_id,
-        sender_id,
-        link_call: `/messenger/${type_call}?ROOM_ID=${
-          receiver_id + sender_id
-        }&sender_id=${sender_id}&receiver_id=${receiver_id}`,
-      });
-
-      navigate(
-        `/messenger/${type_call}?ROOM_ID=${
-          id_receiver + dataOwner?.user_id
-        }&sender_id=${dataOwner?.user_id}&receiver_id=${id_receiver}`
-      );
+    if (blockUser?.requestor_id) {
+      toast.error("Rất tiếc cuộc gọi đã bị chặn");
     } else {
-      toast.info("Người dùng này không trực tuyến!");
+      if (
+        socket &&
+        id_receiver &&
+        dataOwner?.user_id &&
+        listUsersOnline &&
+        listUsersOnline?.includes(id_receiver)
+      ) {
+        socket.emit("registerUser", { user_id: dataOwner?.user_id });
+        const receiver_id = id_receiver;
+        const sender_id = dataOwner?.user_id;
+        // Send call notification to the receiver
+        socket.emit("callUser", {
+          receiver_id,
+          sender_id,
+          link_call: `/messenger/${type_call}?ROOM_ID=${
+            receiver_id + sender_id
+          }&sender_id=${sender_id}&receiver_id=${receiver_id}`,
+        });
+
+        navigate(
+          `/messenger/${type_call}?ROOM_ID=${
+            id_receiver + dataOwner?.user_id
+          }&sender_id=${dataOwner?.user_id}&receiver_id=${id_receiver}`
+        );
+      } else {
+        toast.info("Người dùng này không trực tuyến!");
+      }
     }
   };
 
@@ -741,6 +758,55 @@ function ChatMessengerPage({ titlePage }) {
     }
   };
 
+  const handleBlockUser = async () => {
+    try {
+      const response = await getData(API_FRIEND_CREATE_BLOCK(id_receiver));
+      if (response?.status) {
+        if (socket) {
+          socket.emit("sendBlockUser", {
+            requestor_id: dataOwner?.user_id,
+            receiver_id: id_receiver,
+            status: "block"
+          });
+        }
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const handleDeleteBlock = async () => {
+    try {
+      const response = await deleteData(API_FRIEND_DELETE_BLOCK(id_receiver));
+      if (response?.status) {
+        if (socket) {
+          socket.emit("sendBlockUser", {
+            requestor_id: dataOwner?.user_id,
+            receiver_id: id_receiver,
+            status: "unblock"
+          });
+        }
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const checkBlock = async () => {
+    try {
+      const response = await getData(API_FRIEND_CHECK_BLOCK(id_receiver));
+      if (response?.status) {
+        setBlockUser(response?.data);
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  useLayoutEffect(() => {
+    if (!id_receiver) return;
+    checkBlock();
+  }, [id_receiver]);
   return (
     <React.Fragment>
       <NavigativeBar />
@@ -1067,64 +1133,74 @@ function ChatMessengerPage({ titlePage }) {
                   </div>
                 )}
                 {isHasKeysPairReceiver ? (
-                  <div className="chat-input">
-                    {showFilePond && (
-                      <FilePond
-                        files={files}
-                        allowMultiple={true}
-                        onupdatefiles={setFiles}
-                        labelIdle='Kéo và Thả tệp phương tiện or <span class="filepond--label-action">Duyệt</span>'
-                      />
-                    )}
-                    {showAudio && (
-                      <div
-                        className="hear"
-                        onClick={isRecording ? stopRecording : startRecording}
-                      >
-                        {loading ? (
-                          <LoadingIcon />
-                        ) : isRecording ? (
-                          <>
-                            <FaStop /> Đang nghe...
-                          </>
-                        ) : (
-                          <>
-                            <FaMicrophone /> Bấm để ghi âm
-                          </>
-                        )}
-                      </div>
-                    )}
-                    <div className="input-container">
-                      <RiChatVoiceFill
-                        onClick={() => setShowAudio(!showAudio)}
-                      />
-                      <MdPermMedia
-                        onClick={() => setShowFilePond(!showFilePond)}
-                      />
-                      <input
-                        autoFocus={true}
-                        ref={inputRef}
-                        type="text"
-                        placeholder="Aa"
-                        onFocus={() => setIsTyping(true)}
-                        onBlur={() => setIsTyping(false)}
-                        value={message}
-                        onChange={(e) => setMessage(e.target.value)}
-                        onKeyDown={(e) =>
-                          !sendLoading && e.key === "Enter" && handleSend()
-                        }
-                      />
-                      {sendLoading ? (
-                        <LoadingIcon />
-                      ) : (
-                        <div className="btn-func">
-                          {(message !== "" || files.length > 0) && (
-                            <IoSend className="send-btn" onClick={handleSend} />
+                  blockUser?.receiver_id ? (
+                    <h5 className="text-center">
+                      Hiện bạn không thể trò chuyện trực tiếp với người này vì
+                      kết nối đã bị chặn.
+                    </h5>
+                  ) : (
+                    <div className="chat-input">
+                      {showFilePond && (
+                        <FilePond
+                          files={files}
+                          allowMultiple={true}
+                          onupdatefiles={setFiles}
+                          labelIdle='Kéo và Thả tệp phương tiện or <span class="filepond--label-action">Duyệt</span>'
+                        />
+                      )}
+                      {showAudio && (
+                        <div
+                          className="hear"
+                          onClick={isRecording ? stopRecording : startRecording}
+                        >
+                          {loading ? (
+                            <LoadingIcon />
+                          ) : isRecording ? (
+                            <>
+                              <FaStop /> Đang nghe...
+                            </>
+                          ) : (
+                            <>
+                              <FaMicrophone /> Bấm để ghi âm
+                            </>
                           )}
                         </div>
                       )}
+                      <div className="input-container">
+                        <RiChatVoiceFill
+                          onClick={() => setShowAudio(!showAudio)}
+                        />
+                        <MdPermMedia
+                          onClick={() => setShowFilePond(!showFilePond)}
+                        />
+                        <input
+                          autoFocus={true}
+                          ref={inputRef}
+                          type="text"
+                          placeholder="Aa"
+                          onFocus={() => setIsTyping(true)}
+                          onBlur={() => setIsTyping(false)}
+                          value={message}
+                          onChange={(e) => setMessage(e.target.value)}
+                          onKeyDown={(e) =>
+                            !sendLoading && e.key === "Enter" && handleSend()
+                          }
+                        />
+                        {sendLoading ? (
+                          <LoadingIcon />
+                        ) : (
+                          <div className="btn-func">
+                            {(message !== "" || files.length > 0) && (
+                              <IoSend
+                                className="send-btn"
+                                onClick={handleSend}
+                              />
+                            )}
+                          </div>
+                        )}
+                      </div>
                     </div>
-                  </div>
+                  )
                 ) : (
                   <h5 className="text-center">
                     Người dùng này chưa tạo mã PIN thực hiện mã hoá đầu cuối
@@ -1190,8 +1266,33 @@ function ChatMessengerPage({ titlePage }) {
                         handleDeleteAllMessage();
                       }}
                     >
-                      <MdDeleteForever /> Xóa đoạn chat
+                      <MdDeleteForever style={{ marginRight: "5px" }} /> Xóa
+                      đoạn chat
                     </p>
+                    {blockUser &&
+                      blockUser?.requestor_id === dataOwner?.user_id && (
+                        <p
+                          className="delete"
+                          onClick={() => {
+                            handleDeleteBlock();
+                          }}
+                        >
+                          <FaUserAltSlash style={{ marginRight: "5px" }} /> Bỏ
+                          chặn
+                        </p>
+                      )}
+
+                    {!blockUser?.requestor_id && (
+                      <p
+                        className="delete"
+                        onClick={() => {
+                          handleBlockUser();
+                        }}
+                      >
+                        <FaUserAltSlash style={{ marginRight: "5px" }} /> Chặn
+                        người dùng
+                      </p>
+                    )}
                   </div>
                 </div>
               )}

@@ -19,8 +19,14 @@ import { darkHandle, lightHandle } from "../../redux/Reducer/reducer";
 import { IoListOutline, IoSettingsSharp } from "react-icons/io5";
 import { OwnDataContext } from "../../provider/own_data";
 import { useSocket } from "../../provider/socket_context";
-import { getData } from "../../ultils/fetchAPI/fetch_API";
-import { API_LIST_NOTIFICATION } from "../../API/api_server";
+import { deleteData, getData } from "../../ultils/fetchAPI/fetch_API";
+import {
+  API_DELETE_ALL_NOTICE_CURRRENT,
+  API_DELETE_ALL_NOTIFICATION,
+  API_DELETE_NOTIFICATION_BY_ID,
+  API_LIST_NOTIFICATION,
+} from "../../API/api_server";
+import { Button, Popover, Typography } from "@mui/material";
 
 function NavigativeBar() {
   const navigate = useNavigate();
@@ -60,7 +66,30 @@ function NavigativeBar() {
   }, [darkOn, dispatch]);
 
   // Use useToggleListener hook for bell-notice--icon and personal-icon
-  useToggleListener("bell-notice--icon", "box-notice");
+  const [anchorEl, setAnchorEl] = useState(null);
+
+  const handleClick = async (event) => {
+    setAnchorEl(event.currentTarget);
+    setUnseenCount(0);
+    try {
+      const response = await deleteData(API_DELETE_ALL_NOTICE_CURRRENT);
+      if (response?.status === true) {
+        setUnseenCount(0);
+        setListNotifications((prevList) =>
+          prevList.map((notice) => ({ ...notice, is_seen: 1 }))
+        );
+      }
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
+
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
+  const open = Boolean(anchorEl);
+  const id = open ? "simple-popover" : undefined;
   useToggleListener("personal-icon", "box-personal");
   useEffect(() => {
     const currentPath =
@@ -87,12 +116,22 @@ function NavigativeBar() {
   }, []);
 
   const [listNotifications, setListNotifications] = useState([]);
+  const [unseenCount, setUnseenCount] = useState(0);
+
   const fetchNotifications = async () => {
     const response = await getData(API_LIST_NOTIFICATION);
     if (response?.status) {
       setListNotifications(response.data);
     }
   };
+
+  // Theo dõi sự thay đổi của listNotifications để tính số lượng thông báo chưa xem
+  useEffect(() => {
+    const countUnseen = listNotifications.filter(
+      (notice) => notice.is_seen === 0
+    ).length;
+    setUnseenCount(countUnseen);
+  }, [listNotifications]);
 
   useEffect(() => {
     try {
@@ -101,17 +140,42 @@ function NavigativeBar() {
     } catch (error) {
       console.error(error.message);
     }
-  }, []);
+  }, [dataOwner]);
 
   useEffect(() => {
     if (socket) {
-      socket.on("send_notice", (data) => {
-        console.log(data);
+      socket.on("send_notice", (data) => {        
+        setListNotifications((prevData) => [data, ...prevData]);
       });
     }
   }, [socket]);
 
-  console.log(listNotifications);
+  const handleDeleteNotice = async (notice_id, e) => {
+    e.preventDefault();
+    try {
+      const response = await deleteData(
+        API_DELETE_NOTIFICATION_BY_ID(notice_id)
+      );
+      if (response?.status === true) {
+        setListNotifications((prevList) =>
+          prevList.filter((notice) => notice.notice_id !== notice_id)
+        );
+      }
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
+
+  const handleDeleteAllNotice = async () => {
+    try {
+      const response = await deleteData(API_DELETE_ALL_NOTIFICATION);
+      if (response?.status === true) {
+        setListNotifications([]);
+      }
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
 
   return (
     <React.Fragment>
@@ -181,30 +245,48 @@ function NavigativeBar() {
           </ul>
           <div className="navbar-side--right">
             <div className="bell-notice--icon">
-              <div className="icon-notice--container">
+              <div className="icon-notice--container" onClick={handleClick}>
                 <BiSolidBellRing />
-                <p>4</p>
+                {unseenCount > 0 && <p> {unseenCount} </p>}
               </div>
-              <ul className="box-notice">
-                <div className="box-notice--header">
-                  <h1 lang="vi">Thông báo</h1>
-                  <p className="delete-all">Xóa tất cả</p>
-                </div>
-                <div className="box-notice--body">
-                  <ul className="list-notice">
-                    <NoticeItem />
-                    <NoticeItem />
-                    <NoticeItem />
-                    <NoticeItem />
-                    <NoticeItem />
-                    <NoticeItem />
-                    <NoticeItem />
-                    <NoticeItem />
-                    <NoticeItem />
-                    <NoticeItem />
-                  </ul>
-                </div>
-              </ul>
+
+              <Popover
+                id={id}
+                open={open}
+                anchorEl={anchorEl}
+                onClose={handleClose}
+                anchorOrigin={{
+                  vertical: "bottom",
+                  horizontal: "right",
+                }}
+              >
+                <ul className="box-notice">
+                  <div className="box-notice--header">
+                    <h3 lang="vi">Thông báo</h3>
+                    <p
+                      className="delete-all"
+                      onClick={() => handleDeleteAllNotice()}
+                    >
+                      Xóa tất cả
+                    </p>
+                  </div>
+                  <div className="box-notice--body">
+                    <ul className="list-notice">
+                      {listNotifications.length > 0 ? (
+                        listNotifications?.map((item, index) => (
+                          <NoticeItem
+                            key={index}
+                            data={item}
+                            handleDeleteNotice={handleDeleteNotice}
+                          />
+                        ))
+                      ) : (
+                        <h4 className="box-center">Không có thông báo nào.</h4>
+                      )}
+                    </ul>
+                  </div>
+                </ul>
+              </Popover>
             </div>
             <div className="personal-icon">
               <img

@@ -11,10 +11,10 @@ const useToggleListener = (iconClassName, boxClassName = null) => {
                 icon.classList.toggle("active");
             }
 
-            // Check if box exists and click occurred inside the box
-            if (box && box.contains(e.target)) {
-                return;
-            }
+            // // Check if box exists and click occurred inside the box
+            // if (box && box.contains(e.target)) {
+            //     return;
+            // }
 
             // If click occurred outside the box or there's no boxClassName provided, remove active
             if (icon && !icon.contains(e.target)) {

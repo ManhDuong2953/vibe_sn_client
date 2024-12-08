@@ -1,5 +1,5 @@
 // src/components/Login.jsx
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { FaFacebook, FaGoogle } from "react-icons/fa";
 import "./login_page.scss";
 import logo from "../../www/logo.png"; // Add your logo image here
@@ -19,6 +19,7 @@ import {
 import getToken from "../../ultils/getToken/get_token";
 import { LuScanFace } from "react-icons/lu";
 import { toast } from "react-toastify";
+import { LoadingIcon } from "../../ultils/icons/loading";
 
 const LoginPage = ({ titlePage }) => {
   useEffect(() => {
@@ -26,7 +27,7 @@ const LoginPage = ({ titlePage }) => {
   }, [titlePage]);
 
   const navigate = useNavigate();
-
+  const [loading, setLoading] = useState(false);
   useEffect(() => {
     const storedToken = getToken();
     if (storedToken) {
@@ -34,20 +35,27 @@ const LoginPage = ({ titlePage }) => {
     }
   }, []);
 
-  const handleLogin = async (e) => {
+  const handleLogin = async (e) => {    
     e.preventDefault();
-    const data = getDataForm(".form-login");
-    const response = await postData(API_LOGIN_POST, {
-      type_account: "register",
-      ...data,
-    });
-    if (response?.status) {
-      navigate("/");
+    try {
+      const data = getDataForm(".form-login");
+      setLoading(true);
+      const response = await postData(API_LOGIN_POST, {
+        type_account: "register",
+        ...data,
+      });
+      if (response?.status) {
+        navigate("/");
+      }
+    } catch (error) {
+    } finally {
+      setLoading(false);
     }
   };
 
   const handleLoginSocial = async (payload) => {
     try {
+      setLoading(true);
       const response = await getData(
         API_CHECK_EXIST_USER(`uid_${payload?.user_id}`)
       );
@@ -57,6 +65,7 @@ const LoginPage = ({ titlePage }) => {
           user_password: payload?.user_password,
           type_account: payload?.type_account,
         });
+        
         if (responseLogin?.status) {
           navigate("/");
         } else {
@@ -69,12 +78,14 @@ const LoginPage = ({ titlePage }) => {
           API_SIGNUP_SOCIALNETWORK_POST,
           payload
         );
-        if (responseSignup) {
+        if (responseSignup?.status) {
           await handleLoginSocial(payload);
         }
       }
     } catch (error) {
       console.log(error.message);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -118,9 +129,13 @@ const LoginPage = ({ titlePage }) => {
             <Link to="/login/forgot-password">
               <p className="forgot-password ">Quên mật khẩu?</p>
             </Link>
-            <button type="submit" className="login-button">
-              ĐĂNG NHẬP
-            </button>
+            {loading ? (
+              <LoadingIcon />
+            ) : (
+              <button type="submit" className="login-button">
+                ĐĂNG NHẬP
+              </button>
+            )}
           </form>
           <Link to="/login/face-recognition/">
             <LuScanFace className="icon-face" />

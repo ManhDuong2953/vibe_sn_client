@@ -1,7 +1,17 @@
 .content.content-text {
+  padding: 15px 15px 7px;
+  a {
+    color: aqua;
+  }
+}
+.toggle-text {
+  color: #007bff;
+  cursor: pointer;
+  font-weight: bold;
   padding-right: 15px;
   padding-left: 15px;
-  a{
-    color: aqua;
+  font-size: 0.6;
+  &:hover {
+    text-decoration: underline;
   }
 }

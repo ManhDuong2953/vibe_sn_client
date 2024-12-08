@@ -37,7 +37,6 @@ function MarketplaceDetail({ titlePage }) {
   const fetchProductById = async () => {
     const response = await getData(API_MARKETPLACE_GET_BY_ID(id_product));
     if (response?.status) {
-      console.log(response.data);
       setData(response.data);
     }
   };

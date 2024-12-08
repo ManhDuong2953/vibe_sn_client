@@ -49,8 +49,7 @@ function ProfileRequestItem({ user_id }) {
       try {
         if (dataOwner && user_id) {
           const mutualCount = await getCountMutualFriends(
-            user_id,
-            dataOwner?.user_id
+            user_id
           );
           setCountMutualFr(mutualCount);
         }

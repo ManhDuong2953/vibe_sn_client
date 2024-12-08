@@ -3,7 +3,7 @@ import {
   API_WEATHER_CURRENT,
   API_WEATHER_FORECAST,
 } from "../API/api_fe";
-import { API_FRIEND_LIST } from "../API/api_server";
+import { API_COUNT_MANUAL_FRIEND, API_FRIEND_LIST } from "../API/api_server";
 import { getData } from "../ultils/fetchAPI/fetch_API";
 import { getCurrentLocation } from "../ultils/getLocation/get_location";
 
@@ -46,19 +46,14 @@ export const getAllFriends = async (user_id) => {
   }
 };
 
-export const getCountMutualFriends = async (user_id1, user_id2) => {
+export const getCountMutualFriends = async (friend_id) => {
   try {
-    if(!user_id1 && !user_id2) return 0;
     // Lấy danh sách bạn bè của cả hai người dùng
-    const friendsUser1 = await getAllFriends(user_id1);
-    const friendsUser2 = await getAllFriends(user_id2);
+    const friendsUser1 = await getData(API_COUNT_MANUAL_FRIEND(friend_id));
+    console.log(friendsUser1);
 
-    if (friendsUser1 && friendsUser2) {
-      // Lọc ra những bạn chung
-      const mutualFriends = friendsUser1.data.filter(friend1 =>
-        friendsUser2.data.some(friend2 => friend2.friend_id === friend1.friend_id)
-      );
-      return mutualFriends?.length; 
+    if (friendsUser1?.status) {
+      return friendsUser1?.data?.mutual_friend_count ?? 0;
     }
     return 0;
   } catch (error) {
@@ -68,9 +63,31 @@ export const getCountMutualFriends = async (user_id1, user_id2) => {
 };
 
 
+// export const getCountMutualFriends = async (user_id1, user_id2) => {
+//   try {
+//     if(!user_id1 && !user_id2) return 0;
+//     // Lấy danh sách bạn bè của cả hai người dùng
+//     const friendsUser1 = await getAllFriends(user_id1);
+//     const friendsUser2 = await getAllFriends(user_id2);
+
+//     if (friendsUser1 && friendsUser2) {
+//       // Lọc ra những bạn chung
+//       const mutualFriends = friendsUser1.data.filter(friend1 =>
+//         friendsUser2.data.some(friend2 => friend2.friend_id === friend1.friend_id)
+//       );
+//       return mutualFriends?.length; 
+//     }
+//     return 0;
+//   } catch (error) {
+//     console.error("Failed to fetch mutual friends:", error);
+//     return 0;
+//   }
+// };
+
+
 export const getListMutualFriends = async (user_id1, user_id2) => {
   try {
-    if(!user_id1 && !user_id2) return [];
+    if (!user_id1 && !user_id2) return [];
 
     // Lấy danh sách bạn bè của cả hai người dùng
     const friendsUser1 = await getAllFriends(user_id1);
@@ -78,10 +95,12 @@ export const getListMutualFriends = async (user_id1, user_id2) => {
 
     if (friendsUser1 && friendsUser2) {
       // Lọc ra những bạn chung
-      const mutualFriends = friendsUser1.data.filter(friend1 =>
-        friendsUser2.data.some(friend2 => friend2.friend_id === friend1.friend_id)
+      const mutualFriends = friendsUser1.data.filter((friend1) =>
+        friendsUser2.data.some(
+          (friend2) => friend2.friend_id === friend1.friend_id
+        )
       );
-      return mutualFriends; 
+      return mutualFriends;
     }
     return [];
   } catch (error) {

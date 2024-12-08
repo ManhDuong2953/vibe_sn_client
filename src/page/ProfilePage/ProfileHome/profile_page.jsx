@@ -146,7 +146,7 @@ function ProfilePage({ titlePage }) {
                 <h3>Bài viết</h3>
               </div>
               {listPost ? (
-                listPost?.map((item) => <PostItem data={item} />)
+                listPost?.map((item, index) => <PostItem key={index} data={item} />)
               ) : (
                 <h4 className="box-center">Không có bài viết nào</h4>
               )}

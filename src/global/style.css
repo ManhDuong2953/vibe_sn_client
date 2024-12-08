@@ -21,8 +21,7 @@
   --bg-color: #181820;
   /* --navbar-color: #242526; */
   --navbar-color: #292e33;
-
-  --border-color: #5b5c5e85;
+  --border-color: #494949;
   --text-color: #e4e6eb;
   --text-black-color: #161616;
   --icon-color: #e4e6eb;
@@ -145,7 +144,7 @@ button[type="submit"]:hover {
 
 .box-center {
   display: flex;
-  width: auto;
+  width: -webkit-fill-available;
   height: 100%;
   min-height: 200px;
   align-items: center;
@@ -255,6 +254,11 @@ a.filepond--credits {
 .container {
   width: calc(100vw - 50px) !important;
   margin: auto;
+}
+
+
+.filepond--drop-label label{
+  color: var(--text-color) !important;
 }
 .crop-img-container .reactEasyCrop_Container {
   position: absolute !important;

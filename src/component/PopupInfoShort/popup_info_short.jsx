@@ -46,7 +46,6 @@ function PopupInfoShort({ user_id }) {
       if (dataOwner && dataOwner.user_id !== user_id) {
         try {
           const response = await getCountMutualFriends(
-            dataOwner.user_id,
             user_id
           );
 

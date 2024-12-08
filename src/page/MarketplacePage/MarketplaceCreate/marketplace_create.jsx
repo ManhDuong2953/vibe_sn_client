@@ -1,12 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { FilePond, registerPlugin } from "react-filepond";
-import "filepond/dist/filepond.min.css";
-import FilePondPluginImagePreview from "filepond-plugin-image-preview";
-import "filepond-plugin-image-preview/dist/filepond-plugin-image-preview.css";
-import FilePondPluginFileEncode from "filepond-plugin-file-encode";
-import FilePondPluginFileValidateSize from "filepond-plugin-file-validate-size";
-import FilePondPluginImageExifOrientation from "filepond-plugin-image-exif-orientation";
 import "./marketplace_create.scss";
 import NavigativeBar from "../../../layout/NavigativeBar/navigative_bar";
 import { postData } from "../../../ultils/fetchAPI/fetch_API";
@@ -14,6 +7,13 @@ import { API_MARKETPLACE_CREATE } from "../../../API/api_server";
 import { toast } from "react-toastify";
 import { LoadingIcon } from "../../../ultils/icons/loading";
 
+import { FilePond, registerPlugin } from "react-filepond";
+import "filepond/dist/filepond.min.css";
+import FilePondPluginImagePreview from "filepond-plugin-image-preview";
+import "filepond-plugin-image-preview/dist/filepond-plugin-image-preview.css";
+import FilePondPluginFileEncode from "filepond-plugin-file-encode";
+import FilePondPluginFileValidateSize from "filepond-plugin-file-validate-size";
+import FilePondPluginImageExifOrientation from "filepond-plugin-image-exif-orientation";
 registerPlugin(
   FilePondPluginFileEncode,
   FilePondPluginFileValidateSize,
