@@ -234,7 +234,7 @@ function ChatMessengerPage({ titlePage }) {
 
   //Check xem người dùng đã có cặp key chưa
   const checkExistKeyPair = async () => {
-    try {
+    try {      
       if (!isVerifiedCode) {
         // nếu chưa verify
         const response = await getData(API_IS_EXIST_KEYSPAIR);
@@ -270,7 +270,7 @@ function ChatMessengerPage({ titlePage }) {
   //Kiểm tra người dùng có cặp khoá chưa,và lấy toàn bộ tin nhắn lúc đầu
   useEffect(() => {
     if (id_receiver) {
-      const checkExistKeyPair = async () => {
+      const checkReceiverExistKeyPair = async () => {
         try {
           const response = await getData(API_CHECK_KEYSPAIR(id_receiver));
           if (response?.status === true || response?.status === false) {
@@ -297,7 +297,7 @@ function ChatMessengerPage({ titlePage }) {
         }
       };
 
-      checkExistKeyPair();
+      checkReceiverExistKeyPair();
       getAllMessages();
     }
   }, [id_receiver]);
@@ -394,7 +394,7 @@ function ChatMessengerPage({ titlePage }) {
         setReceiverIsTyping(data?.status);
       });
     } catch (error) {
-      // console.log("error", error);
+      console.log("error", error);
     }
   }, [isTyping]);
 

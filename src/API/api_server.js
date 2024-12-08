@@ -53,11 +53,11 @@ const API_FRIEND_DELETE = API_HOST + "/users/friend/delete";
 const API_FRIEND_SUGGEST = API_HOST + "/users/friend/list-suggest";
 const API_FRIEND_DATE_OF_BIRTH = API_HOST + "/users/friend/list-dob";
 const API_FRIEND_CREATE_BLOCK = (id) =>
-  API_HOST + "/users/friend/create-block/" + id;
+  API_HOST + "/users/friend-block/create-block/" + id;
 const API_FRIEND_CHECK_BLOCK = (id) =>
-  API_HOST + "/users/friend/check-block/" + id;
+  API_HOST + "/users/friend-block/check-block/" + id;
 const API_FRIEND_DELETE_BLOCK = (id) =>
-  API_HOST + "/users/friend/delete-block/" + id;
+  API_HOST + "/users/friend-block/delete-block/" + id;
 
 // Profile Heart API endpoint
 const API_PROFILE_HEART_GET = (id) =>

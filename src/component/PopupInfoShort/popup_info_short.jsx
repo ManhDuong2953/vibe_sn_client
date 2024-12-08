@@ -66,7 +66,7 @@ function PopupInfoShort({ user_id }) {
     const handleMouseEnter = (popupInfoElement, avtParent) => () => {
       if (avtParent) {
         //fetch data
-        const screenMidpoint = window.innerHeight / 2;
+        const screenMidpoint = window.innerHeight;
         const y = avtParent.getBoundingClientRect().y;
         if (y <= screenMidpoint) {
           popupInfoElement.style.top = "40px";

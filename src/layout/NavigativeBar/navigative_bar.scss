@@ -202,9 +202,8 @@
           p {
             top: -5px;
             left: 13px;
-            width: 17px;
+            width: max-content;
             height: 17px;
-            aspect-ratio: 1;
             position: absolute;
             padding: 4px;
             border-radius: 50%;
@@ -280,7 +279,8 @@
               display: block;
               padding: 0;
 
-              a {
+              a,
+              .list {
                 border-bottom: 1px solid var(--border-color);
                 padding: 10px;
                 justify-content: start;
@@ -344,14 +344,21 @@
             li.function-direct {
               width: 100%;
               display: block;
-              a {
+              a,
+              .list {
                 display: flex;
                 justify-content: space-between;
               }
             }
+            .list {
+              padding: 10px 10px;
+              display: flex;
+              align-items: center;
+            }
             li.function-direct.logout {
               margin-bottom: 5px;
-              a {
+              a,
+              .list {
                 path,
                 p {
                   color: var(--accent-color);
@@ -425,7 +432,7 @@ div.MuiPaper-elevation:has(ul.box-notice) {
   width: 450px;
   background-color: var(--border-color);
 }
-.MuiBackdrop-root{
+.MuiBackdrop-root {
   width: 100vw !important;
   overflow: hidden;
 }

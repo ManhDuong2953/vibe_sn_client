@@ -136,10 +136,10 @@ const LoginFaceRecognition = ({ titlePage }) => {
     const findBestMatch = (descriptor) => {
       if (labeledFaceDescriptors.length === 0) return null;
 
-      const faceMatcher = new faceapi.FaceMatcher(labeledFaceDescriptors, 0.4);
+      const faceMatcher = new faceapi.FaceMatcher(labeledFaceDescriptors, 0.6);
       const bestMatch = faceMatcher.findBestMatch(descriptor);
 
-      if (bestMatch.label === "unknown" || bestMatch.distance > 0.4) {
+      if (bestMatch.label === "unknown" || bestMatch.distance > 0.6) {
         return null;
       }
       return bestMatch;
@@ -242,11 +242,11 @@ const LoginFaceRecognition = ({ titlePage }) => {
                 <canvas ref={canvasRef} className="overlay"></canvas>
               </div>
               {nameUser === "Không nhận diện được khuôn mặt phù hợp" ? (
-                <h6 className="text-warning">{nameUser}</h6>
+                <h6 className="text-warning text-center text-danger">{nameUser}</h6>
               ) : nameUser ? (
-                <h4>{nameUser}</h4>
+                <h4 className="text-warning text-center text-danger">{nameUser}</h4>
               ) : (
-                <h6 className="text-danger">
+                <h6 className="text-danger text-center">
                   Đang kiểm tra dữ liệu khuôn mặt {".".repeat(dots)}
                 </h6>
               )}

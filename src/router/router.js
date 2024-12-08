@@ -13,7 +13,6 @@ const GroupMemberPage = lazy(() => import("../page/GroupPage/GroupMember/group_m
 const ListPostGroupPage = lazy(() => import("../page/GroupPage/ListPostGroup/list_post_group"));
 const HomePage = lazy(() => import("../page/Home/home_page"));
 const LoginPage = lazy(() => import("../page/LoginPage/login_page"));
-const Logout = lazy(() => import("../page/Logout/log_out"));
 const CreateProductPage = lazy(() => import("../page/MarketplacePage/MarketplaceCreate/marketplace_create"));
 const MarketplaceDetail = lazy(() => import("../page/MarketplacePage/MarketplaceDetail/marketplace_detail"));
 const EditProductPage = lazy(() => import("../page/MarketplacePage/MarketplaceEdit/marketplace_edit"));
@@ -223,12 +222,6 @@ const routes = [
     exact: true,
     requireAuth: false,
     component: <LoginPage titlePage="Đăng nhập | Vibe" />,
-  },
-  {
-    path: '/logout',
-    exact: true,
-    requireAuth: true,
-    component: <Logout titlePage="Đăng xuất | Vibe" />,
   },
   {
     path: '/login/forgot-password',

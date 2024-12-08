@@ -25,8 +25,11 @@ import {
   API_DELETE_ALL_NOTIFICATION,
   API_DELETE_NOTIFICATION_BY_ID,
   API_LIST_NOTIFICATION,
+  API_LOGOUT,
 } from "../../API/api_server";
-import { Button, Popover, Typography } from "@mui/material";
+import { Popover } from "@mui/material";
+import { toast } from "react-toastify";
+import Cookies from "js-cookie";
 
 function NavigativeBar() {
   const navigate = useNavigate();
@@ -144,7 +147,7 @@ function NavigativeBar() {
 
   useEffect(() => {
     if (socket) {
-      socket.on("send_notice", (data) => {        
+      socket.on("send_notice", (data) => {
         setListNotifications((prevData) => [data, ...prevData]);
       });
     }
@@ -174,6 +177,27 @@ function NavigativeBar() {
       }
     } catch (error) {
       console.log(error.message);
+    }
+  };
+
+  const logout = async () => {
+    try {
+      // Gọi API để xóa token từ phía server (nếu cần)
+      const response = await deleteData(API_LOGOUT);
+      console.log(response?.status);
+      
+      if (response?.status) {
+        // Xóa token từ cookie
+        Cookies.remove("accessToken");
+        Cookies.remove("key_refresh_token_encode");
+        Cookies.remove("refreshToken");
+        localStorage.clear();
+        // Redirect đến trang đăng nhập
+        navigate("/login");
+      }
+    } catch (error) {
+      // Thông báo lỗi nếu có
+      toast.error("Đăng xuất thất bại");
     }
   };
 
@@ -247,7 +271,7 @@ function NavigativeBar() {
             <div className="bell-notice--icon">
               <div className="icon-notice--container" onClick={handleClick}>
                 <BiSolidBellRing />
-                {unseenCount > 0 && <p> {unseenCount} </p>}
+                {unseenCount > 0 && <p> {unseenCount > 9 ? "9+" : unseenCount} </p>}
               </div>
 
               <Popover
@@ -334,14 +358,17 @@ function NavigativeBar() {
                       <FaChevronRight />
                     </Link>
                   </li>
-                  <li className="function-direct logout">
-                    <Link to="/logout">
+                  <li
+                    className="function-direct logout"
+                    onClick={() => logout()}
+                  >
+                    <div className="list">
                       <span>
                         <MdLogout />
                         <p>Đăng xuất</p>
                       </span>
                       <FaChevronRight />
-                    </Link>
+                    </div>
                   </li>
                 </ul>
               </div>
