@@ -1,4 +1,10 @@
-import React, { useState, useEffect, useCallback, useRef, useContext } from "react";
+import React, {
+  useState,
+  useEffect,
+  useCallback,
+  useRef,
+  useContext,
+} from "react";
 import { Editor } from "react-draft-wysiwyg";
 import {
   EditorState,
@@ -65,11 +71,11 @@ const TextEditor = ({ initialContent, getText }) => {
       const textArray = [];
       const mentions = [];
       const hashtags = [];
-  
+
       content.blocks.forEach((block) => {
         const text = block.text;
         textArray.push(text);
-  
+
         const words = text.split(" ");
         words.forEach((word) => {
           if (word.startsWith("@")) {
@@ -79,39 +85,41 @@ const TextEditor = ({ initialContent, getText }) => {
           }
         });
       });
-  
+
       // Tạo mentionMap từ danh sách suggestions
-      const mentionMap = dataFriends?.reduce((acc, item) => {
-        acc[`@${item.user_nickname}`] = `/profile/${item.friend_id}`;
-        return acc;
-      }, {}) || {};
-  
+      const mentionMap =
+        dataFriends?.reduce((acc, item) => {
+          acc[`@${item.user_nickname}`] = `/profile/${item.friend_id}`;
+          return acc;
+        }, {}) || {};
+
       // Lưu mentions vào một biến để sử dụng sau này
-      const mentionList = dataFriends?.map((item) => ({
-        value: `@${item.user_nickname}`,
-        url: `/profile/${item.friend_id}`,
-        nickname: item.user_name,
-      })) || [];
-  
+      const mentionList =
+        dataFriends?.map((item) => ({
+          value: `@${item.user_nickname}`,
+          url: `/profile/${item.friend_id}`,
+          nickname: item.user_name,
+        })) || [];
+
       // Chuyển đổi nội dung thành HTML với thẻ <a> cho mentions
       let html = convertToHTML({
         blockToHTML: (block) => {
           let formattedText = block.text;
-  
+
           // Thay thế các mention trong text thành <a> tags
           const mentionRegex = /(@[a-zA-Z0-9_]+)/g;
           formattedText = formattedText.replace(mentionRegex, (match) => {
             const userUrl = mentionMap[match]; // Lấy URL từ mentionMap
             return userUrl ? `<a href="${userUrl}">${match}</a>` : match;
           });
-  
+
           // Thêm hashtag vào HTML nếu cần
           const hashtagRegex = /(#\w+)/g;
           formattedText = formattedText.replace(hashtagRegex, (match) => {
             const hashtag = match.substring(1); // Lấy hashtag bỏ ký tự #
             return `<a href="/search/${hashtag}">${match}</a>`;
           });
-  
+
           return {
             start: `<span>`,
             end: `</span>`,
@@ -119,29 +127,32 @@ const TextEditor = ({ initialContent, getText }) => {
           };
         },
       })(editorState.getCurrentContent());
-  
+
       // Trước khi gọi getText, thay thế những mention trong html
       mentionList.forEach((mention) => {
         const regex = new RegExp(`(${mention.value})`, "g");
-        html = html.replace(regex, `<a href="${mention.url}">${mention.nickname}</a>`);
+        html = html.replace(
+          regex,
+          `<a href="${mention.url}">${mention.nickname}</a>`
+        );
       });
-  
+
       const result = {
         text: textArray.join(" "),
-        html: html,  // HTML với các thẻ <a> đã được thay thế
+        html: html, // HTML với các thẻ <a> đã được thay thế
         mentions: mentions,
         hashtags: hashtags,
       };
-  
+
       // Kiểm tra xem HTML có thay đổi so với lần trước không
       if (html !== prevHtmlContent.current) {
-        getText(result);  // Truyền cả text và html
+        getText(result); // Truyền cả text và html
         prevHtmlContent.current = html; // Cập nhật nội dung trước đó
       }
     }, 500),
-    [editorState, dataFriends]  // Thêm dataFriends vào dependency list
+    [editorState, dataFriends] // Thêm dataFriends vào dependency list
   );
-  
+
   useEffect(() => {
     logContent(); // Gọi lại hàm logContent mỗi khi editorState thay đổi
   }, [editorState, logContent]);
@@ -158,8 +169,8 @@ const TextEditor = ({ initialContent, getText }) => {
             "list",
             "textAlign",
             "history",
-            "fontSize", 
-            "colorPicker", 
+            "fontSize",
+            "colorPicker",
           ],
           inline: {
             inDropdown: false,
@@ -178,15 +189,15 @@ const TextEditor = ({ initialContent, getText }) => {
           },
           colorPicker: {
             colors: [
-              "rgb(0, 0, 0)", 
-              "rgb(255, 0, 0)", 
-              "rgb(0, 255, 0)", 
-              "rgb(0, 0, 255)", 
-              "rgb(255, 255, 0)", 
-              "rgb(255, 165, 0)", 
-              "rgb(255, 192, 203)", 
-              "rgb(128, 128, 128)", 
-              "rgb(255, 255, 255)", 
+              "rgb(0, 0, 0)",
+              "rgb(255, 0, 0)",
+              "rgb(0, 255, 0)",
+              "rgb(0, 0, 255)",
+              "rgb(255, 255, 0)",
+              "rgb(255, 165, 0)",
+              "rgb(255, 192, 203)",
+              "rgb(128, 128, 128)",
+              "rgb(255, 255, 255)",
             ],
           },
         }}

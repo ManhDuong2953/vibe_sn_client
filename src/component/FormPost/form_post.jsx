@@ -31,7 +31,7 @@ registerPlugin(
 export default function FormPost({ group_id = undefined }) {
   const [showEmotion, setShowEmotion] = useState(false);
   const [showImage, setShowImage] = useState(false);
-  const [text, setText] = useState(false);
+  const [text, setText] = useState(false);  
   const [showPopup, setShowPopup] = useState(false);
   const dataOwner = useContext(OwnDataContext);
   const [privacy, setPrivacy] = useState(); // Default privacy is "global"

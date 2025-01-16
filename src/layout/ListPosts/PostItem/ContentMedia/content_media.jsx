@@ -29,10 +29,10 @@ function ContentMedia({ data }) {
               {mediaItems.slice(2, 4).map((item, index) => (
                 <React.Fragment key={index}>
                   {item.media_type === "video" && (
-                    <video src={item.media_link} controls muted></video>
+                    <video loading="lazy" playsInline src={item.media_link} controls muted></video>
                   )}
                   {item.media_type === "image" && (
-                    <img src={item.media_link} alt="" />
+                    <img loading="lazy" src={item.media_link} alt="" />
                   )}
 
                   {/* Hiển thị số lượng ảnh dư nếu có nhiều hơn 4 ảnh */}
