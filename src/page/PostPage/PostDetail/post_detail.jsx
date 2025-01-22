@@ -9,6 +9,7 @@ import ContentText from "../../../layout/ListPosts/PostItem/ContentText/content_
 import Comment from "../../../layout/ListPosts/PostItem/Comment/comment";
 import { getData } from "../../../ultils/fetchAPI/fetch_API";
 import { API_POST_DETAIL } from "../../../API/api_server";
+import generateContent from "../../../config/ai_studio.config";
 
 function PostDetail({ titlePage }) {
   const { post_id } = useParams();
@@ -34,7 +35,6 @@ function PostDetail({ titlePage }) {
         console.error("Error fetching post detail:", error);
       }
     };
-
     if (post_id) fetchData();
   }, [post_id]);
 
