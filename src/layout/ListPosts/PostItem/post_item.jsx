@@ -28,12 +28,13 @@ function PostItem({ data }) {
             <div className="content-container">
               {data?.post_text &&
                 !(
-                  data?.post_text === "<p></p>" || data?.post_text === "<span></span>"
+                  data?.post_text === "<p></p>" ||
+                  data?.post_text === "<span></span>"
                 ) && <ContentText data={data} />}
               <Link
                 to={{
                   pathname: `/post/${data?.post_id}`,
-                  state: { from: location.pathname }, 
+                  state: { from: location.pathname },
                 }}
               >
                 <h5 className="detail-post">Xem chi tiết bài viết</h5>

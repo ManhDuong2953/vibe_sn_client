@@ -14,6 +14,7 @@ import PrivateRoute from "./component/PrivateRouter/PrivateRouter";
 import OwnDataProvider from "./provider/own_data";
 import { SocketProvider } from "./provider/socket_context";
 import Spinner from "./component/Spinner/spinner";
+import BoxChatAI from "./component/BoxChatAPI/box_chat_ai";
 
 function App() {
   const theme = useSelector((state) => state.themeUI.theme);
@@ -67,6 +68,7 @@ function App() {
         pauseOnHover
         theme={theme}
       />
+      <BoxChatAI />
       <Suspense
         fallback={
           <div>
