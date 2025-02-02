@@ -48,8 +48,14 @@
       margin-top: 3px;
       a {
         p.name {
+          display: flex;
+          align-items: center;
           font-weight: 600;
           color: var(--text-color);
+          svg{
+            font-size: 15px;
+            margin-left: 2px;
+          }
           &:hover {
             text-decoration: underline;
           }
@@ -61,10 +67,16 @@
         margin-bottom: 1px;
       }
       p.subname {
+        display: flex;
+        align-items: center;
         font-size: 13px;
         font-weight: 500;
         color: var(--text-color);
         margin-right: 1px;
+        svg{
+          font-size: 15px;
+          margin-left: 2px;
+        }
       }
       p.time {
         margin: 2px 0 0;
