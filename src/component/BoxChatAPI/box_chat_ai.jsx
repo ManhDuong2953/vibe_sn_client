@@ -1,7 +1,8 @@
 import React, { useState, useRef, useEffect } from "react";
-import "./box_chat_ai.scss";
+import "./box_chat_ai.scss"; // Style kéo thả trong đây
 import generateContent from "../../config/ai_studio.config";
 import icon from "../../www/icons/chatboxicon.png";
+
 export default function Chatbox() {
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState([
@@ -11,6 +12,7 @@ export default function Chatbox() {
     },
   ]);
   const chatEndRef = useRef(null);
+  const chatboxRef = useRef(null);
 
   const toggleChatbox = () => setIsOpen(!isOpen);
 
@@ -20,9 +22,9 @@ export default function Chatbox() {
 
   useEffect(() => {
     if (isOpen) scrollToBottom();
-  }, [isOpen]);
+  }, [isOpen, messages]);
 
-  // Hàm escape HTML để bảo vệ và hiển thị nội dung an toàn
+  // Escape HTML để tránh lỗi XSS
   const escapeHTML = (html) => {
     return html
       .replace(/&/g, "&amp;")
@@ -32,29 +34,24 @@ export default function Chatbox() {
       .replace(/'/g, "&#039;");
   };
 
-  // Hàm xử lý response từ AI và render nội dung
   const processResponse = (text) => {
-    const codeRegex = /```(\w*)\n([\s\S]*?)```/; // Regex tìm code Markdown
+    const codeRegex = /```(\w*)\n([\s\S]*?)```/;
     const match = text.match(codeRegex);
 
     if (match) {
-      const language = match[1]; // Ngôn ngữ (html, js, ...)
-      const codeContent = match[2]; // Nội dung code
+      const language = match[1];
+      const codeContent = match[2];
       return `<pre><code class="language-${language}">${escapeHTML(
         codeContent
       )}</code></pre>`;
     }
-
-    // Nếu không phải mã code, trả về nội dung dạng văn bản
     return `<div>${escapeHTML(text)}</div>`;
   };
 
   const sendMessage = async (text) => {
-    // Thêm tin nhắn của người dùng
     setMessages((prev) => [...prev, { sender: "user", text }]);
     scrollToBottom();
 
-    // Chatbot đang trả lời
     setMessages((prev) => [
       ...prev,
       { sender: "bot", text: "Chatbot đang trả lời..." },
@@ -63,7 +60,6 @@ export default function Chatbox() {
 
     const aiReply = await generateContent(text);
 
-    // Cập nhật câu trả lời từ AI
     setMessages((prev) => [
       ...prev.slice(0, -1),
       { sender: "bot", text: aiReply },
@@ -71,10 +67,54 @@ export default function Chatbox() {
     scrollToBottom();
   };
 
+  // Kéo thả Chatbox
+  useEffect(() => {
+    const chatbox = chatboxRef.current;
+    if (!chatbox) return;
+
+    let isDragging = false;
+    let offsetX = 0;
+    let offsetY = 0;
+
+    const handleMouseDown = (e) => {
+      isDragging = true;
+      offsetX = e.clientX - chatbox.getBoundingClientRect().left;
+      offsetY = e.clientY - chatbox.getBoundingClientRect().top;
+      document.addEventListener("mousemove", handleMouseMove);
+      document.addEventListener("mouseup", handleMouseUp);
+    };
+
+    const handleMouseMove = (e) => {
+      if (!isDragging) return;
+      chatbox.style.left = `${e.clientX - offsetX}px`;
+      chatbox.style.top = `${e.clientY - offsetY}px`;
+    };
+
+    const handleMouseUp = () => {
+      isDragging = false;
+      document.removeEventListener("mousemove", handleMouseMove);
+      document.removeEventListener("mouseup", handleMouseUp);
+    };
+
+    const header = chatbox.querySelector(".chatbox-header");
+    if (header) {
+      header.style.cursor = "move";
+      header.addEventListener("mousedown", handleMouseDown);
+    }
+
+    return () => {
+      if (header) header.removeEventListener("mousedown", handleMouseDown);
+    };
+  }, [isOpen]);
+
   return (
     <div className="chatbox">
       {isOpen && (
-        <div className="chatbox-container">
+        <div
+          className="chatbox-container"
+          ref={chatboxRef}
+          style={{ position: "absolute", top: "100px", left: "100px" }}
+        >
           <div className="chatbox-header">
             <span>Vibe Chat</span>
             <button onClick={toggleChatbox} className="chatbox-close">
@@ -85,13 +125,14 @@ export default function Chatbox() {
             {messages.map((msg, index) => (
               <div
                 key={index}
-                className={`chatbox-message ${msg.sender === "user" ? "user" : "bot"
-                  }`}
+                className={`chatbox-message ${
+                  msg.sender === "user" ? "user" : "bot"
+                }`}
                 dangerouslySetInnerHTML={{
                   __html:
                     msg.sender === "bot"
-                      ? processResponse(msg.text) // Xử lý nội dung trả về từ AI
-                      : `<div>${escapeHTML(msg.text)}</div>`, // Escape nội dung người dùng
+                      ? processResponse(msg.text)
+                      : `<div>${escapeHTML(msg.text)}</div>`,
                 }}
               />
             ))}

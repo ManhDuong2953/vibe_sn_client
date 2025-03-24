@@ -209,6 +209,7 @@
             border-radius: 50%;
             background-color: var(--accent-color);
             display: flex;
+            color: white;
             align-items: center;
             justify-content: center;
             font-size: 12px;
@@ -228,6 +229,97 @@
           path {
             color: var(--active-color);
           }
+        }
+      }
+      .wallet-container {
+        position: relative;
+        display: inline-block;
+        font-size: 0.8rem;
+        i {
+          &.fa-wallet {
+            margin-right: 4px;
+            color: #d85201;
+          }
+          &.fa-ethereum {
+            margin: 0 4px;
+            color: #5f7ae3;
+          }
+        }
+        .wallet-button {
+          background: transparent;
+          padding: 10px;
+          border: none;
+          border-radius: 8px;
+          cursor: pointer;
+          font-weight: bold;
+          &:hover {
+            transform: scale(1.05);
+          }
+        }
+
+        .wallet-menu {
+          position: absolute;
+          top: 45px;
+          right: 0;
+          background: #292e33;
+          border-radius: 10px;
+          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+          list-style: none;
+          padding: 0;
+          min-width: 220px;
+          border: 1px solid #494949;
+          z-index: 100;
+          animation: fadeIn 0.3s ease-in-out;
+
+          li {
+            p {
+              font-size: 0.8rem;
+            }
+            &.balance {
+              display: flex;
+              flex-direction: column;
+              justify-content: center;
+              strong {
+                padding: 8px 0 0;
+                display: flex;
+                align-items: center;
+              }
+            }
+            padding: 12px;
+            border-bottom: 1px solid #ddd;
+            font-weight: 500;
+            transition: background 0.2s ease-in-out;
+
+            &:last-child {
+              border-bottom: none;
+            }
+
+            &.wallet-action {
+              cursor: pointer;
+              color: red;
+              font-weight: bold;
+              border-radius: 10px;
+              margin: 4px 0;
+              text-align: center;
+              transition: background 0.2s ease-in-out;
+
+              &:hover {
+                background: rgba(255, 0, 0, 0.1);
+              }
+            }
+          }
+        }
+      }
+
+      // Hiệu ứng fade-in cho menu
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(-10px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
         }
       }
 

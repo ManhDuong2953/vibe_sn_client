@@ -4,7 +4,6 @@ import React, {
   useEffect,
   useContext,
   useState,
-  useCallback,
 } from "react";
 import "./video_call.scss";
 import {

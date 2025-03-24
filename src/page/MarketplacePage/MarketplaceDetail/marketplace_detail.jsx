@@ -6,7 +6,7 @@ import { MdDeleteSweep, MdOutlineClose } from "react-icons/md";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import NavigativeBar from "../../../layout/NavigativeBar/navigative_bar";
 import HeaderPost from "../../../layout/ListPosts/PostItem/HeaderPost/header_post";
-import { FaEdit } from "react-icons/fa";
+import { FaEdit, FaMoneyCheckAlt } from "react-icons/fa";
 import { IoMdMore } from "react-icons/io";
 import { deleteData, getData } from "../../../ultils/fetchAPI/fetch_API";
 import {
@@ -17,6 +17,9 @@ import { timeAgo } from "../../../ultils/formatDate/format_date";
 import PopupInfoShort from "../../../component/PopupInfoShort/popup_info_short";
 import { generateMapIframe } from "../../../ultils/generateLinkMap/generateLinkMap";
 import { OwnDataContext } from "../../../provider/own_data";
+import { useSelector } from "react-redux";
+import { toast } from "react-toastify";
+import { sendTransaction } from "../../../ultils/transaction/transaction";
 
 function MarketplaceDetail({ titlePage }) {
   useEffect(() => {
@@ -24,6 +27,8 @@ function MarketplaceDetail({ titlePage }) {
   }, [titlePage]);
   const dataOwner = useContext(OwnDataContext);
   const [showFunc, setShowFunc] = useState(false);
+  const { account } = useSelector((state) => state.wallet);
+  const [isTrans, setIsTrans] = useState(false);
 
   const toggleFunc = () => {
     setShowFunc((prev) => !prev);
@@ -72,6 +77,18 @@ function MarketplaceDetail({ titlePage }) {
       }
     } catch (error) {
       console.error(error);
+    }
+  };
+
+  const handleTransaction = async () => {
+    if (!data) return;
+    try {
+      setIsTrans(true)
+      await sendTransaction(data.product.seller_wallet_address, data.product.product_price)
+    } catch (error) {
+      toast.error(error.message);
+    } finally{
+      setIsTrans(false)
     }
   };
   return (
@@ -154,13 +171,8 @@ function MarketplaceDetail({ titlePage }) {
               <h3 className="name-prd">{data?.product?.product_name}</h3>
               <h2 className="price-prd">
                 {" "}
-                {(Number(data?.product?.product_price) || 0).toLocaleString(
-                  "vi-VN",
-                  {
-                    style: "currency",
-                    currency: "VND",
-                  }
-                )}
+                {(Number(data?.product?.product_price) || 0).toLocaleString() +
+                  " ETH"}
               </h2>
               <p className="desc-prd">
                 <b>Chi tiết: </b>
@@ -170,6 +182,23 @@ function MarketplaceDetail({ titlePage }) {
                 <b>Địa chỉ: </b>
                 {data?.product?.product_location}
               </p>
+            </div>
+            {!account && (
+              <p className="text-danger">* Kết nối ví để mua sản phẩm</p>
+            )}
+            <div className="row-buy">
+              {account && (
+                <button disabled={isTrans} onClick={handleTransaction}>
+                  <FaMoneyCheckAlt />
+                  <b>{isTrans? 'Đang mua' : "Mua sản phẩm"}</b>
+                </button>
+              )}
+              <Link to={"/messenger/" + data?.user?.user_id}>
+                <div className="contact">
+                  <FaFacebookMessenger />
+                  Liên hệ với người bán
+                </div>
+              </Link>
             </div>
             <div className="map">
               <iframe
@@ -185,14 +214,6 @@ function MarketplaceDetail({ titlePage }) {
                 style={{ border: "1px solid black" }}
               ></iframe>
             </div>
-
-            <Link to={"/messenger/" + data?.user?.user_id}>
-              <div className="contact">
-                <FaFacebookMessenger />
-                Liên hệ với người bán
-              </div>
-            </Link>
-            <div className="temp"></div>
           </div>
         </div>
       </div>

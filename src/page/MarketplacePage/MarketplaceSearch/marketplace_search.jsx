@@ -234,13 +234,7 @@ function MarketplaceSearchPage({ titlePage }) {
                       <p className="product-price">
                         Giá:
                         <b>
-                          {(Number(item?.product_price) || 0).toLocaleString(
-                            "vi-VN",
-                            {
-                              style: "currency",
-                              currency: "VND",
-                            }
-                          )}
+                          {(Number(item?.product_price) || 0).toLocaleString() + ' ETH'}
                         </b>
                       </p>
                       <p className="product-location">

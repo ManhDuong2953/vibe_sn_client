@@ -5,8 +5,6 @@ import React, { useState } from "react";
 import AvatarWithText from "../../../skeleton/avatarwithtext";
 import { timeAgo } from "../../../ultils/formatDate/format_date";
 function StoryPageItem({ active, story }) {
-  const [loaded, setLoaded] = useState(false);
-
   return (
     <React.Fragment>
       {story ? (

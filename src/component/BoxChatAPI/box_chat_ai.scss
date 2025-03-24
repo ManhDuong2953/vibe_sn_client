@@ -26,14 +26,19 @@
   .chatbox-container {
     width: 380px;
     height: 500px;
-    margin-right: 40px;
-    margin-bottom: 20px;
     background: #f1f1f1;
     box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
     border-radius: 12px;
     display: flex;
     flex-direction: column;
     overflow: hidden;
+
+    // Remove fixed margin để hỗ trợ kéo thả tự do
+    margin: 0;
+
+    position: absolute; // Hỗ trợ kéo thả tự do bằng JS
+    top: 100px;
+    left: 100px;
 
     .chatbox-header {
       padding: 12px;
@@ -46,6 +51,7 @@
       align-items: center;
       border-top-left-radius: 12px;
       border-top-right-radius: 12px;
+      cursor: move; // Chỉ định header có thể kéo
     }
 
     .chatbox-close {

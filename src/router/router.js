@@ -1,4 +1,5 @@
 import { lazy } from 'react';
+import Scense from '../page/MarketplacePage/PageThreeD';
 
 const ChatMessengerPage = lazy(() => import("../page/ChatPage/chat_page"));
 const CreateFaceRecognitionPage = lazy(() => import("../page/FaceRecognitionPage/CreateFaceRecognition/create_face_recognition"));
@@ -45,6 +46,13 @@ const routes = [
     requireAuth: true,
     component: <HomePage titlePage="Vibe" />,
   },
+    {
+      path: '/abc',
+      exact: true,
+      requireAuth: true,
+      component: <Scense />,
+    },
+
 
 
   //story

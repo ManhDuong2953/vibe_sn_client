@@ -8,12 +8,13 @@ import { toast } from "react-toastify";
 import { LoadingIcon } from "../../../ultils/icons/loading";
 
 import { FilePond, registerPlugin } from "react-filepond";
-import "filepond/dist/filepond.min.css";
+// import "filepond/dist/filepond.min.css";
 import FilePondPluginImagePreview from "filepond-plugin-image-preview";
-import "filepond-plugin-image-preview/dist/filepond-plugin-image-preview.css";
+// import "filepond-plugin-image-preview/dist/filepond-plugin-image-preview.css";
 import FilePondPluginFileEncode from "filepond-plugin-file-encode";
 import FilePondPluginFileValidateSize from "filepond-plugin-file-validate-size";
 import FilePondPluginImageExifOrientation from "filepond-plugin-image-exif-orientation";
+import { useSelector } from "react-redux";
 registerPlugin(
   FilePondPluginFileEncode,
   FilePondPluginFileValidateSize,
@@ -30,8 +31,15 @@ function CreateProductPage({ titlePage }) {
   const [latitude, setLatitude] = useState(null);
   const [longitude, setLongitude] = useState(null);
   const [files, setFiles] = useState([]);
+  const [fileGLB, setFileGLB] = useState();
+  const [walletAddress, setWalletAddress] = useState([]);
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+  const { account } = useSelector((state) => state.wallet);
+
+  useEffect(() => {
+    setWalletAddress(account);
+  }, [account]);
   useEffect(() => {
     document.title = titlePage;
 
@@ -76,7 +84,8 @@ function CreateProductPage({ titlePage }) {
     formData.append("product_location", location);
     formData.append("product_latitude", latitude);
     formData.append("product_longitude", longitude);
-    if (files.length <= 0) {
+    formData.append("seller_wallet_address", walletAddress);
+    if (files.length <= 0 || fileGLB.file) {
       toast.error("Vui lòng thêm ảnh sản phẩm");
       setLoading(false);
       return;
@@ -84,6 +93,10 @@ function CreateProductPage({ titlePage }) {
     // Thêm từng file vào FormData
     files.forEach((file) => {
       formData.append(`files`, file.file);
+    });
+
+    fileGLB.forEach((file) => {
+      formData.append("file_glb", file.file);
     });
 
     try {
@@ -153,6 +166,7 @@ function CreateProductPage({ titlePage }) {
                   <option value="office">Văn phòng phẩm</option>
                   <option value="jewelry">Trang sức</option>
                   <option value="pet_supplies">Đồ dùng thú cưng</option>
+                  <option value="Uncategorized">Khác</option>
                 </select>
               </div>
               <div className="form-group">
@@ -175,6 +189,16 @@ function CreateProductPage({ titlePage }) {
                   className="form-input"
                 />
               </div>
+              <div className="form-group flex">
+                <label>Địa chỉ ví</label>
+                <input
+                  type="text"
+                  value={walletAddress}
+                  onChange={(e) => setWalletAddress(e.target.value)}
+                  required
+                  className="form-input"
+                />
+              </div>
             </div>
             <div className="side-right">
               <div className="form-group">
@@ -187,6 +211,19 @@ function CreateProductPage({ titlePage }) {
                   name="files"
                   labelIdle='Kéo và thả ảnh hoặc <span class="filepond--label-action">Chọn ảnh</span>'
                   acceptedFileTypes={["image/*"]}
+                />
+              </div>
+
+              <div className="form-group">
+                <label>File sản phẩm</label>
+                <FilePond
+                  files={fileGLB}
+                  onupdatefiles={setFileGLB}
+                  allowMultiple={false}
+                  maxFiles={1}
+                  name="files"
+                  labelIdle='Kéo và thả ảnh hoặc <span class="filepond--label-action">Chọn file .glb/.gltf</span>'
+                  acceptedFileTypes={[".glb", ".gltf"]}
                 />
               </div>
             </div>

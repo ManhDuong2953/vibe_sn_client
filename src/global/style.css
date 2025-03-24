@@ -270,7 +270,13 @@ a.filepond--credits {
   background-color: var(--bg-color);
 }
 
-
+.tox-statusbar {
+  display: none !important;
+}
+.tox-tinymce{
+  height: 300px !important;
+  margin: 20px 0 !important;
+}
 /* Điện thoại di động, hiển thị chiều dọc */
 @media (max-width: 320px) {
   svg {

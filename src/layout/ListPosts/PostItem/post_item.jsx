@@ -32,6 +32,7 @@ function PostItem({ data }) {
                   data?.post_text === "<span></span>"
                 ) && <ContentText data={data} />}
               <Link
+                shallow={true}
                 to={{
                   pathname: `/post/${data?.post_id}`,
                   state: { from: location.pathname },

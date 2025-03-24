@@ -78,7 +78,7 @@
         font-size: 30px;
         transform: scale(1);
         transition: 0.3s ease-out;
-        filter: drop-shadow(0px 1px 1px black);
+        filter: drop-shadow(0px 1px 1px var(--black-text));
         &:hover {
           cursor: pointer;
           transform: scale(1.5);
@@ -175,7 +175,7 @@
           background-color: var(--hover-color);
         }
         svg {
-          filter: drop-shadow(0px 1px 1px black);
+          filter: drop-shadow(0px 1px 1px var(--black-text));
           font-size: 20px;
         }
       }

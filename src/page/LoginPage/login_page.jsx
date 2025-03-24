@@ -55,6 +55,9 @@ const LoginPage = ({ titlePage }) => {
 
   const handleLoginSocial = async (payload) => {
     try {
+
+      console.log(payload);
+      
       setLoading(true);
       const response = await getData(
         API_CHECK_EXIST_USER(`uid_${payload?.user_id}`)
@@ -66,9 +69,11 @@ const LoginPage = ({ titlePage }) => {
           type_account: payload?.type_account,
         });
         
-        if (responseLogin?.status) {
+        if (responseLogin?.status  || responseLogin?.status === true) {
           navigate("/");
+          return
         } else {
+          return
           toast.error(
             "Lỗi đăng nhập, vui lòng thử lại hoặc dùng phương thức đăng nhập khác"
           );
@@ -78,8 +83,10 @@ const LoginPage = ({ titlePage }) => {
           API_SIGNUP_SOCIALNETWORK_POST,
           payload
         );
-        if (responseSignup?.status) {
+        if (responseSignup?.status || responseSignup?.status === true) {
           await handleLoginSocial(payload);
+        } else {
+          return;
         }
       }
     } catch (error) {

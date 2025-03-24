@@ -31,7 +31,7 @@ import {
 } from "react-icons/md";
 import { LuCopyPlus, LuCornerDownRight } from "react-icons/lu";
 import { FilePond } from "react-filepond";
-import "filepond/dist/filepond.min.css";
+// import "filepond/dist/filepond.min.css";
 import { RiChatVoiceFill } from "react-icons/ri";
 import { IoSend } from "react-icons/io5";
 import Waveform from "../../component/WaveSurfer/wave_surfer";
@@ -885,8 +885,8 @@ function ChatMessengerPage({ titlePage }) {
                   </div>
                 </div>
                 <ul className="chat-messages">
-                  {Object.keys(groupedMessages).map((date) => (
-                    <React.Fragment key={date}>
+                  {Object.keys(groupedMessages).map((date, index) => (
+                    <React.Fragment key={index}>
                       <li className="message-date">
                         {date === formatDate(Date.now(), "dd/mm/yy")
                           ? "Hôm nay"

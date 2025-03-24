@@ -5,7 +5,6 @@ const useToggleListener = (iconClassName, boxClassName = null) => {
         const handleToggleActive = (e) => {
             e.stopPropagation();
             const icon = document.querySelector(`.${iconClassName}`);
-            const box = boxClassName ? document.querySelector(`.${boxClassName}`) : null;
 
             if (icon) {
                 icon.classList.toggle("active");

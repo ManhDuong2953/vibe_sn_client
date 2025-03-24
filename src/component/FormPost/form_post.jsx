@@ -15,9 +15,9 @@ import { LoadingIcon } from "../../ultils/icons/loading";
 import { toast } from "react-toastify";
 
 import { FilePond, registerPlugin } from "react-filepond";
-import "filepond/dist/filepond.min.css";
+// import "filepond/dist/filepond.min.css";
 import FilePondPluginImagePreview from "filepond-plugin-image-preview";
-import "filepond-plugin-image-preview/dist/filepond-plugin-image-preview.css";
+// import "filepond-plugin-image-preview/dist/filepond-plugin-image-preview.css";
 import FilePondPluginFileEncode from "filepond-plugin-file-encode";
 import FilePondPluginFileValidateSize from "filepond-plugin-file-validate-size";
 import FilePondPluginImageExifOrientation from "filepond-plugin-image-exif-orientation";
@@ -61,16 +61,16 @@ export default function FormPost({ group_id = undefined }) {
       setShowImage(false);
     }
 
-    const handleClickOutside = (event) => {
-      if (popupPost && !popupPost.contains(event.target)) {
-        setShowPopup(false);
-      }
-    };
+    // const handleClickOutside = (event) => {
+    //   if (popupPost && !popupPost.contains(event.target)) {
+    //     setShowPopup(false);
+    //   }
+    // };
 
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
+    // document.addEventListener("mousedown", handleClickOutside);
+    // return () => {
+    //   document.removeEventListener("mousedown", handleClickOutside);
+    // };
   }, [showPopup]);
 
   const toggleEmotion = () => setShowEmotion(!showEmotion);

@@ -14,7 +14,7 @@ import imgError from "../../www/error_image.png";
 import NoticeItem from "../../component/NoticeItem/notice_item";
 import ToggleButton from "react-toggle-button";
 import useToggleListener from "../../ultils/animation/toggle_active";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { darkHandle, lightHandle } from "../../redux/Reducer/reducer";
 import { IoListOutline, IoSettingsSharp } from "react-icons/io5";
 import { OwnDataContext } from "../../provider/own_data";
@@ -30,6 +30,8 @@ import {
 import { Popover } from "@mui/material";
 import { toast } from "react-toastify";
 import Cookies from "js-cookie";
+import Web3 from "web3";
+import { setWallet } from "../../redux/Reducer/wallet";
 
 function NavigativeBar() {
   const navigate = useNavigate();
@@ -83,7 +85,7 @@ function NavigativeBar() {
         );
       }
     } catch (error) {
-      console.log(error.message);
+      toast.error(error.message);
     }
   };
 
@@ -165,7 +167,7 @@ function NavigativeBar() {
         );
       }
     } catch (error) {
-      console.log(error.message);
+      toast.error(error.message);
     }
   };
 
@@ -176,7 +178,7 @@ function NavigativeBar() {
         setListNotifications([]);
       }
     } catch (error) {
-      console.log(error.message);
+      toast.error(error.message);
     }
   };
 
@@ -184,13 +186,9 @@ function NavigativeBar() {
     try {
       // Gọi API để xóa token từ phía server (nếu cần)
       const response = await deleteData(API_LOGOUT);
-      console.log(response?.status);
-      
       if (response?.status) {
         // Xóa token từ cookie
         Cookies.remove("accessToken");
-        Cookies.remove("key_refresh_token_encode");
-        Cookies.remove("refreshToken");
         localStorage.clear();
         // Redirect đến trang đăng nhập
         navigate("/login");
@@ -200,6 +198,95 @@ function NavigativeBar() {
       toast.error("Đăng xuất thất bại");
     }
   };
+
+  const { account, balance } = useSelector((state) => state.wallet);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+  useEffect(() => {
+    if (window.ethereum) {
+      window.ethereum.on("accountsChanged", handleAccountsChanged);
+    }
+    return () => {
+      if (window.ethereum) {
+        window.ethereum.removeListener(
+          "accountsChanged",
+          handleAccountsChanged
+        );
+      }
+    };
+  }, []);
+
+  const connectWallet = async () => {
+    if (window.ethereum) {
+      try {
+        const web3 = new Web3(window.ethereum);
+        const accounts = await window.ethereum.request({
+          method: "eth_requestAccounts",
+        });
+        const balanceWei = await web3.eth.getBalance(accounts[0]);
+        const balanceEther = web3.utils.fromWei(balanceWei, "ether");
+        const formattedBalance = parseFloat(balanceEther).toFixed(4);
+
+        dispatch(
+          setWallet({ account: accounts[0], balance: Number(formattedBalance) })
+        );
+      } catch (error) {
+        toast.error("Kết nối ví thất bại:", error);
+      }
+    } else {
+      toast.info("Vui lòng cài đặt MetaMask!");
+    }
+  };
+
+  const handleAccountsChanged = async (accounts) => {
+    if (accounts.length > 0) {
+      const web3 = new Web3(window.ethereum);
+      const balanceWei = await web3.eth.getBalance(accounts[0]);
+      const balanceEther = web3.utils.fromWei(balanceWei, "ether");
+      const formattedBalance = parseFloat(balanceEther).toFixed(4);
+
+      dispatch(setWallet({ account: accounts[0], balance: formattedBalance }));
+    } else {
+      dispatch(setWallet({ account: accounts[0], balance: 0 }));
+    }
+  };
+
+  const switchAccount = async () => {
+    if (window.ethereum) {
+      try {
+        await window.ethereum.request({
+          method: "wallet_requestPermissions",
+          params: [{ eth_accounts: {} }],
+        });
+        const accounts = await window.ethereum.request({
+          method: "eth_accounts",
+        });
+        handleAccountsChanged(accounts);
+      } catch (error) {
+        toast.error("Lỗi đổi tài khoản:", error);
+      }
+    } else {
+      toast.info("Vui lòng cài đặt MetaMask!");
+    }
+  };
+
+  const popupRef = useRef(null);
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (popupRef.current && !popupRef.current.contains(event.target)) {
+        setIsMenuOpen(false);
+      }
+    };
+
+    if (isMenuOpen) {
+      document.addEventListener("mousedown", handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [isMenuOpen]);
 
   return (
     <React.Fragment>
@@ -267,11 +354,52 @@ function NavigativeBar() {
               </li>
             </Link>
           </ul>
-          <div className="navbar-side--right">
+          <div className="navbar-side--right" ref={popupRef}>
+            <div className="wallet-container">
+              <button
+                className="wallet-button"
+                onClick={() => setIsMenuOpen(!isMenuOpen)}
+              >
+                <i className="fa-solid fa-wallet"></i>
+              </button>
+
+              {isMenuOpen && (
+                <ul className="wallet-menu">
+                  {account && (
+                    <>
+                      <li>
+                        <i className="fa-solid fa-wallet"></i>
+                        {account.substring(0, 12)}...
+                        {account.slice(-4)}
+                      </li>
+                      <li className="balance">
+                        <p>Số dư:</p>
+                        <strong>
+                          <i className="fa-brands fa-ethereum"></i>
+                          {balance || balance === 0
+                            ? `${balance?.toLocaleString()} ETH`
+                            : "Đang tải..."}
+                        </strong>
+                      </li>
+                      <li className="wallet-action" onClick={switchAccount}>
+                        Đổi tài khoản
+                      </li>
+                    </>
+                  )}
+                  {!account && (
+                    <li className="wallet-action" onClick={connectWallet}>
+                      Kết nối ví
+                    </li>
+                  )}
+                </ul>
+              )}
+            </div>
             <div className="bell-notice--icon">
               <div className="icon-notice--container" onClick={handleClick}>
                 <BiSolidBellRing />
-                {unseenCount > 0 && <p> {unseenCount > 9 ? "9+" : unseenCount} </p>}
+                {unseenCount > 0 && (
+                  <p> {unseenCount > 9 ? "9+" : unseenCount} </p>
+                )}
               </div>
 
               <Popover
@@ -312,6 +440,7 @@ function NavigativeBar() {
                 </ul>
               </Popover>
             </div>
+
             <div className="personal-icon">
               <img
                 className="avt-navbar"
@@ -333,6 +462,7 @@ function NavigativeBar() {
                       </span>
                     </Link>
                   </li>
+
                   <li
                     className="dark-mode--setting"
                     onClick={() => {

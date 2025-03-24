@@ -1,11 +1,10 @@
 import React, { useContext, useEffect, useState } from "react";
 import "./stories_page.scss";
-import { FaPlus, FaHandHoldingHeart } from "react-icons/fa6";
+import { FaPlus } from "react-icons/fa6";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { MdDelete } from "react-icons/md";
 import StoryPageItem from "./StoryPageItem/story_page_item";
 import soundClickHeart from "../../www/mp3/comedy_pop_finger_in_mouth_001.mp3";
-import ClassicPostLoader from "../../skeleton/classic_post_loader";
 import NavigativeBar from "../../layout/NavigativeBar/navigative_bar";
 import { deleteData, getData, postData } from "../../ultils/fetchAPI/fetch_API";
 import {

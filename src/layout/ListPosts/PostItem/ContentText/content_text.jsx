@@ -3,7 +3,7 @@ import "./content_text.scss";
 
 function ContentText({ data }) {
     const [isExpanded, setIsExpanded] = useState(false); // Trạng thái mở rộng
-    const maxLength = 100; // Độ dài tối đa cho nội dung rút gọn
+    const maxLength = 250; // Độ dài tối đa cho nội dung rút gọn
 
     const toggleExpand = () => {
         setIsExpanded(!isExpanded);
@@ -24,7 +24,7 @@ function ContentText({ data }) {
             />
             {shouldTruncate && (
                 <span className="toggle-text" onClick={toggleExpand}>
-                    {isExpanded ? " Xem bớt" : " Xem thêm"}
+                    {isExpanded ? "Ẩn bớt" : " Xem thêm"}
                 </span>
             )}
         </React.Fragment>

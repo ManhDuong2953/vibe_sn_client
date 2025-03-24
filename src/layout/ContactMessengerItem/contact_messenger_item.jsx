@@ -86,7 +86,7 @@ function ContactMessengerItem({ getFristConversation, listUsersOnline }) {
                     <div className="avt-contact">
                       <img src={msg.friend_avatar} alt={msg.friend_name} />
                     </div>
-                    <span text-ellipsis>
+                    <span className="text-ellipsis">
                       <p className="name-contact">{msg.friend_name}</p>
                       <p className="newest-messenger">
                         {msg.content_text && (

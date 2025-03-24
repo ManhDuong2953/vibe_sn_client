@@ -93,6 +93,7 @@
         justify-content: center;
         img,
         video {
+          width: 100%;
           height: 100%;
           object-fit: contain;
         }
@@ -161,7 +162,7 @@
           display: flex;
           align-items: center;
           margin: 3px;
-         
+
           svg {
             margin-right: 4px;
             font-size: 20px;
@@ -213,7 +214,6 @@
       }
       a {
         .contact {
-          width: calc(100% - 30px);
           margin: auto;
           padding: 10px;
           border-radius: 5px;
@@ -234,5 +234,40 @@
         padding: 15px 0 0;
       }
     }
+  }
+  .row-buy {
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    a {
+      flex: 1;
+      padding: 0 10px;
+      &:hover {
+        opacity: 0.8;
+      }
+    }
+    button {
+      &:hover {
+        opacity: 0.8;
+      }
+      flex: 1;
+      padding: 0 10px;
+      background: green;
+      height: 100%;
+      width: 100%;
+      font-size: 16px;
+      padding: 10px;
+      border-radius: 5px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      b {
+        margin-left: 4px;
+      }
+    }
+  }
+  p.text-danger {
+    padding: 10px 15px 2px;
   }
 }

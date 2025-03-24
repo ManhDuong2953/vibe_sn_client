@@ -35,6 +35,7 @@ const API_LOGIN_FACE_RECOGNITION = `${API_HOST}/users/face-recognition/login-fac
 const API_LOGOUT = API_HOST + "/token/delete";
 const API_ROTATION_TOKEN = API_HOST + "/token/create";
 const API_DECODE_TOKEN = API_HOST + "/token/decode-refresh-token";
+const API_AUTH_TOKEN = API_HOST + "/token/auth-token";
 
 // OTP API endpoints
 const API_CREATE_OTP = API_HOST + "/otp/create";
@@ -304,5 +305,6 @@ export {
   API_FRIEND_CREATE_BLOCK,
   API_FRIEND_CHECK_BLOCK,
   API_FRIEND_DELETE_BLOCK,
-  API_COUNT_MANUAL_FRIEND
+  API_COUNT_MANUAL_FRIEND,
+  API_AUTH_TOKEN,
 };

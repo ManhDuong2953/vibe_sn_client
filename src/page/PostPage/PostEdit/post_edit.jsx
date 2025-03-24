@@ -10,9 +10,9 @@ import { API_POST_DETAIL, API_UPDATE_POST } from "../../../API/api_server";
 
 // Import FilePond and necessary plugins
 import { FilePond, registerPlugin } from "react-filepond";
-import "filepond/dist/filepond.min.css";
+// import "filepond/dist/filepond.min.css";
 import FilePondPluginImagePreview from "filepond-plugin-image-preview";
-import "filepond-plugin-image-preview/dist/filepond-plugin-image-preview.css";
+// import "filepond-plugin-image-preview/dist/filepond-plugin-image-preview.css";
 import FilePondPluginFileEncode from "filepond-plugin-file-encode";
 import FilePondPluginFileValidateSize from "filepond-plugin-file-validate-size";
 import FilePondPluginImageExifOrientation from "filepond-plugin-image-exif-orientation";
