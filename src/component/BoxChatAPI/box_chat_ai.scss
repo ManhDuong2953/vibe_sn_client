@@ -6,135 +6,90 @@
   flex-direction: column;
   align-items: flex-end;
   z-index: 10000;
-
   .chatbox-toggle {
-    width: 60px;
-    height: 60px;
+    width: 150px;
+    height: 150px;
     cursor: pointer;
-    border-radius: 50%;
-    border: 2px solid #ddd;
-    background: #fff;
-    transition: transform 0.3s, box-shadow 0.3s;
-    box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
-
+    transform: scale(1);
+    transition: all 0.7s ease;
     &:hover {
-      transform: scale(1.1);
-      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+      transform: scale(1.2);
     }
   }
 
   .chatbox-container {
-    width: 380px;
-    height: 500px;
-    background: #f1f1f1;
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
-    border-radius: 12px;
+    width: 300px;
+    height: 400px;
+    margin-right: 40px;
+    margin-bottom: 10px;
+    background: #f9f9f9;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    border-radius: 10px;
     display: flex;
     flex-direction: column;
-    overflow: hidden;
-
-    // Remove fixed margin để hỗ trợ kéo thả tự do
-    margin: 0;
-
-    position: absolute; // Hỗ trợ kéo thả tự do bằng JS
-    top: 100px;
-    left: 100px;
 
     .chatbox-header {
-      padding: 12px;
-      background: #25aae3;
+      padding: 10px;
+      background: #007bff;
       color: #fff;
+      border-radius: 10px;
       font-weight: bold;
-      font-size: 16px;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      border-top-left-radius: 12px;
-      border-top-right-radius: 12px;
-      cursor: move; // Chỉ định header có thể kéo
-    }
 
-    .chatbox-close {
-      background: transparent;
-      border: none;
-      font-size: 20px;
-      color: #fff;
-      cursor: pointer;
-      transition: opacity 0.3s;
-
-      &:hover {
-        opacity: 0.7;
+      .chatbox-close {
+        background: transparent;
+        border: none;
+        font-size: 20px;
+        color: #fff;
+        cursor: pointer;
       }
     }
 
     .chatbox-body {
       flex: 1;
       overflow-y: auto;
-      padding: 10px 15px;
+      padding: 10px;
       display: flex;
       flex-direction: column;
-      gap: 15px;
+      gap: 10px;
 
       .chatbox-message {
-        padding: 10px 15px;
+        padding: 8px 12px;
         border-radius: 10px;
         max-width: 80%;
-        font-size: 15px;
-        line-height: 1.6;
-        word-wrap: break-word;
-        background: #f4f4f4;
-        color: #333;
 
         &.user {
           align-self: flex-end;
-          background: #25aae3;
+          background: #007bff;
           color: #fff;
         }
 
         &.bot {
           align-self: flex-start;
-          background: #8f8f8f;
+          background: #e9ecef;
           color: #333;
-        }
-
-        pre,
-        code {
-          font-family: 'Courier New', Courier, monospace;
-          background: #2e2e2e;
-          color: #f1f1f1;
-          border-radius: 5px;
-          padding: 8px;
-          white-space: pre-wrap;
-          word-wrap: break-word;
-          font-size: 14px;
         }
       }
     }
 
     .chatbox-footer {
-      padding: 12px 15px;
-      background: #fff;
+      padding: 10px;
       border-top: 1px solid #ddd;
       display: flex;
-      gap: 15px;
+      gap: 10px;
 
       input {
         flex: 1;
-        padding: 12px;
-        background-color: #f4f4f4;
+        padding: 8px;
+        background-color: #ddd !important;
         border: 1px solid #ccc;
-        border-radius: 8px;
+        color: #333 !important;
+        border-radius: 5px;
         font-size: 14px;
-        color: #333;
-
         &::placeholder {
-          color: #aaa;
-        }
-
-        &:focus {
-          outline: none;
-          border-color: #007bff;
-          box-shadow: 0 0 5px rgba(0, 123, 255, 0.4);
+          color: #333 !important;
         }
       }
     }

@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useRef, useState } from "react";
 import "./navigative_bar.scss";
 import logo from "../../www/logo_sm.png";
-import { AiFillHome } from "react-icons/ai";
+import { AiFillHome, AiOutlineReload } from "react-icons/ai";
 import { FaShop } from "react-icons/fa6";
 import { HiMiniUserGroup } from "react-icons/hi2";
 import { BiLogoMessenger, BiSolidBellRing } from "react-icons/bi";
@@ -379,6 +379,10 @@ function NavigativeBar() {
                           {balance || balance === 0
                             ? `${balance?.toLocaleString()} ETH`
                             : "Đang tải..."}
+                          <AiOutlineReload
+                            style={{ marginLeft: "5px", cursor: "pointer" }}
+                            onClick={connectWallet}
+                          />
                         </strong>
                       </li>
                       <li className="wallet-action" onClick={switchAccount}>

@@ -83,14 +83,29 @@ function MarketplaceDetail({ titlePage }) {
   const handleTransaction = async () => {
     if (!data) return;
     try {
-      setIsTrans(true)
-      await sendTransaction(data.product.seller_wallet_address, data.product.product_price)
+      setIsTrans(true);
+
+      // Tạo payload JSON
+      const payload = {
+        buyer_id: dataOwner?.user_id,
+        seller_id: data?.user?.user_id,
+        amount: data.product.product_price,
+        timestamp: new Date().toISOString(),
+        product_id: data.product.marketplace_product_id,
+      };
+
+      await sendTransaction(
+        data.product.seller_wallet_address,
+        data.product.product_price,
+        payload
+      );
     } catch (error) {
       toast.error(error.message);
-    } finally{
-      setIsTrans(false)
+    } finally {
+      setIsTrans(false);
     }
   };
+
   return (
     <React.Fragment>
       <NavigativeBar />
@@ -183,23 +198,25 @@ function MarketplaceDetail({ titlePage }) {
                 {data?.product?.product_location}
               </p>
             </div>
-            {!account && (
+            {!account && (dataOwner?.user_id !== data?.user?.user_id) && (
               <p className="text-danger">* Kết nối ví để mua sản phẩm</p>
             )}
-            <div className="row-buy">
-              {account && (
-                <button disabled={isTrans} onClick={handleTransaction}>
-                  <FaMoneyCheckAlt />
-                  <b>{isTrans? 'Đang mua' : "Mua sản phẩm"}</b>
-                </button>
-              )}
-              <Link to={"/messenger/" + data?.user?.user_id}>
-                <div className="contact">
-                  <FaFacebookMessenger />
-                  Liên hệ với người bán
-                </div>
-              </Link>
-            </div>
+            {dataOwner?.user_id !== data?.user?.user_id && (
+              <div className="row-buy">
+                {account && (
+                  <button disabled={isTrans} onClick={handleTransaction}>
+                    <FaMoneyCheckAlt />
+                    <b>{isTrans ? "Đang mua" : "Mua sản phẩm"}</b>
+                  </button>
+                )}
+                <Link to={"/messenger/" + data?.user?.user_id}>
+                  <div className="contact">
+                    <FaFacebookMessenger />
+                    Liên hệ với người bán
+                  </div>
+                </Link>
+              </div>
+            )}
             <div className="map">
               <iframe
                 src={

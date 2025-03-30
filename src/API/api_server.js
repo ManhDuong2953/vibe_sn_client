@@ -48,7 +48,8 @@ const API_FRIEND_REQUEST = (id) => API_HOST + "/users/friend/request/" + id;
 const API_FRIEND_ACCEPT = (id) => API_HOST + "/users/friend/accept/" + id;
 const API_FRIEND_STATUS = API_HOST + "/users/friend/status/";
 const API_FRIEND_LIST = (id) => API_HOST + "/users/friend/list/" + id;
-const API_COUNT_MANUAL_FRIEND = (id) => API_HOST + "/users/friend/get-count-manual-friend/" + id;
+const API_COUNT_MANUAL_FRIEND = (id) =>
+  API_HOST + "/users/friend/get-count-manual-friend/" + id;
 const API_FRIEND_LIST_REQUEST = API_HOST + "/users/friend/requests/list";
 const API_FRIEND_DELETE = API_HOST + "/users/friend/delete";
 const API_FRIEND_SUGGEST = API_HOST + "/users/friend/list-suggest";
@@ -194,6 +195,8 @@ const API_DELETE_ALL_NOTIFICATION = API_HOST + "/notices/delete-all";
 const API_DELETE_ALL_NOTICE_CURRRENT =
   API_HOST + "/notices/delete-notice-current";
 
+const API_POST_CONFIRM_PURCHASE = API_HOST + "/confirm-purchase";
+
 export {
   API_SIGNUP_POST,
   API_SIGNUP_SOCIALNETWORK_POST,
@@ -307,4 +310,5 @@ export {
   API_FRIEND_DELETE_BLOCK,
   API_COUNT_MANUAL_FRIEND,
   API_AUTH_TOKEN,
+  API_POST_CONFIRM_PURCHASE
 };

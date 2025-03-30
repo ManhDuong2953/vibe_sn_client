@@ -234,7 +234,7 @@ function ChatMessengerPage({ titlePage }) {
 
   //Check xem người dùng đã có cặp key chưa
   const checkExistKeyPair = async () => {
-    try {      
+    try {
       if (!isVerifiedCode) {
         // nếu chưa verify
         const response = await getData(API_IS_EXIST_KEYSPAIR);
@@ -348,8 +348,6 @@ function ChatMessengerPage({ titlePage }) {
       getDataReceiver();
     }
   }, [id_receiver]);
-
-
 
   // lắng nghe sự kiện nhận tin nhắn
   useEffect(() => {
@@ -766,7 +764,7 @@ function ChatMessengerPage({ titlePage }) {
           socket.emit("sendBlockUser", {
             requestor_id: dataOwner?.user_id,
             receiver_id: id_receiver,
-            status: "block"
+            status: "block",
           });
         }
       }
@@ -783,7 +781,7 @@ function ChatMessengerPage({ titlePage }) {
           socket.emit("sendBlockUser", {
             requestor_id: dataOwner?.user_id,
             receiver_id: id_receiver,
-            status: "unblock"
+            status: "unblock",
           });
         }
       }
@@ -886,8 +884,8 @@ function ChatMessengerPage({ titlePage }) {
                 </div>
                 <ul className="chat-messages">
                   {Object.keys(groupedMessages).map((date, index) => (
-                    <React.Fragment key={index}>
-                      <li className="message-date">
+                    <React.Fragment>
+                      <li className="message-date" key={index}>
                         {date === formatDate(Date.now(), "dd/mm/yy")
                           ? "Hôm nay"
                           : date === "NaN/NaN/NaN"
@@ -942,9 +940,11 @@ function ChatMessengerPage({ titlePage }) {
                                       className={`message-content message-${msg.messenger_id}`}
                                     >
                                       {msg.content_type === "text" && (
-                                        <p className="message-text">
-                                          {msg.content_text}
-                                        </p>
+                                        <p
+                                          dangerouslySetInnerHTML={{
+                                            __html: msg.content_text,
+                                          }}
+                                        ></p>
                                       )}
                                       {msg.content_type === "link" && (
                                         <p
