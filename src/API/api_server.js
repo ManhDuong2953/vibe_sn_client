@@ -196,6 +196,8 @@ const API_DELETE_ALL_NOTICE_CURRRENT =
   API_HOST + "/notices/delete-notice-current";
 
 const API_POST_CONFIRM_PURCHASE = API_HOST + "/confirm-purchase";
+const API_GET_LINK_THREE_DIMENSION = (id) =>
+  API_HOST + "/marketplace/get-view-three-dimension/" + id;
 
 export {
   API_SIGNUP_POST,
@@ -310,5 +312,6 @@ export {
   API_FRIEND_DELETE_BLOCK,
   API_COUNT_MANUAL_FRIEND,
   API_AUTH_TOKEN,
-  API_POST_CONFIRM_PURCHASE
+  API_POST_CONFIRM_PURCHASE,
+  API_GET_LINK_THREE_DIMENSION
 };
