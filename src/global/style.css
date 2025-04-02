@@ -273,7 +273,7 @@ a.filepond--credits {
 .tox-statusbar {
   display: none !important;
 }
-.tox-tinymce{
+.tox-tinymce {
   height: 300px !important;
   margin: 20px 0 !important;
 }
@@ -311,4 +311,8 @@ a.filepond--credits {
 
 /* Desktop thông thường */
 @media (min-width: 1025px) {
+}
+
+.leva-c-dKMqBT {
+  color: aqua;
 }

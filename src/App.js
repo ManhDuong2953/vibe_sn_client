@@ -68,7 +68,6 @@ function App() {
         pauseOnHover
         theme={theme}
       />
-      <BoxChatAI />
       <Suspense
         fallback={
           <div>
@@ -90,6 +89,7 @@ function App() {
                           <SocketProvider>
                             <ImageProvider>{route.component}</ImageProvider>
                           </SocketProvider>
+                          <BoxChatAI />
                         </OwnDataProvider>
                       }
                     />

@@ -39,15 +39,17 @@ function Scene() {
     modelRotation: { value: [0, 0, 0], step: 0.1 },
     cameraPosition: { value: [0, 5, 10], step: 0.5 },
     cameraFov: { value: 50, min: 10, max: 100, step: 1 },
-    backgroundColor: { value: "#313131" },
+    backgroundColor: { value: "#4b4b4b" },
+    showGrid: { value: true, label: "Show Grid" }, // Thêm nút bật/tắt grid
   });
 
   return (
     <div style={{ width: "100vw", height: "100vh" }}>
-      <Suspense fallback={<span>Loading 3D Model...</span>}>
+      <Suspense fallback={<span style={{padding: '20px'}}>Loading 3D Model...</span>}>
         <Canvas
           camera={{ position: controls.cameraPosition, fov: controls.cameraFov }}
           gl={{ antialias: true }}
+          shadows // Bật tính năng bóng
         >
           <color attach="background" args={[controls.backgroundColor]} />
           <ambientLight intensity={controls.ambientIntensity} />
@@ -55,15 +57,35 @@ function Scene() {
             position={controls.lightPosition}
             intensity={controls.lightIntensity}
             color={controls.lightColor}
+            shadow-mapSize-width={1024} // Độ phân giải bóng
+            shadow-mapSize-height={1024}
           />
+          
           {link && (
             <ModelThreeD
               scale={[controls.modelScale, controls.modelScale, controls.modelScale]}
               position={controls.modelPosition}
               rotation={controls.modelRotation}
               url={link}
+              castShadow // Model tạo bóng
+              receiveShadow // Model nhận bóng
             />
           )}
+
+          {/* Thêm lưới với chiều cao bằng -50% model */}
+          {controls.showGrid && (
+            <mesh 
+              position={[0, -controls.modelScale * 25, 0]} // Giảm 50% chiều cao
+              receiveShadow // Nhận bóng từ model
+            >
+              <planeGeometry args={[100, 100, 10, 10]} />
+              <shadowMaterial opacity={0.2} /> {/* Vật liệu bóng */}
+              <gridHelper 
+                args={[100, 100, '#ffffff', '#666666']} // Kích thước và màu sắc lưới
+              />
+            </mesh>
+          )}
+
           <OrbitControls />
         </Canvas>
       </Suspense>
