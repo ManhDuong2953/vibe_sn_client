@@ -7,13 +7,13 @@
   align-items: flex-end;
   z-index: 10000;
   .chatbox-toggle {
-    width: 150px;
-    height: 150px;
+    width: 100px;
+    height: 100px;
     cursor: pointer;
     transform: scale(1);
     transition: all 0.7s ease;
     &:hover {
-      transform: scale(1.2);
+      transform: scale(1.5);
     }
   }
 
