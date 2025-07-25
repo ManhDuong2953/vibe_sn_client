@@ -5,7 +5,7 @@ import { getData } from "../../ultils/fetchAPI/fetch_API";
 import { API_AUTH_TOKEN } from "../../API/api_server";
 import Spinner from "../Spinner/spinner";
 
-const PrivateRoute = () => {
+const PrivateRoute = () => {    
   const [isAuthenticated, setIsAuthenticated] = useState(Cookies.get("accessToken") ? true : false);
   const accessToken = Cookies.get("accessToken");
   

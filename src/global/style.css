@@ -31,7 +31,7 @@
   --bg-temp-color: transparent !important;
   --input-color: #5b5c5e;
   --bg-sidebar-left: url("https://vapa.vn/wp-content/uploads/2022/12/anh-den-dep-002.jpg")
-    top center / cover no-repeat;
+  top center / cover no-repeat;
 }
 
 [data-theme="light"] {
@@ -93,9 +93,12 @@ svg {
 }
 
 .text-ellipsis {
-  white-space: nowrap; /* Không cho ngắt dòng */
-  overflow: hidden; /* Ẩn phần chữ thừa */
-  text-overflow: ellipsis; /* Thay thế phần chữ thừa bằng dấu '...' */
+  white-space: nowrap;
+  /* Không cho ngắt dòng */
+  overflow: hidden;
+  /* Ẩn phần chữ thừa */
+  text-overflow: ellipsis;
+  /* Thay thế phần chữ thừa bằng dấu '...' */
 }
 
 .text-center {
@@ -105,17 +108,19 @@ svg {
 .Toastify__toast-theme--light {
   background-color: #000000 !important;
 }
+
 .Toastify__toast-body > * {
   color: white;
 }
+
 .popup-info--container {
   display: none;
 }
 
 input:disabled,
-button:disabled,
-select:disabled,
-textarea:disabled {
+  button:disabled,
+  select:disabled,
+  textarea:disabled {
   cursor: not-allowed;
   filter: brightness(0.8);
 }
@@ -193,11 +198,25 @@ a {
   font-style: normal;
 }
 
+.filepond--root {
+  margin-bottom: 0;
+}
+
+.filepond--root .filepond--drop-label {
+  border: 2px solid var(--input-color);
+}
+
 .text-danger {
-  color: red;
+  color: red !important;
   font-style: italic;
   padding: 5px 0;
   font-size: 13px;
+}
+
+input {
+  border: none !important;
+  outline: unset !important;
+  min-height: 35px !important;
 }
 
 ul {
@@ -259,6 +278,7 @@ a.filepond--credits {
 .filepond--drop-label label {
   color: var(--text-color) !important;
 }
+
 .crop-img-container .reactEasyCrop_Container {
   position: absolute !important;
   top: calc(10% + 56px) !important;
@@ -266,6 +286,7 @@ a.filepond--credits {
   right: 10% !important;
   bottom: 10% !important;
 }
+
 .crop-img-container {
   background-color: var(--bg-color);
 }
@@ -273,27 +294,28 @@ a.filepond--credits {
 .tox-statusbar {
   display: none !important;
 }
+
 .tox-tinymce {
   height: 300px !important;
   margin: 20px 0 !important;
 }
 /* Điện thoại di động, hiển thị chiều dọc */
-@media (max-width: 320px) {
+@media (max-width:320px) {
   svg {
     font-size: 0.9;
   }
 }
 
 /* Điện thoại di động, hiển thị chiều ngang */
-@media (max-width: 480px) {
+@media (max-width:480px) {
 }
 
 /* Máy tính bảng, hiển thị chiều dọc */
-@media (max-width: 600px) {
+@media (max-width:600px) {
 }
 
 /* Máy tính bảng, hiển thị chiều ngang */
-@media (max-width: 800px) {
+@media (max-width:800px) {
   .container {
     width: calc(100vw - 5px) !important;
     margin: auto;
@@ -302,15 +324,15 @@ a.filepond--credits {
 }
 
 /* Máy tính bảng loại to, hiển thị chiều dọc */
-@media (max-width: 768px) {
+@media (max-width:768px) {
 }
 
 /* Máy tính bảng loại to, hiển thị chiều ngang */
-@media (max-width: 1024px) {
+@media (max-width:1024px) {
 }
 
 /* Desktop thông thường */
-@media (min-width: 1025px) {
+@media (min-width:1025px) {
 }
 
 .leva-c-dKMqBT {

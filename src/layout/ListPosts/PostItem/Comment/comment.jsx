@@ -6,16 +6,7 @@ import React, {
   useCallback,
 } from "react";
 import "./comment.scss";
-import {
-  FaRegHeart,
-  FaFaceGrinBeamSweat,
-  FaFaceGrinSquintTears,
-  FaFaceSadTear,
-  FaFaceSadCry,
-  FaFaceSmileWink,
-  FaFaceRollingEyes,
-} from "react-icons/fa6";
-import { FaAngry, FaHeart, FaCamera } from "react-icons/fa";
+import { FaCamera } from "react-icons/fa";
 import { IoSendSharp } from "react-icons/io5";
 import { FaRegComment } from "react-icons/fa6";
 import { VscShare } from "react-icons/vsc";
@@ -31,7 +22,6 @@ import {
   API_DELETE_REACT_BY_ID,
   API_LIST_COMMENT_POST,
   API_POST_REACT_BY_ID,
-  API_SHARE_POST,
 } from "../../../../API/api_server";
 import { OwnDataContext } from "../../../../provider/own_data";
 import { FilePond, registerPlugin } from "react-filepond";
@@ -57,26 +47,11 @@ function Comment({ setShowCommentPage, data }) {
   const [showFilePond, setShowFilePond] = useState(false);
 
   const icons = {
-    default: <FaRegHeart title="" className="reaction-icon" />,
-    heart: <FaHeart title="Yêu thương" className="reaction-icon--heart" />,
-    sweat: (
-      <FaFaceGrinBeamSweat title="Cười trừ" className="reaction-icon--sweat" />
-    ),
-    tears: (
-      <FaFaceGrinSquintTears title="Haha" className="reaction-icon--tears" />
-    ),
-    tear: <FaFaceSadTear title="Buồn" className="reaction-icon--tear" />,
-    cry: <FaFaceSadCry title="Khóc" className="reaction-icon--cry" />,
-    angry: <FaAngry title="Tức giận" className="reaction-icon--angry" />,
-    smile: (
-      <FaFaceSmileWink title="Nháy mắt" className="reaction-icon--smile" />
-    ),
-    rollingeyes: (
-      <FaFaceRollingEyes
-        title="Nghi ngờ"
-        className="reaction-icon--rollingeyes"
-      />
-    ),
+    default: { icon: "👍", title: "Thích" },
+    heart: { icon: "😍", title: "Yêu thương" },
+    smile: { icon: "😂", title: "Cười" },
+    cry: { icon: "😭", title: "Khóc" },
+    angry: { icon: "😡", title: "Tức giận" },
   };
   useEffect(() => {
     setShowCommentContainer(setShowCommentPage);
@@ -84,9 +59,9 @@ function Comment({ setShowCommentPage, data }) {
   useEffect(() => {
     if (!data || !dataOwner) return;
     data?.reacts?.forEach((element) => {
-      if (element?.user_id === dataOwner?.user_id) {  
+      if (element?.user_id === dataOwner?.user_id) {
         setActiveIcon(element.react);
-        setActiveTitle(icons[element.react]?.props?.title)
+        setActiveTitle(icons[element.react]?.title);
       }
     });
   }, [dataOwner, data]);
@@ -166,7 +141,7 @@ function Comment({ setShowCommentPage, data }) {
 
   // lấy list comment
   const fetchData = useCallback(async () => {
-    if(!data?.post_id) return;
+    if (!data?.post_id) return;
     const response = await getData(API_LIST_COMMENT_POST(data?.post_id));
     if (response?.status) {
       setListComment(response.data);
@@ -223,7 +198,7 @@ function Comment({ setShowCommentPage, data }) {
     if (navigator.share) {
       try {
         console.log(domain + "/post/" + post_id);
-        
+
         await navigator.share({
           title: "Bài viết được tạo trên nền tảng mạng xã hội Vibe",
           text: "Bấm vào đây để truy cập bài viết",
@@ -243,7 +218,7 @@ function Comment({ setShowCommentPage, data }) {
       <div id="comment-main">
         <div className="analyst">
           <p className="like">
-            <FaHandHoldingHeart /> <b>{totalReacts}</b>
+            <span>👍</span> <b>{totalReacts}</b>
           </p>
           <p
             className="comment-share"
@@ -255,18 +230,20 @@ function Comment({ setShowCommentPage, data }) {
         <div className="action-post--container">
           <div className="reaction-container">
             <div className="react-icon--show">
-              {icons[activeIcon]}
-              <div className={"reaction-title--" + activeIcon}>
-                {activeTitle}
-              </div>
+              <span>{icons[activeIcon]?.icon}</span>
+              <div>{activeTitle}</div>
             </div>
+
             <div className="react-icon--hide">
               {Object.keys(icons).map((iconKey) => (
-                <div className="reaction-wrapper" key={iconKey}>
-                  {React.cloneElement(icons[iconKey], {
-                    onClick: () =>
-                      handleIconClick(iconKey, icons[iconKey]?.props?.title),
-                  })}
+                <div
+                  className="reaction-wrapper"
+                  key={iconKey}
+                  onClick={() =>
+                    handleIconClick(iconKey, icons[iconKey]?.title)
+                  }
+                >
+                  <span>{icons[iconKey]?.icon}</span>
                   <div className="reaction-count">
                     {reactionCounts[iconKey] || 0}
                   </div>
@@ -282,7 +259,10 @@ function Comment({ setShowCommentPage, data }) {
             Bình luận
           </div>
           {dataOwner?.user_id !== data?.user_id && (
-            <div className="share-container" onClick={() => sharePostHandle(data?.post_text, data?.post_id)}>
+            <div
+              className="share-container"
+              onClick={() => sharePostHandle(data?.post_text, data?.post_id)}
+            >
               <VscShare />
               Chia sẻ
             </div>
@@ -291,7 +271,9 @@ function Comment({ setShowCommentPage, data }) {
         <div className="comment-container--main">
           {showCommentContainer && (
             <>
-              <p className="load-more--comment" onClick={()=>fetchData()}>Tải thêm bình luận</p>
+              <p className="load-more--comment" onClick={() => fetchData()}>
+                Tải thêm bình luận
+              </p>
               <ul className="comment-container">
                 {listComment &&
                   listComment?.map((dataComment, index) => (
