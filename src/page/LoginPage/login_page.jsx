@@ -45,9 +45,10 @@ const LoginPage = ({ titlePage }) => {
       const response = await postData(API_LOGIN_POST, {
         type_account: "register",
         ...data,
-      });
+      });      
       if (response?.status) {
         navigate("/");
+        return;
       } else {
         setTextError(
           response?.message ||
