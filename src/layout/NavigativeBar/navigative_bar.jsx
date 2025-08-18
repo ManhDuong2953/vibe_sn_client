@@ -347,7 +347,7 @@ function NavigativeBar() {
                 <b>Nhóm</b>
               </li>
             </Link>
-            <Link to={"/setting/"} title="Cài đặt">
+            <Link to={"/setting"} title="Cài đặt">
               <li>
                 <IoMdSettings />
                 <b>Cài đặt</b>

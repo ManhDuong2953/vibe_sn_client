@@ -51,7 +51,7 @@ function ProfileEditor({ titlePage }) {
                     }));
                 }
             } catch (error) {
-                console.log(error.message);
+                console.error(error.message);
             }
         };
         fetchData();
@@ -151,7 +151,7 @@ function ProfileEditor({ titlePage }) {
                 <BackButton />
                 <form className="form-edit" encType="multipart/form-data">
                     <div className="side-left">
-                        <h2 className="form-title form-group full-width">Chỉnh sửa thông tin cá nhân</h2>
+                        <h2 className="form-group form-title full-width">Chỉnh sửa thông tin cá nhân</h2>
                         <div className="form-group full-width">
                             <label htmlFor="user_name">Họ và tên:</label>
                             <input

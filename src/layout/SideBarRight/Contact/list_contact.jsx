@@ -25,7 +25,7 @@ function ListContact() {
         setLoading(fetchData());
       }
     } catch (error) {
-      console.log(error.message);
+      console.error(error.message);
     }
   }, [dataOwner]);
   useEffect(() => {

@@ -197,8 +197,6 @@ function Comment({ setShowCommentPage, data }) {
 
     if (navigator.share) {
       try {
-        console.log(domain + "/post/" + post_id);
-
         await navigator.share({
           title: "Bài viết được tạo trên nền tảng mạng xã hội Vibe",
           text: "Bấm vào đây để truy cập bài viết",

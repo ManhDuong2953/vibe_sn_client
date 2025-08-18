@@ -4,7 +4,7 @@
   --success-color: #2ecc71;
   --accent-color: #e74c3c;
   --bg-accent-color: #e74d3c1e;
-  --active-color: #0654d2;
+  --active-color: #629eff;
   --bg-active-color: #0654d21b;
   --active-status-color: #46ab5e;
   --black-text: black;
@@ -337,4 +337,15 @@ a.filepond--credits {
 
 .leva-c-dKMqBT {
   color: aqua;
+}
+
+.btn-func {
+  background: var(--always-dark-overlay);
+  border-radius: 10px;
+}
+
+button:hover{
+  cursor: pointer;
+  opacity: 0.8;
+  transition: 0.6s ease;
 }

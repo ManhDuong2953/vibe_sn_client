@@ -210,7 +210,7 @@ function ChatMessengerPage({ titlePage }) {
         }
       }
     } catch (error) {
-      console.log("Error fetching data: ", error);
+      console.error("Error fetching data: ", error);
     }
   };
 
@@ -263,7 +263,7 @@ function ChatMessengerPage({ titlePage }) {
           localStorage.clear();
         }
       } catch (error) {
-        console.log("Error: ", error);
+        console.error("Error: ", error);
       }
     }
   };
@@ -277,7 +277,7 @@ function ChatMessengerPage({ titlePage }) {
             setIsHasKeysPairReceiver(response?.status);
           }
         } catch (error) {
-          console.log("Error: " + error);
+          console.error("Error: " + error);
         }
       };
       const getAllMessages = async () => {
@@ -293,7 +293,7 @@ function ChatMessengerPage({ titlePage }) {
             setMessages(sortedMessages);
           }
         } catch (error) {
-          console.log("Error: " + error);
+          console.error("Error: " + error);
         }
       };
 
@@ -342,7 +342,7 @@ function ChatMessengerPage({ titlePage }) {
             setInfoReceiver(response?.data);
           }
         } catch (error) {
-          console.log(error);
+          console.error(error);
         }
       };
       getDataReceiver();
@@ -392,7 +392,7 @@ function ChatMessengerPage({ titlePage }) {
         setReceiverIsTyping(data?.status);
       });
     } catch (error) {
-      console.log("error", error);
+      console.error("Error", error);
     }
   }, [isTyping]);
 
@@ -406,7 +406,7 @@ function ChatMessengerPage({ titlePage }) {
       recorder.start();
       setIsRecording(true);
     } catch (error) {
-      console.log(error);
+      console.error(error);
     }
   };
 
@@ -456,7 +456,7 @@ function ChatMessengerPage({ titlePage }) {
         setLoading(false);
       }
     } catch (error) {
-      console.log("Error sending audio message: ", error);
+      console.error("Error sending audio message: ", error);
     }
     // Reset lại input và tệp tin
     setMessage(""); // Reset input
@@ -550,7 +550,7 @@ function ChatMessengerPage({ titlePage }) {
           reply_messenger_id: newMessage.reply_messenger_id,
         });
       } catch (error) {
-        console.log("Error sending text message: ", error);
+        console.error("Error sending text message: ", error);
       }
     }
 
@@ -599,7 +599,7 @@ function ChatMessengerPage({ titlePage }) {
             },
           });
         } catch (error) {
-          console.log("Error sending file: ", error);
+          console.error("Error sending file: ", error);
         }
       }
     }

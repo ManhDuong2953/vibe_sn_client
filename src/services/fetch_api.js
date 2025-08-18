@@ -42,7 +42,7 @@ export const getAllFriends = async (user_id) => {
     }
     throw new Error(`HTTP error! status: ${response?.status}`);
   } catch (error) {
-    console.log(error);
+    console.error(error);
   }
 };
 

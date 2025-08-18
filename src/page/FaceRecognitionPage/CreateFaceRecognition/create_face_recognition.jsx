@@ -157,7 +157,7 @@ const CreateFaceRecognitionPage = ({ titlePage }) => {
         formData
       );
       if (response?.status) {
-        window.location.href = "/setting/"; // Điều hướng sau khi upload thành công
+        window.location.href = "/setting"; // Điều hướng sau khi upload thành công
       }
     };
     if (uploading) {
@@ -172,7 +172,7 @@ const CreateFaceRecognitionPage = ({ titlePage }) => {
           <BackButton />
           <h3>Tạo nhận diện khuôn mặt</h3>
           {!loading ? (
-            <div className="loading text-danger">
+            <div className="text-danger loading">
               Đang tải mô hình nhận diện...
             </div>
           ) : (
@@ -187,7 +187,7 @@ const CreateFaceRecognitionPage = ({ titlePage }) => {
                   height="480"
                 />
               </div>
-              {error && <div className="error text-danger">{error}</div>}
+              {error && <div className="text-danger error">{error}</div>}
               {!uploading && (
                 <h6 className="text-danger">
                   Đang thu thập dữ liệu khuôn mặt {".".repeat(dots)}{" "}

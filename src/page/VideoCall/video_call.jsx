@@ -128,7 +128,7 @@ const VideoCall = ({ isVideoCall = true, titlePage }) => {
             setDataReceiver(data);
           }
         } catch (error) {
-          console.log("Error: ", error);
+          console.error("Error: ", error);
         }
       };
 
@@ -326,7 +326,7 @@ const VideoCall = ({ isVideoCall = true, titlePage }) => {
         sender_id,
       });
     } catch (error) {
-      console.log("Error sending call message: ", error);
+      console.error("Error sending call message: ", error);
     }
   };
 

@@ -114,9 +114,8 @@ function CreateStoryTextPreview({ titlePage }) {
         <div className="container">
           <div className="story-container-preview--wrapper">
             <div className="side-left">
-              <div className="title">
+              <div className="title" style={{ display: "flex", alignItems: "center" }}>
                 <BackButton />
-
                 <h2>Tạo tin</h2>
               </div>
               <div className="controls-text">

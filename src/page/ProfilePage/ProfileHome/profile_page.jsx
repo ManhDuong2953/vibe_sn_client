@@ -40,7 +40,7 @@ function ProfilePage({ titlePage }) {
       };
       setLoading(fetchData());
     } catch (error) {
-      console.log(error.message);
+      console.error(error.message);
     }
   }, [user_id]);
 
@@ -55,7 +55,7 @@ function ProfilePage({ titlePage }) {
       };
       fetchData();
     } catch (error) {
-      console.log(error.message);
+      console.error(error.message);
     }
   }, [user_id]);
 

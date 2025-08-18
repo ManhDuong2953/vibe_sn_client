@@ -44,7 +44,7 @@ function ProfileHeader({ classNameActive, userId }) {
       };
       setLoading(fetchData());
     } catch (error) {
-      console.log(error.message);
+      console.error(error.message);
     }
   }, [userId]);
   const [countMutual, setCountMutual] = useState();
@@ -115,7 +115,7 @@ function ProfileHeader({ classNameActive, userId }) {
         }
       }
     } catch (error) {
-      console.log(error.message);
+      console.error(error.message);
     }
   };
 
@@ -126,7 +126,7 @@ function ProfileHeader({ classNameActive, userId }) {
         window.location.reload();
       }
     } catch (error) {
-      console.log(error.message);
+      console.error(error.message);
     }
   };
 
@@ -139,7 +139,7 @@ function ProfileHeader({ classNameActive, userId }) {
         window.location.reload();
       }
     } catch (error) {
-      console.log(error.message);
+      console.error(error.message);
     }
   };
 
@@ -155,7 +155,7 @@ function ProfileHeader({ classNameActive, userId }) {
         window.location.reload();
       }
     } catch (error) {
-      console.log(error.message);
+      console.error(error.message);
     }
   };
 
@@ -306,7 +306,7 @@ function ProfileHeader({ classNameActive, userId }) {
             <li className="profile-navigation--item friends">Bạn bè</li>
           </Link>
           <Link to={`/profile/${data && data?.user_id}/group`}>
-            <li className="profile-navigation--item group">Nhóm</li>
+            <li className="group profile-navigation--item">Nhóm</li>
           </Link>
           {data && dataOwner && dataOwner?.user_id === data.user_id && (
             <>

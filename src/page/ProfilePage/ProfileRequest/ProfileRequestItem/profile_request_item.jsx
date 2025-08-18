@@ -76,10 +76,7 @@ function ProfileRequestItem({ user_id }) {
     try {
       const confirmDelete = window.confirm("Từ chối lời mời người này chứ");
       if (!confirmDelete) return; // Nếu người dùng không xác nhận thì không làm gì
-  
-      // Kiểm tra dữ liệu và gọi API
-      console.log("Sending request to delete:", user_id, dataOwner?.user_id);
-  
+    
       const response = await postData(API_FRIEND_DELETE, {
         requestor_id: user_id,
         receiver_id: dataOwner?.user_id,
@@ -104,7 +101,7 @@ function ProfileRequestItem({ user_id }) {
         {!loading ? (
           <>
             <div className="item-container">
-              <div className="avt-suggest ">
+              <div className="avt-suggest">
                 <PopupInfoShort user_id={user_id} />
                 <img src={dataUser?.avatar} alt="User Avatar" />
               </div>

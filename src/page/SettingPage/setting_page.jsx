@@ -44,7 +44,7 @@ const SettingPage = ({ titlePage }) => {
                 }
             }
         } catch (error) {
-            console.log(error.message);
+            console.error(error.message);
 
         }
     };
@@ -71,7 +71,7 @@ const SettingPage = ({ titlePage }) => {
                 window.location.reload();
             }
         } catch (error) {
-            console.log(error.message);
+            console.error(error.message);
         }
     };
 

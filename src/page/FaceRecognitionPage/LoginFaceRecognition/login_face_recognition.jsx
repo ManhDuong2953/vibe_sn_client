@@ -36,7 +36,6 @@ const LoginFaceRecognition = ({ titlePage }) => {
           type_account: accountType,
         }
       );
-      console.log(response?.status);
       
       if (response?.status === true || response?.status === 200) {
         setIsDetect(true);
@@ -202,7 +201,6 @@ const LoginFaceRecognition = ({ titlePage }) => {
           user_id_encode,
         });
         if (response?.status) {
-          console.log("Đăng nhập thành công:", response.data);
           window.location.href = "/";
         } else {
           console.error("Đăng nhập thất bại:", response.message);
@@ -231,7 +229,7 @@ const LoginFaceRecognition = ({ titlePage }) => {
           <BackButton />
           <h3>Nhận Diện Khuôn Mặt để Đăng Nhập</h3>
           {!loading ? (
-            <div className="loading text-danger">
+            <div className="text-danger loading">
               Đang tải mô hình nhận diện...
             </div>
           ) : (
@@ -242,9 +240,9 @@ const LoginFaceRecognition = ({ titlePage }) => {
                 <canvas ref={canvasRef} className="overlay"></canvas>
               </div>
               {nameUser === "Không nhận diện được khuôn mặt phù hợp" ? (
-                <h6 className="text-warning text-center text-danger">{nameUser}</h6>
+                <h6 className="text-danger text-warning text-center">{nameUser}</h6>
               ) : nameUser ? (
-                <h4 className="text-warning text-center text-danger">{nameUser}</h4>
+                <h4 className="text-danger text-warning text-center">{nameUser}</h4>
               ) : (
                 <h6 className="text-danger text-center">
                   Đang kiểm tra dữ liệu khuôn mặt {".".repeat(dots)}

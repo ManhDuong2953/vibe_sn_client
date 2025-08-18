@@ -7,7 +7,6 @@ const provider = new ethers.JsonRpcProvider('HTTP://192.168.3.103:7545');
 export const getTransactionInfo = async (txHash) => {
   try {
     const tx = await provider.getTransaction(txHash);
-    console.log('Thông tin giao dịch:', tx);
   } catch (err) {
     console.error('Lỗi:', err);
   }

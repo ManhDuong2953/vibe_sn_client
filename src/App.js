@@ -1,8 +1,9 @@
-import React, { Suspense, useEffect } from "react";
+import { Suspense, useEffect } from "react";
 import routes from "./router/router";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import "./global/style.css";
+import "./global/toastify.scss";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { ImageProvider } from "./provider/image_context";
@@ -54,12 +55,20 @@ function App() {
     root.style.transition = "all .5s ease";
   }, [theme, root]);
 
+  const handleBackHistory = (key) => {
+    console.log(key);
+
+    if (key === "Escape") {
+      window.history.back();
+    }
+  };
+
   return (
-    <div className="App">
+    <div className="App" onKeyDown={(e) => handleBackHistory(e.key)}>
       <ToastContainer
-        position="top-right"
-        autoClose={3000}
-        hideProgressBar={false}
+        position="bottom-left"
+        autoClose={2000}
+        hideProgressBar={true}
         newestOnTop={false}
         closeOnClick
         rtl={false}

@@ -3,7 +3,7 @@ import "./profile_image.scss";
 
 import NavigativeBar from "../../../layout/NavigativeBar/navigative_bar";
 import ProfileHeader from "../../../layout/ProfileHeader/profile_header";
-import { Link, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { getData } from "../../../ultils/fetchAPI/fetch_API";
 import { API_GET_ALL_PROFILE_MEDIA_BY_ID } from "../../../API/api_server";
 import { timeAgo } from "../../../ultils/formatDate/format_date";
@@ -33,7 +33,7 @@ function ProfileImage({ titlePage }) {
             <ul className="post-image--list">
               {images &&
                 images?.map((image) => (
-                  <li className="post-image--item">
+                  <li className="post-image--item" key={Math.random()}>
                     <img src={image.media_link} alt="" />
                     <p className="time">{timeAgo(image.created_at)}</p>
                   </li>

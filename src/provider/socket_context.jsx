@@ -1,4 +1,4 @@
-import React, {
+import {
   createContext,
   useContext,
   useEffect,
@@ -73,7 +73,7 @@ export const SocketProvider = ({ children }) => {
     if (audioRef.current) {
       audioRef.current
         .play()
-        .catch((error) => console.log("Error playing audio:", error));
+        .catch((error) => console.error("Error playing audio:", error));
     }
   };
 
