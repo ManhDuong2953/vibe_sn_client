@@ -16,7 +16,6 @@
   display: flex;
   align-items: center;
   gap: 8px;
-
   background: var(--navbar-color);
   color: var(--text-color);
   box-shadow: 0 2px 6px var(--shadow-1);
@@ -40,14 +39,14 @@
 // Success
 .Toastify__toast--success {
   border-left: 4px solid var(--active-status-color);
-  background: var(--bg-active-color);
+  background: var(--bg--color);
   color: var(--active-status-color);
 }
 
 // Error
 .Toastify__toast--error {
   border-left: 4px solid var(--accent-color);
-  background: var(--bg-accent-color);
+  background: var(--bg-color);
   color: var(--accent-color);
 }
 

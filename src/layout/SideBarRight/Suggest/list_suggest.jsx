@@ -27,7 +27,7 @@ function ListSuggest() {
             <SuggestItem key={index} user_id={item?.user_id} />
           ))
         ) : (
-          <h5 className="text-center" style={{ margin: "5px 0" }}>
+          <h5 className="text-center" style={{ margin: "5px 0", color: "#7171718c" }}>
             Bạn không có gợi ý kết bạn nào
           </h5>
         )}

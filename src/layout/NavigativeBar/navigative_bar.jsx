@@ -419,12 +419,14 @@ function NavigativeBar() {
                 <ul className="box-notice">
                   <div className="box-notice--header">
                     <h3 lang="vi">Thông báo</h3>
-                    <p
-                      className="delete-all"
-                      onClick={() => handleDeleteAllNotice()}
-                    >
-                      Xóa tất cả
-                    </p>
+                    {listNotifications.length > 0 && (
+                      <p
+                        className="delete-all"
+                        onClick={() => handleDeleteAllNotice()}
+                      >
+                        Xóa tất cả
+                      </p>
+                    )}
                   </div>
                   <div className="box-notice--body">
                     <ul className="list-notice">

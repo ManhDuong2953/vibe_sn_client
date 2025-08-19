@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import "./list_posts.scss";
 import ListStories from "../ListStories/list_stories";
 import FormPost from "../../component/FormPost/form_post";
@@ -8,7 +8,6 @@ import { API_GET_POSTS } from "../../API/api_server";
 
 function ListPosts() {
   const [listPost, setListPost] = useState([]);
-  const scrollPosition = useRef(0);
   const [isDataLoaded, setIsDataLoaded] = useState(false);
 
   useEffect(() => {
@@ -28,18 +27,6 @@ function ListPosts() {
 
     fetchData();
   }, []);
-
-  useEffect(() => {
-    // Chỉ khôi phục vị trí cuộn sau khi dữ liệu đã được tải
-    if (isDataLoaded) {
-      window.scrollTo(0, scrollPosition.current);
-    }
-
-    return () => {
-      // Lưu vị trí cuộn trước khi rời khỏi trang
-      scrollPosition.current = window.scrollY;
-    };
-  }, [isDataLoaded]);
 
   return (
     <React.Fragment>

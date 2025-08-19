@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import NavigativeBar from "../../../layout/NavigativeBar/navigative_bar";
-import SuggestItem from "../../../layout/SideBarRight/Suggest/SuggestItem/suggest_item";
 import PostItem from "../../../layout/ListPosts/PostItem/post_item";
 import "./list_post_group.scss";
 import { Link } from "react-router-dom";
@@ -9,7 +8,6 @@ import { FaLayerGroup } from "react-icons/fa6";
 import { getData } from "../../../ultils/fetchAPI/fetch_API";
 import {
   API_LIST_GROUP_BY_OWNER,
-  API_LIST_GROUP_UNAPPROVED_POST,
   API_LIST_MY_GROUP_POST,
 } from "../../../API/api_server";
 import GroupItem from "../../../component/GroupItem/group_item";
@@ -18,7 +16,6 @@ function ListPostGroupPage({ titlePage }) {
     document.title = titlePage;
   }, [titlePage]);
 
-  const [listPostGroup, setListPostGroup] = useState([]);
   useEffect(() => {
     const icon = document.querySelector(".icon-gr");
     const sideLeft = document.querySelector(".side-left");

@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useRef, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import ReactDOM from "react-dom";
 import "./form_post.scss";
 import { Link } from "react-router-dom";
@@ -245,7 +245,7 @@ export default function FormPost({ group_id = undefined }) {
         </div>
         {!showImage && (
           <div className="func btn-create--img handle" onClick={toggleImg}>
-            <FaImages /> Thêm ảnh
+            <FaImages />
           </div>
         )}
         {!showEmotion && !group_id && (
@@ -253,7 +253,7 @@ export default function FormPost({ group_id = undefined }) {
             className="func btn-create--react handle"
             onClick={toggleEmotion}
           >
-            <BsEmojiLaughingFill /> Thêm bày tỏ cảm xúc
+            <BsEmojiLaughingFill /> 
           </div>
         )}
         <br />

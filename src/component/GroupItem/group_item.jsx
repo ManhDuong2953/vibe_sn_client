@@ -30,13 +30,13 @@ function GroupItem({ group_id = null, data = {} }) {
     } finally {
       setLoading(false);
     }
-  }, []);
+  }, [group_id, data]);
 
   return (
     <li className="list-group--item">
       {!loading && dataGr ? (
         <Link to={`/group/` + dataGr?.group_id}>
-          <div className="avt-group ">
+          <div className="avt-group">
             <img src={dataGr?.avatar_media_link} alt="" />
           </div>
           <div className="name-group">

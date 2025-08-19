@@ -489,7 +489,7 @@
 ul.box-notice {
   background-color: var(--navbar-color);
   width: 450px;
-  height: calc(100vh - 70px);
+  height: calc(90vh - 70px);
   border: 0.1px solid var(--border-color);
   padding: 10px;
   box-shadow: 0 2px 8px 0 rgba(99, 99, 99, 0.2);
@@ -498,7 +498,7 @@ ul.box-notice {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 0 0 15px 0;
+    padding: 15px;
     p.delete-all {
       font-size: 14px;
       padding: 10px;
@@ -512,7 +512,7 @@ ul.box-notice {
     }
   }
   .box-notice--body {
-    height: calc(100vh - 70px - 51.8px - 20px);
+    height: calc(90vh - 70px - 51.8px - 20px);
     overflow-y: scroll;
     overflow-x: hidden;
   }

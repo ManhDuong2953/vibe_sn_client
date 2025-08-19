@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import "./notice_item.scss";
 import { Link } from "react-router-dom";
 import { timeAgo } from "../../ultils/formatDate/format_date";
@@ -6,12 +6,6 @@ import { MdDeleteForever } from "react-icons/md";
 import { IoMdNotifications } from "react-icons/io";
 
 function NoticeItem({ data, handleDeleteNotice }) {
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    if (data) setLoading(false);
-  }, []);
-
 
 
   return (
