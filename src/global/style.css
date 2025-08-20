@@ -176,6 +176,10 @@ svg.icon-checked path {
   color: #32c3f1;
 }
 
+svg.icon-checked {
+  margin-left: 6px;
+}
+
 h1,
 h2,
 h3,
@@ -344,7 +348,7 @@ a.filepond--credits {
   border-radius: 10px;
 }
 
-button:hover{
+button:hover {
   cursor: pointer;
   opacity: 0.8;
   transition: 0.6s ease;
