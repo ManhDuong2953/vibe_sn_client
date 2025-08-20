@@ -123,7 +123,7 @@ const LoginPage = ({ titlePage }) => {
         <img className="img-thumb" src={bgAuthentication} alt="Marketing" />
         <div className="flex flex-col items-center w-full login-box">
           <img src={logo} alt="Logo" className="logo" />
-          <h2>Đăng nhập</h2>
+          <h2 className="bg-red-400 text-red-600">Đăng nhập</h2>
           <form className="w-full form-login" onSubmit={handleLogin}>
             <div className="input-group">
               <MdEmail className="icon" />

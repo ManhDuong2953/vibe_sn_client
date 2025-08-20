@@ -825,10 +825,17 @@ function ChatMessengerPage({ titlePage }) {
             </div>
 
             <ul className="chat-list">
-              <ContactMessengerItem
-                getFristConversation={handleGetFristConversition}
-                listUsersOnline={listUsersOnline}
-              />
+              {listUsersOnline?.length > 0 ? (
+                listUsersOnline.map((user, index) => (
+                  <ContactMessengerItem
+                    key={index}
+                    getFristConversation={handleGetFristConversition}
+                    user={user}
+                  />
+                ))
+              ) : (
+                <li className="box-center">Không có người dùng trực tuyến</li>
+              )}
             </ul>
           </div>
           {id_receiver && (

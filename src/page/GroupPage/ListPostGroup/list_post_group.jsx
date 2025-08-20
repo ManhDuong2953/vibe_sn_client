@@ -78,7 +78,7 @@ function ListPostGroupPage({ titlePage }) {
           </div>
           <div className="side-right">
             <ul className="list-gr">
-              {dataListPost ? (
+              {dataListPost.length > 0 ? (
                 dataListPost?.map((data, index) => {
                   return <PostItem key={index} data={data} />;
                 })

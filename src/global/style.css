@@ -152,7 +152,7 @@ button[type="submit"]:hover {
   width: -webkit-fill-available;
   min-height: 20vh;
   align-items: center;
-  color: #7171718c;
+  color: #7171718c !important;
   justify-content: center;
 }
 
