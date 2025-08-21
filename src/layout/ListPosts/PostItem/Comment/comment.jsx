@@ -47,11 +47,12 @@ function Comment({ setShowCommentPage, data }) {
   const [showFilePond, setShowFilePond] = useState(false);
 
   const icons = {
-    default: { icon: "👍", title: "Thích" },
+    default: { icon: "🤍", title: "Thả cảm xúc" },
+    like: { icon: "♥️", title: "Thích" },
     heart: { icon: "😍", title: "Yêu thương" },
     smile: { icon: "😂", title: "Cười" },
     cry: { icon: "😭", title: "Khóc" },
-    angry: { icon: "😡", title: "Tức giận" },
+    angry: { icon: "😤", title: "Tức giận" },
   };
   useEffect(() => {
     setShowCommentContainer(setShowCommentPage);
@@ -69,24 +70,25 @@ function Comment({ setShowCommentPage, data }) {
   // Xử lý khi click icon để tym
   const handleIconClick = async (icon, title) => {
     try {
+      // Cập nhật trạng thái icon và tiêu đề
+      setActiveIcon(icon);
+      setActiveTitle(title);
       // Nếu icon hiện tại không phải "default", xóa react trước đó
       if (activeIcon !== "default") {
-        await deleteData(API_DELETE_REACT_BY_ID(data?.post_id));
-
+        
         // Giảm số lượng của react cũ
         setReactionCount((prev) => ({
           ...prev,
           [activeIcon]: Math.max((prev[activeIcon] || 1) - 1, 0),
         }));
-
+        
         // Giảm tổng react
         setTotalReacts((prev) => Math.max(prev - 1, 0));
+        await deleteData(API_DELETE_REACT_BY_ID(data?.post_id));
       }
 
       // Nếu icon mới không phải "default", thêm react mới
       if (icon !== "default") {
-        await postData(API_POST_REACT_BY_ID(data?.post_id), { react: icon });
-
         // Tăng số lượng của react mới
         setReactionCount((prev) => ({
           ...prev,
@@ -95,11 +97,9 @@ function Comment({ setShowCommentPage, data }) {
 
         // Tăng tổng react
         setTotalReacts((prev) => prev + 1);
+        await postData(API_POST_REACT_BY_ID(data?.post_id), { react: icon });
       }
 
-      // Cập nhật trạng thái icon và tiêu đề
-      setActiveIcon(icon);
-      setActiveTitle(title);
     } catch (error) {
       console.error(error);
     }
@@ -216,7 +216,7 @@ function Comment({ setShowCommentPage, data }) {
       <div id="comment-main">
         <div className="analyst">
           <p className="like">
-            <span>👍</span> <b>{totalReacts}</b>
+            <span>❤️</span> <b>{totalReacts}</b>
           </p>
           <p
             className="comment-share"
@@ -227,7 +227,12 @@ function Comment({ setShowCommentPage, data }) {
         </div>
         <div className="action-post--container">
           <div className="reaction-container">
-            <div className="react-icon--show">
+            <div
+              className="react-icon--show"
+              onClick={() =>
+                handleIconClick(icons.default, icons.default?.title)
+              }
+            >
               <span>{icons[activeIcon]?.icon}</span>
               <div>{activeTitle}</div>
             </div>
@@ -256,15 +261,13 @@ function Comment({ setShowCommentPage, data }) {
             <FaRegComment />
             Bình luận
           </div>
-          {dataOwner?.user_id !== data?.user_id && (
-            <div
-              className="share-container"
-              onClick={() => sharePostHandle(data?.post_text, data?.post_id)}
-            >
-              <VscShare />
-              Chia sẻ
-            </div>
-          )}
+          <div
+            className="share-container"
+            onClick={() => sharePostHandle(data?.post_text, data?.post_id)}
+          >
+            <VscShare />
+            Chia sẻ
+          </div>
         </div>
         <div className="comment-container--main">
           {showCommentContainer && (

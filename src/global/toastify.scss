@@ -16,7 +16,7 @@
   display: flex;
   align-items: center;
   gap: 8px;
-  background: var(--navbar-color);
+  background: var(--toast-bg--color);
   color: var(--text-color);
   box-shadow: 0 2px 6px var(--shadow-1);
   border: 1px solid var(--border-color);
@@ -39,28 +39,28 @@
 // Success
 .Toastify__toast--success {
   border-left: 4px solid var(--active-status-color);
-  background: var(--bg--color);
+  background: var(--toast-bg--color);
   color: var(--active-status-color);
 }
 
 // Error
 .Toastify__toast--error {
   border-left: 4px solid var(--accent-color);
-  background: var(--bg-color);
+  background: var(--toast-bg--color);
   color: var(--accent-color);
 }
 
 // Warning (dùng disable-status để dịu hơn)
 .Toastify__toast--warning {
   border-left: 4px solid var(--disable-status-color);
-  background: rgba(255, 199, 0, 0.12);
+  background: var(--toast-bg--color);
   color: var(--disable-status-color);
 }
 
 // Info (primary-color)
 .Toastify__toast--info {
   border-left: 4px solid var(--primary-color);
-  background: rgba(0, 162, 255, 0.12);
+  background: var(--toast-bg--color);
   color: var(--primary-color);
 }
 
@@ -71,10 +71,10 @@
   background: var(--border-color);
 }
 
-.Toastify__progress-bar--success { background: var(--active-status-color); }
-.Toastify__progress-bar--error { background: var(--accent-color); }
-.Toastify__progress-bar--warning { background: var(--disable-status-color); }
-.Toastify__progress-bar--info { background: var(--primary-color); }
+.Toastify__progress-bar--success { background: var(--toast-bg--color); }
+.Toastify__progress-bar--error { background: var(--toast-bg--color); }
+.Toastify__progress-bar--warning { background: var(--toast-bg--color); }
+.Toastify__progress-bar--info { background: var(--toast-bg--color); }
 
 // ---- Close button ----
 .Toastify__close-button {

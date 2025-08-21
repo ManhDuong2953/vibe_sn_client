@@ -1,9 +1,11 @@
 .content.content-text {
   padding: 5px 5px 7px 15px;
-  font-size: 0.6rem;
-  line-height: 1.5;
+  line-height: 1.4;
   a {
     color: aqua;
+  }
+  *{
+    font-size: 0.9rem;
   }
 }
 .toggle-text {

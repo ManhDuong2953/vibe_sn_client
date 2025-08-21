@@ -19,7 +19,7 @@
   --disable-status-color: #787878;
   --primary-color: rgb(4, 196, 224);
   --bg-color: #181820;
-  /* --navbar-color: #242526; */
+  --toast-bg-color: black;
   --navbar-color: #292e33;
   --border-color: #494949;
   --text-color: #e4e6eb;
@@ -37,6 +37,7 @@
 [data-theme="light"] {
   --input-color: #e7e7e7;
   --disable-status-color: #d3cece;
+  --toast-bg-color: #ffffff;
   --primary-color: rgb(9 99 131);
   --bg-color: #f0f2f5;
   --navbar-color: #ffffff;
