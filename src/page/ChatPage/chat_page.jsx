@@ -156,15 +156,6 @@ function ChatMessengerPage({ titlePage }) {
     }
   }, [id_receiver_param]);
 
-  // set lại id receiver nếu không có params URL thì lấy last message id friend
-  const handleGetFristConversition = useCallback(
-    (data) => {
-      if (data && !id_receiver_param) {
-        setIDReceiver(data?.friend_id);
-      }
-    },
-    [id_receiver_param]
-  );
   //PIN Input
   const handleChange = (e, index) => {
     const value = e.target.value;
@@ -825,18 +816,8 @@ function ChatMessengerPage({ titlePage }) {
             </div>
 
             <ul className="chat-list">
-              {listUsersOnline?.length > 0 ? (
-                listUsersOnline.map((user, index) => (
-                  <ContactMessengerItem
-                    key={index}
-                    getFristConversation={handleGetFristConversition}
-                    user={user}
-                  />
-                ))
-              ) : (
-                <li className="box-center">Không có người dùng trực tuyến</li>
-              )}
-            </ul>
+              <ContactMessengerItem listUsersOnline={listUsersOnline} />
+            </ul>~
           </div>
           {id_receiver && (
             <>
@@ -1226,7 +1207,6 @@ function ChatMessengerPage({ titlePage }) {
                       {infoReceiver && infoReceiver?.user_name}
                     </div>
                     <div className="user-status">
-                      {" "}
                       {id_receiver &&
                       listUsersOnline &&
                       listUsersOnline?.includes(id_receiver)

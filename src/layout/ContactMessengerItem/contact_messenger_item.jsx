@@ -8,7 +8,7 @@ import { useSocket } from "../../provider/socket_context";
 import { timeAgo } from "../../ultils/formatDate/format_date";
 import { OwnDataContext } from "../../provider/own_data";
 
-function ContactMessengerItem({ getFristConversation, listUsersOnline }) {
+function ContactMessengerItem({listUsersOnline}) {
   const [loading, setLoading] = useState(false);
   const [listConversation, setListConversation] = useState([]);
   const [filteredConversations, setFilteredConversations] = useState([]);
@@ -45,13 +45,6 @@ function ContactMessengerItem({ getFristConversation, listUsersOnline }) {
   }, [socket]);
 
   useEffect(() => {
-    if (listConversation) {
-      getFristConversation(listConversation && listConversation[0]);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [listConversation]);
-
-  useEffect(() => {
     // Filter conversations by search query
     const filtered = listConversation?.filter((conversation) =>
       conversation.friend_name.toLowerCase().includes(searchQuery.toLowerCase())
@@ -71,7 +64,8 @@ function ContactMessengerItem({ getFristConversation, listUsersOnline }) {
       </div>
       {loading ? (
         <ul className="list-contact">
-          {filteredConversations &&
+          {listConversation?.length > 0 ? (
+            filteredConversations &&
             listUsersOnline &&
             dataOwner &&
             filteredConversations?.map((msg, index) => {
@@ -125,7 +119,10 @@ function ContactMessengerItem({ getFristConversation, listUsersOnline }) {
                   </Link>
                 </li>
               );
-            })}
+            })
+          ) : (
+            <li className="box-center">Không có người dùng trực tuyến</li>
+          )}
         </ul>
       ) : (
         <div className="loading-skeleton">

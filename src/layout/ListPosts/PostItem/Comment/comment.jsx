@@ -140,13 +140,13 @@ function Comment({ setShowCommentPage, data }) {
   }, [commentText, files]);
 
   // lấy list comment
-  const fetchData = useCallback(async () => {
-    if (!data?.post_id) return;
+  const fetchData = async () => {
+    if (!data?.post_id || !showCommentContainer) return;    
     const response = await getData(API_LIST_COMMENT_POST(data?.post_id));
     if (response?.status) {
       setListComment(response.data);
     }
-  }, [data?.post_id]);
+  };
 
   const handleSubmitComment = async (e) => {
     try {

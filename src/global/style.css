@@ -28,7 +28,7 @@
   --hover-color: #56585e6b;
   --disabled-color: #95a5a6;
   --text-blur-color: rgba(255, 255, 255, 0.6);
-  --bg-temp-color: transparent !important;
+  --bg-temp-color: rgba(255, 255, 255, 0.089) !important;
   --input-color: #5b5c5e;
   --bg-sidebar-left: url("https://vapa.vn/wp-content/uploads/2022/12/anh-den-dep-002.jpg")
   top center / cover no-repeat;
@@ -48,7 +48,7 @@
   --hover-color: #f1f1f1;
   --disabled-color: #cccccc;
   --text-blur-color: #515151;
-  --bg-temp-color: #897ee7;
+  --bg-temp-color: white;
 }
 
 * {
@@ -301,7 +301,7 @@ a.filepond--credits {
 }
 
 .tox-tinymce {
-  height: 45vh !important;
+  min-height: 45vh !important;
   margin: 10px 0 20px !important;
 }
 /* Điện thoại di động, hiển thị chiều dọc */

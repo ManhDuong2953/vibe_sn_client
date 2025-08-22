@@ -131,7 +131,7 @@ function ProfilePage({ titlePage }) {
               {dataOwner && dataOwner?.user_id === user_id && (
                 <div
                   style={{
-                    marginBottom: "30px",
+                    marginBottom: "20px",
                   }}
                 >
                   <FormPost />
