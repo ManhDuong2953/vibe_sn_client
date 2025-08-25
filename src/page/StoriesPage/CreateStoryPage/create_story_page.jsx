@@ -42,6 +42,10 @@ function CreateStoryPage({ titlePage }) {
                 </div>
                 <div className="info-create--story">
                   <img
+                    onError={(e) => {
+                      e.target.src =
+                        "https://tenten.vn/tin-tuc/wp-content/uploads/2022/06/loi-http-error-4.png";
+                    }}
                     src={dataOwner?.avatar}
                     alt=""
                   />
@@ -52,7 +56,7 @@ function CreateStoryPage({ titlePage }) {
 
             <div className="side-right">
               <Link to="/story/create/preview/text">
-                <div className="direct create-story--text-container">
+                <div className="create-story--text-container direct">
                   <div className="icon">
                     <IoText />
                   </div>

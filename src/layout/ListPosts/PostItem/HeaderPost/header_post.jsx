@@ -79,14 +79,30 @@ function HeaderPost({ data }) {
             {data?.group?.group_id ? (
               <>
                 <img
+                  onError={(e) => {
+                    e.target.src =
+                      "https://tenten.vn/tin-tuc/wp-content/uploads/2022/06/loi-http-error-4.png";
+                  }}
                   className="avt-group"
                   src={data?.group?.avatar_media_link}
                   alt=""
                 />
-                <img className="avt-member--group" src={data?.avatar} alt="" />
+                <img
+                  onError={(e) => {
+                    e.target.src =
+                      "https://tenten.vn/tin-tuc/wp-content/uploads/2022/06/loi-http-error-4.png";
+                  }}
+                  className="avt-member--group"
+                  src={data?.avatar}
+                  alt=""
+                />
               </>
             ) : (
               <img
+                onError={(e) => {
+                  e.target.src =
+                    "https://tenten.vn/tin-tuc/wp-content/uploads/2022/06/loi-http-error-4.png";
+                }}
                 className="avt-member--group avt-user"
                 src={data?.avatar}
                 alt=""

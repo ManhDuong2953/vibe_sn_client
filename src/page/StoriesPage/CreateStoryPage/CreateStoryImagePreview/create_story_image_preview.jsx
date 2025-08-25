@@ -325,6 +325,10 @@ function CreateStoryImagePreview({ titlePage }) {
                     )}
                     {croppedImage && (
                       <img
+                        onError={(e) => {
+                          e.target.src =
+                            "https://tenten.vn/tin-tuc/wp-content/uploads/2022/06/loi-http-error-4.png";
+                        }}
                         src={croppedImage}
                         alt="Cropped"
                         className="cropped-image"

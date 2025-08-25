@@ -68,9 +68,9 @@ const SignupPage = ({ titlePage }) => {
   return (
     <div className="signup-main">
       <div className="signup-container">
-        <img className="img-thumb" src={bgAuthentication} alt="" />
+        <img onError={(e) => { e.target.src = "https://tenten.vn/tin-tuc/wp-content/uploads/2022/06/loi-http-error-4.png"; }}className="img-thumb" src={bgAuthentication} alt="" />
         <div className="signup-box">
-          <img src={logo} alt="Logo" className="logo" />
+          <img onError={(e) => { e.target.src = "https://tenten.vn/tin-tuc/wp-content/uploads/2022/06/loi-http-error-4.png"; }}src={logo} alt="Logo" className="logo" />
           <h2>Đăng ký</h2>
           <form onSubmit={handleSignup} className="form-signup">
             <div className="input-group">
@@ -95,7 +95,7 @@ const SignupPage = ({ titlePage }) => {
                 required
               />
             </div>
-            <div className="input_select_gender input-group">
+            <div className="input-group input_select_gender">
               <PiGenderMaleFill className="icon" />
               <span>
                 <input

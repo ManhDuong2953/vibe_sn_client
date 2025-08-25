@@ -118,6 +118,10 @@ function ProfilePage({ titlePage }) {
                       dataFriend?.map((dataFriendItem) => (
                         <li className="friend-item">
                           <img
+                            onError={(e) => {
+                              e.target.src =
+                                "https://tenten.vn/tin-tuc/wp-content/uploads/2022/06/loi-http-error-4.png";
+                            }}
                             src={dataFriendItem?.avatar}
                             alt={dataFriendItem?.user_name}
                           />
@@ -146,7 +150,9 @@ function ProfilePage({ titlePage }) {
                 <h3>Bài viết</h3>
               </div>
               {listPost ? (
-                listPost?.map((item, index) => <PostItem key={index} data={item} />)
+                listPost?.map((item, index) => (
+                  <PostItem key={index} data={item} />
+                ))
               ) : (
                 <h4 className="box-center">Không có bài viết nào</h4>
               )}

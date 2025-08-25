@@ -103,7 +103,7 @@ function ProfileRequestItem({ user_id }) {
             <div className="item-container">
               <div className="avt-suggest">
                 <PopupInfoShort user_id={user_id} />
-                <img src={dataUser?.avatar} alt="User Avatar" />
+                <img onError={(e) => { e.target.src = "https://tenten.vn/tin-tuc/wp-content/uploads/2022/06/loi-http-error-4.png"; }}src={dataUser?.avatar} alt="User Avatar" />
               </div>
               <div className="name-suggest">
                 <b>{dataUser?.user_name}</b>

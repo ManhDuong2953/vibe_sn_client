@@ -12,9 +12,9 @@ function StoryItem({ story }) {
       <li className="story-item">
         {loaded && story ? (
           <Link to={"/story/" + story?.story_id}>
-            <img className="media-story" src={story?.media_link} alt="" />
+            <img onError={(e) => { e.target.src = "https://tenten.vn/tin-tuc/wp-content/uploads/2022/06/loi-http-error-4.png"; }}className="media-story" src={story?.media_link} alt="" />
             <div className="info-container">
-              <img src={story?.avatar} alt="" />
+              <img onError={(e) => { e.target.src = "https://tenten.vn/tin-tuc/wp-content/uploads/2022/06/loi-http-error-4.png"; }}src={story?.avatar} alt="" />
               <div className="name">{story?.user_name}</div>
             </div>
           </Link>

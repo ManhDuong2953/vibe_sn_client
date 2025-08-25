@@ -158,7 +158,7 @@ export default function EditPost({ titlePage }) {
         <div className="form-post-wrapper">
           <div className="privacy-main">
             <div className="avatar">
-              <img src={data?.avatar} alt="avatar" />
+              <img onError={(e) => { e.target.src = "https://tenten.vn/tin-tuc/wp-content/uploads/2022/06/loi-http-error-4.png"; }}src={data?.avatar} alt="avatar" />
             </div>
             <div className="privacy-container">
               <p className="name">

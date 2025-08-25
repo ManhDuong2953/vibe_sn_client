@@ -142,7 +142,7 @@ function PopupInfoShort({ user_id }) {
         <div className="popup-info--container">
           <div className="popup-row-container">
             <div className="popup-row popup-info">
-              <img className="popup-avt" src={infoUser?.avatar} alt="" />
+              <img onError={(e) => { e.target.src = "https://tenten.vn/tin-tuc/wp-content/uploads/2022/06/loi-http-error-4.png"; }}className="popup-avt" src={infoUser?.avatar} alt="" />
               <div className="popup-info-short">
                 <b className="popup-name-user">{infoUser?.user_name}</b>
                 <p className="popup-nickname-user">

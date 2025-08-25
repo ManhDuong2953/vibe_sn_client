@@ -16,7 +16,7 @@ export default function ContentMedia({ data }) {
                 {item.media_type === "video" ? (
                   <VideoInViewport src={item.media_link} />
                 ) : (
-                  <img src={item.media_link} alt="" />
+                  <img onError={(e) => { e.target.src = "https://tenten.vn/tin-tuc/wp-content/uploads/2022/06/loi-http-error-4.png"; }}src={item.media_link} alt="" />
                 )}
               </React.Fragment>
             ))}
@@ -30,7 +30,7 @@ export default function ContentMedia({ data }) {
                   {item.media_type === "video" ? (
                     <VideoInViewport src={item.media_link} />
                   ) : (
-                    <img loading="lazy" src={item.media_link} alt="" />
+                    <img onError={(e) => { e.target.src = "https://tenten.vn/tin-tuc/wp-content/uploads/2022/06/loi-http-error-4.png"; }}loading="lazy" src={item.media_link} alt="" />
                   )}
 
                   {/* Hiển thị số lượng ảnh dư nếu có nhiều hơn 4 ảnh */}

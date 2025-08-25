@@ -452,12 +452,20 @@ function NavigativeBar() {
                 className="avt-navbar"
                 src={dataOwner && dataOwner?.avatar}
                 alt=""
+                onError={(e) => {
+                  e.target.src =
+                    "https://tenten.vn/tin-tuc/wp-content/uploads/2022/06/loi-http-error-4.png";
+                }}
               />
               <div className="box-personal">
                 <ul className="list-personal--options">
                   <li className="personal-direct--profile">
                     <Link to={`/profile/${dataOwner && dataOwner?.user_id}`}>
                       <img
+                        onError={(e) => {
+                          e.target.src =
+                            "https://tenten.vn/tin-tuc/wp-content/uploads/2022/06/loi-http-error-4.png";
+                        }}
                         className="avt-direct--profile"
                         src={dataOwner && dataOwner?.avatar}
                         alt=""

@@ -84,6 +84,10 @@ function ListStories() {
           <li className="story-item add-story--icon">
             <Link to="/story/create">
               <img
+                onError={(e) => {
+                  e.target.src =
+                    "https://tenten.vn/tin-tuc/wp-content/uploads/2022/06/loi-http-error-4.png";
+                }}
                 className="avt-logo"
                 src={dataOwner && dataOwner?.avatar}
                 alt=""

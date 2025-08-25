@@ -84,7 +84,7 @@ function SubCommentItem({
         </div>
         <div className="avt-img">
           <PopupInfoShort user_id={data?.replying_user_id} />
-          <img src={data?.replying_user_avatar} alt="" />
+          <img onError={(e) => { e.target.src = "https://tenten.vn/tin-tuc/wp-content/uploads/2022/06/loi-http-error-4.png"; }}src={data?.replying_user_avatar} alt="" />
         </div>
         <div className="comment-content--wrapper--container">
           <div className="comment-content--wrapper">
@@ -101,7 +101,7 @@ function SubCommentItem({
               {data?.media_link && (
                 <div className="comment-content--img">
                   {data?.media_type === "image" && (
-                    <img src={data?.media_link} alt="" />
+                    <img onError={(e) => { e.target.src = "https://tenten.vn/tin-tuc/wp-content/uploads/2022/06/loi-http-error-4.png"; }}src={data?.media_link} alt="" />
                   )}
                   {data?.media_type === "video" && (
                     <video controls loop src={data?.media_link} />

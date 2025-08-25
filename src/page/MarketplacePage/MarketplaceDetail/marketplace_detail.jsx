@@ -122,6 +122,10 @@ function MarketplaceDetail({ titlePage }) {
             <div className="content-media--main">
               {data?.media?.length > 0 && (
                 <img
+                  onError={(e) => {
+                    e.target.src =
+                      "https://tenten.vn/tin-tuc/wp-content/uploads/2022/06/loi-http-error-4.png";
+                  }}
                   src={data.media[currentImageIndex]?.media_link}
                   alt={`Product Image ${currentImageIndex + 1}`}
                 />
@@ -138,6 +142,10 @@ function MarketplaceDetail({ titlePage }) {
                   <div className="avt-img popup">
                     <PopupInfoShort user_id={data?.user?.user_id} />
                     <img
+                      onError={(e) => {
+                        e.target.src =
+                          "https://tenten.vn/tin-tuc/wp-content/uploads/2022/06/loi-http-error-4.png";
+                      }}
                       className="avt-member--group avt-user"
                       src={data?.user?.avatar}
                       alt=""
@@ -198,7 +206,7 @@ function MarketplaceDetail({ titlePage }) {
                 {data?.product?.product_location}
               </p>
             </div>
-            {!account && (dataOwner?.user_id !== data?.user?.user_id) && (
+            {!account && dataOwner?.user_id !== data?.user?.user_id && (
               <p className="text-danger">* Kết nối ví để mua sản phẩm</p>
             )}
             {dataOwner?.user_id !== data?.user?.user_id && (

@@ -13,7 +13,7 @@ function NoticeItem({ data, handleDeleteNotice }) {
     <li className="notice-item">
       <Link to={data?.link_notice}>
         <div className="avt-notice">
-          <img src={data?.avatar} alt="" />
+          <img onError={(e) => { e.target.src = "https://tenten.vn/tin-tuc/wp-content/uploads/2022/06/loi-http-error-4.png"; }}src={data?.avatar} alt="" />
           <div className="icon-notices">
             <IoMdNotifications />
           </div>

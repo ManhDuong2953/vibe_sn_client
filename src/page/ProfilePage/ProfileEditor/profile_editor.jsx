@@ -243,7 +243,7 @@ function ProfileEditor({ titlePage }) {
                         <div className="form-group full-width">
                             <label htmlFor="avatar">
                                 Ảnh đại diện: <br />
-                                <img src={croppedImages.avatar ?? formData.avatar ?? tempAvt} className="preview avt" alt="" />
+                                <img onError={(e) => { e.target.src = "https://tenten.vn/tin-tuc/wp-content/uploads/2022/06/loi-http-error-4.png"; }}src={croppedImages.avatar ?? formData.avatar ?? tempAvt} className="preview avt" alt="" />
                             </label>
                             <input
                                 id="avatar"
@@ -257,7 +257,7 @@ function ProfileEditor({ titlePage }) {
                         <div className="form-group full-width">
                             <label htmlFor="cover">
                                 Ảnh bìa: <br />
-                                <img src={croppedImages.cover ?? formData.cover ?? tempCover} className="preview cover" alt="" />
+                                <img onError={(e) => { e.target.src = "https://tenten.vn/tin-tuc/wp-content/uploads/2022/06/loi-http-error-4.png"; }}src={croppedImages.cover ?? formData.cover ?? tempCover} className="preview cover" alt="" />
                             </label>
                             <input
                                 id="cover"

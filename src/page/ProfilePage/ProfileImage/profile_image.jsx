@@ -34,7 +34,7 @@ function ProfileImage({ titlePage }) {
               {images &&
                 images?.map((image) => (
                   <li className="post-image--item" key={Math.random()}>
-                    <img src={image.media_link} alt="" />
+                    <img onError={(e) => { e.target.src = "https://tenten.vn/tin-tuc/wp-content/uploads/2022/06/loi-http-error-4.png"; }}src={image.media_link} alt="" />
                     <p className="time">{timeAgo(image.created_at)}</p>
                   </li>
                 ))}

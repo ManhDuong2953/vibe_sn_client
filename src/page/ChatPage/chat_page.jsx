@@ -814,10 +814,10 @@ function ChatMessengerPage({ titlePage }) {
               <FaFacebookMessenger size={28} /> Nhắn tin
               <AiOutlineSearch size={24} />
             </div>
-
             <ul className="chat-list">
               <ContactMessengerItem listUsersOnline={listUsersOnline} />
-            </ul>~
+            </ul>
+            ~
           </div>
           {id_receiver && (
             <>
@@ -827,7 +827,6 @@ function ChatMessengerPage({ titlePage }) {
                     <Link
                       to={"/profile/" + (infoReceiver && infoReceiver?.user_id)}
                     >
-                      {" "}
                       <div
                         className={`avt-img ${
                           id_receiver &&
@@ -838,6 +837,10 @@ function ChatMessengerPage({ titlePage }) {
                         }`}
                       >
                         <img
+                          onError={(e) => {
+                            e.target.src =
+                              "https://tenten.vn/tin-tuc/wp-content/uploads/2022/06/loi-http-error-4.png";
+                          }}
                           src={infoReceiver && infoReceiver?.avatar}
                           alt=""
                         />
@@ -943,6 +946,10 @@ function ChatMessengerPage({ titlePage }) {
                                       )}
                                       {msg.content_type === "image" && (
                                         <img
+                                          onError={(e) => {
+                                            e.target.src =
+                                              "https://tenten.vn/tin-tuc/wp-content/uploads/2022/06/loi-http-error-4.png";
+                                          }}
                                           src={msg.content_text}
                                           alt="content"
                                         />
@@ -1199,6 +1206,10 @@ function ChatMessengerPage({ titlePage }) {
                 <div className="chat-info-panel">
                   <div className="user-profile">
                     <img
+                      onError={(e) => {
+                        e.target.src =
+                          "https://tenten.vn/tin-tuc/wp-content/uploads/2022/06/loi-http-error-4.png";
+                      }}
                       className="avt-img"
                       src={infoReceiver && infoReceiver?.avatar}
                       alt=""
@@ -1235,7 +1246,14 @@ function ChatMessengerPage({ titlePage }) {
                           if (msg.content_type === "image") {
                             return (
                               <li>
-                                <img src={msg?.content_text} alt="" />
+                                <img
+                                  onError={(e) => {
+                                    e.target.src =
+                                      "https://tenten.vn/tin-tuc/wp-content/uploads/2022/06/loi-http-error-4.png";
+                                  }}
+                                  src={msg?.content_text}
+                                  alt=""
+                                />
                               </li>
                             );
                           }

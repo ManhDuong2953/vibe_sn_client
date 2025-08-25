@@ -111,10 +111,10 @@ function GroupHeader({ classNameActive, group_id }) {
         <div className="group-header--container">
           <div className="group-header">
             <div className="group-cover--img">
-              <img src={dataGroup?.cover_media_link} alt="" />
+              <img onError={(e) => { e.target.src = "https://tenten.vn/tin-tuc/wp-content/uploads/2022/06/loi-http-error-4.png"; }}src={dataGroup?.cover_media_link} alt="" />
             </div>
             <div className="group-avatar--img">
-              <img src={dataGroup?.avatar_media_link} alt="" />
+              <img onError={(e) => { e.target.src = "https://tenten.vn/tin-tuc/wp-content/uploads/2022/06/loi-http-error-4.png"; }}src={dataGroup?.avatar_media_link} alt="" />
               <div className="header-container">
                 <div className="info-analyst">
                   <h1 className="name">{dataGroup?.group_name}</h1>

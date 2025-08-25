@@ -78,7 +78,7 @@ function ContactMessengerItem({listUsersOnline}) {
                 >
                   <Link to={"/messenger/" + msg?.friend_id}>
                     <div className="avt-contact">
-                      <img src={msg.friend_avatar} alt={msg.friend_name} />
+                      <img onError={(e) => { e.target.src = "https://tenten.vn/tin-tuc/wp-content/uploads/2022/06/loi-http-error-4.png"; }}src={msg.friend_avatar} alt={msg.friend_name} />
                     </div>
                     <span className="text-ellipsis">
                       <p className="name-contact">{msg.friend_name}</p>

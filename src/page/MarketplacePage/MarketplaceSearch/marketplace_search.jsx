@@ -225,7 +225,7 @@ function MarketplaceSearchPage({ titlePage }) {
                   className="product-item"
                 >
                   <li>
-                    <img src={item?.media[0]?.media_link} alt="Product" />
+                    <img onError={(e) => { e.target.src = "https://tenten.vn/tin-tuc/wp-content/uploads/2022/06/loi-http-error-4.png"; }}src={item?.media[0]?.media_link} alt="Product" />
                     <div className="product-info">
                       <h4 className="product-name">{item?.product_name}</h4>
                       <p className="product-description">

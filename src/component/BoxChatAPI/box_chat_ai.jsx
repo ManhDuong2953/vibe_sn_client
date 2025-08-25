@@ -83,6 +83,10 @@ export default function Chatbox() {
         </div>
       )}
       <img
+        onError={(e) => {
+          e.target.src =
+            "https://tenten.vn/tin-tuc/wp-content/uploads/2022/06/loi-http-error-4.png";
+        }}
         src={icon}
         alt="avatar"
         className="chatbox-toggle"

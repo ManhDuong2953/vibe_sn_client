@@ -72,9 +72,9 @@ const ForgotPasswordPage = ({ titlePage }) => {
   return (
     <div className="forgot-password-main">
       <div className="forgot-password-container">
-        <img className="img-thumb" src={bgAuthentication} alt="" />
+        <img onError={(e) => { e.target.src = "https://tenten.vn/tin-tuc/wp-content/uploads/2022/06/loi-http-error-4.png"; }}className="img-thumb" src={bgAuthentication} alt="" />
         <div className="forgot-password-box">
-          <img src={logo} alt="Logo" className="logo" />
+          <img onError={(e) => { e.target.src = "https://tenten.vn/tin-tuc/wp-content/uploads/2022/06/loi-http-error-4.png"; }}src={logo} alt="Logo" className="logo" />
           <h2>Quên mật khẩu</h2>
           {!isVerify ? (
             <form onSubmit={handleEmailSubmit}>

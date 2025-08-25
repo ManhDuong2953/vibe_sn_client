@@ -144,6 +144,10 @@ function CreateGroupPage({ titlePage }) {
                 <label htmlFor="avatar">
                   <h3>Ảnh đại diện nhóm:</h3>
                   <img
+                    onError={(e) => {
+                      e.target.src =
+                        "https://tenten.vn/tin-tuc/wp-content/uploads/2022/06/loi-http-error-4.png";
+                    }}
                     src={croppedAvatar ?? tempAvt}
                     alt="Cropped Avatar"
                     className="cropped-image avatar"
@@ -161,6 +165,10 @@ function CreateGroupPage({ titlePage }) {
                 <label htmlFor="cover">
                   <h3>Ảnh bìa nhóm:</h3>
                   <img
+                    onError={(e) => {
+                      e.target.src =
+                        "https://tenten.vn/tin-tuc/wp-content/uploads/2022/06/loi-http-error-4.png";
+                    }}
                     src={croppedCover ?? tempCover}
                     alt="Cropped Cover"
                     className="cropped-image cover"

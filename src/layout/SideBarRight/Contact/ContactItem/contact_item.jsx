@@ -12,7 +12,7 @@ function ContactItem({ active, data, loading = true }) {
           <Link to={"/messenger/" + data?.friend_id}>
             <div className="avt-contact popup">
               <PopupInfoShort user_id={data && data?.friend_id} />
-              <img src={data?.avatar} alt="" />
+              <img onError={(e) => { e.target.src = "https://tenten.vn/tin-tuc/wp-content/uploads/2022/06/loi-http-error-4.png"; }}src={data?.avatar} alt="" />
             </div>
 
             <p className="name-contact">{data?.user_name}</p>

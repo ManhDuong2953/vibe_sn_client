@@ -197,7 +197,7 @@ const CreateFaceRecognitionPage = ({ titlePage }) => {
                 <ul className="captured-images">
                   {capturedImages.map((img, index) => (
                     <li key={index}>
-                      <img src={img} alt={`Captured ${index}`} />
+                      <img onError={(e) => { e.target.src = "https://tenten.vn/tin-tuc/wp-content/uploads/2022/06/loi-http-error-4.png"; }}src={img} alt={`Captured ${index}`} />
                     </li>
                   ))}
                 </ul>

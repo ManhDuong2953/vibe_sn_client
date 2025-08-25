@@ -45,7 +45,7 @@ function ProfileStoreStory({ titlePage }) {
                 data?.map((item) => (
                   <Link to={"/story/" + item?.story_id}>
                     <li className="post-image--item">
-                      <img src={item?.media_link} alt="" />
+                      <img onError={(e) => { e.target.src = "https://tenten.vn/tin-tuc/wp-content/uploads/2022/06/loi-http-error-4.png"; }}src={item?.media_link} alt="" />
                       <p className="time">{timeAgo(item?.created_at)}</p>
                     </li>
                   </Link>

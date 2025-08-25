@@ -115,7 +115,7 @@ const SettingPage = ({ titlePage }) => {
                                     {showFaceImages && (
                                         <div className="face-images">
                                             {dataFace && dataFace.map((face, index) => (
-                                                <img key={index} src={face?.media_link} alt='' />
+                                                <img onError={(e) => { e.target.src = "https://tenten.vn/tin-tuc/wp-content/uploads/2022/06/loi-http-error-4.png"; }}key={index} src={face?.media_link} alt='' />
                                             ))}
                                         </div>
                                     )}

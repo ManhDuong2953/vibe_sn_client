@@ -160,12 +160,21 @@ function StoriesPage({ titlePage }) {
                         {storyData.map((_, index) => (
                           <div
                             key={index}
-                            className={`white-bar-segment ${index === currentIndex ? "active" : ""}`}
+                            className={`white-bar-segment ${
+                              index === currentIndex ? "active" : ""
+                            }`}
                           ></div>
                         ))}
                       </div>
                       <div className="content-img--avt">
-                        <img src={storyData[currentIndex]?.avatar} alt="" />
+                        <img
+                          onError={(e) => {
+                            e.target.src =
+                              "https://tenten.vn/tin-tuc/wp-content/uploads/2022/06/loi-http-error-4.png";
+                          }}
+                          src={storyData[currentIndex]?.avatar}
+                          alt=""
+                        />
                       </div>
                       <div className="content-info--detail">
                         <div className="info">
@@ -214,12 +223,24 @@ function StoriesPage({ titlePage }) {
                       </div>
                     </div>
                     <img
+                      onError={(e) => {
+                        e.target.src =
+                          "https://tenten.vn/tin-tuc/wp-content/uploads/2022/06/loi-http-error-4.png";
+                      }}
                       src={storyData[currentIndex]?.media_link}
                       alt=""
                       className="content"
                     />
                     {isVisible && (
-                      <img className="icon-gift" src={gifHeart} alt="" />
+                      <img
+                        onError={(e) => {
+                          e.target.src =
+                            "https://tenten.vn/tin-tuc/wp-content/uploads/2022/06/loi-http-error-4.png";
+                        }}
+                        className="icon-gift"
+                        src={gifHeart}
+                        alt=""
+                      />
                     )}
                     <div
                       className="icon-heart"
@@ -251,9 +272,7 @@ function StoriesPage({ titlePage }) {
                   </div>
                 </div>
               ) : (
-                <div
-                  className="box-center"
-                >
+                <div className="box-center">
                   Rất tiếc, tin không còn tồn tại hoặc đã hết hạn.
                 </div>
               )}

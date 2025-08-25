@@ -173,6 +173,10 @@ function EditInfoGroupPage({ titlePage }) {
                 <label htmlFor="avatar">
                   <h3>Ảnh đại diện nhóm:</h3>
                   <img
+                    onError={(e) => {
+                      e.target.src =
+                        "https://tenten.vn/tin-tuc/wp-content/uploads/2022/06/loi-http-error-4.png";
+                    }}
                     src={croppedAvatar ?? avatarImage}
                     alt="Cropped Avatar"
                     className="cropped-image avatar"
@@ -190,6 +194,10 @@ function EditInfoGroupPage({ titlePage }) {
                 <label htmlFor="cover">
                   <h3>Ảnh bìa nhóm:</h3>
                   <img
+                    onError={(e) => {
+                      e.target.src =
+                        "https://tenten.vn/tin-tuc/wp-content/uploads/2022/06/loi-http-error-4.png";
+                    }}
                     src={croppedCover ?? coverImage}
                     alt="Cropped Cover"
                     className="cropped-image cover"

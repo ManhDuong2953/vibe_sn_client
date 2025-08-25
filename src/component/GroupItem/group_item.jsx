@@ -37,7 +37,7 @@ function GroupItem({ group_id = null, data = {} }) {
       {!loading && dataGr ? (
         <Link to={`/group/` + dataGr?.group_id}>
           <div className="avt-group">
-            <img src={dataGr?.avatar_media_link} alt="" />
+            <img onError={(e) => { e.target.src = "https://tenten.vn/tin-tuc/wp-content/uploads/2022/06/loi-http-error-4.png"; }}src={dataGr?.avatar_media_link} alt="" />
           </div>
           <div className="name-group">
             <b>{dataGr?.group_name}</b>

@@ -294,7 +294,7 @@ function Comment({ setShowCommentPage, data }) {
           onSubmit={(e) => handleSubmitComment(e)}
         >
           <div className="avt-img">
-            <img src={dataOwner?.avatar} alt="User Avatar" />
+            <img onError={(e) => { e.target.src = "https://tenten.vn/tin-tuc/wp-content/uploads/2022/06/loi-http-error-4.png"; }}src={dataOwner?.avatar} alt="User Avatar" />
           </div>
           <div className="input-wrapper--post">
             {showFilePond && (

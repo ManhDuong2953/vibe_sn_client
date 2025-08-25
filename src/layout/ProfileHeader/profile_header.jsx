@@ -234,10 +234,10 @@ function ProfileHeader({ classNameActive, userId }) {
       ) : (
         <div className="profile-header">
           <div className="profile-cover--img">
-            <img src={data?.cover} alt="Cover" />
+            <img onError={(e) => { e.target.src = "https://tenten.vn/tin-tuc/wp-content/uploads/2022/06/loi-http-error-4.png"; }}src={data?.cover} alt="Cover" />
           </div>
           <div className="profile-avatar--img">
-            <img src={data?.avatar} alt="Avatar" />
+            <img onError={(e) => { e.target.src = "https://tenten.vn/tin-tuc/wp-content/uploads/2022/06/loi-http-error-4.png"; }}src={data?.avatar} alt="Avatar" />
             <div className="header-container">
               <div className="info-analyst">
                 <h1 className="name">

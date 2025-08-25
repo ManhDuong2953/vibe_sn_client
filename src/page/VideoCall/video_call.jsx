@@ -202,7 +202,7 @@ const VideoCall = ({ isVideoCall = true, titlePage }) => {
       localStreamRef.current.getTracks().forEach((track) => track.stop());
     }
     peerRef.current.destroy();
-    socket.emit('endCall', { sender_id, receiver_id });
+    socket.emit("endCall", { sender_id, receiver_id });
     if (receiver_id === dataOwner?.user_id) {
       window.location.href = `/messenger/${
         dataOwner?.user_id !== sender_id ? sender_id : receiver_id
@@ -294,27 +294,27 @@ const VideoCall = ({ isVideoCall = true, titlePage }) => {
 
   useEffect(() => {
     if (socket) {
-        // Listen for the "callEnded" event from the server
-        socket.on('callEnded', (data) => {
-            // Navigate the user back to the message screen
-            if (dataOwner.user_id === receiver_id) {
-                window.location.href = `/messages/${sender_id}`;
-            } else if (dataOwner.user_id === sender_id) {
-                window.location.href = `/messages/${receiver_id}`;
-            }
-        });
+      // Listen for the "callEnded" event from the server
+      socket.on("callEnded", (data) => {
+        // Navigate the user back to the message screen
+        if (dataOwner.user_id === receiver_id) {
+          window.location.href = `/messages/${sender_id}`;
+        } else if (dataOwner.user_id === sender_id) {
+          window.location.href = `/messages/${receiver_id}`;
+        }
+      });
 
-        return () => {
-            socket.off('callEnded');
-        };
+      return () => {
+        socket.off("callEnded");
+      };
     }
-}, [socket, receiver_id]);  
+  }, [socket, receiver_id]);
 
   const handleSendMessage = async (status) => {
     try {
       if (
         !receiver_id ||
-        (time === 0 && status == "accepted") ||
+        (time === 0 && status === "accepted") ||
         callEnded ||
         (dataOwner && dataOwner?.userId === receiver_id)
       )
@@ -410,6 +410,10 @@ const VideoCall = ({ isVideoCall = true, titlePage }) => {
             ) : (
               <div className="avatar">
                 <img
+                  onError={(e) => {
+                    e.target.src =
+                      "https://tenten.vn/tin-tuc/wp-content/uploads/2022/06/loi-http-error-4.png";
+                  }}
                   src={dataReceiver?.avatar}
                   alt="Avatar"
                   className="partner-avatar"
@@ -428,6 +432,10 @@ const VideoCall = ({ isVideoCall = true, titlePage }) => {
           )}
           <div className="avatar">
             <img
+              onError={(e) => {
+                e.target.src =
+                  "https://tenten.vn/tin-tuc/wp-content/uploads/2022/06/loi-http-error-4.png";
+              }}
               src={dataReceiver?.avatar}
               alt="Avatar"
               className="partner-avatar"

@@ -31,7 +31,7 @@ function SideBarRight() {
             <>
               <h4>Sinh nhật</h4>
               <div className="dob-container">
-                <img src={iconsHbbd} alt="" />
+                <img onError={(e) => { e.target.src = "https://tenten.vn/tin-tuc/wp-content/uploads/2022/06/loi-http-error-4.png"; }}src={iconsHbbd} alt="" />
                 <p>
                   Hôm nay là sinh nhật của {" "}
                   {data.map((item, index) => (

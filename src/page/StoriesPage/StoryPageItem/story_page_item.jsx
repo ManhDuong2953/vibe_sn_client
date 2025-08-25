@@ -12,7 +12,7 @@ function StoryPageItem({ active, story }) {
           <Link to={"/story/" + story?.story_id}>
             <div className="avt-img popup">
               <PopupInfoShort user_id={story?.user_id} />
-              <img src={story?.avatar} alt="" />
+              <img onError={(e) => { e.target.src = "https://tenten.vn/tin-tuc/wp-content/uploads/2022/06/loi-http-error-4.png"; }}src={story?.avatar} alt="" />
             </div>
             <div className="info">
               <p className="name">{story?.user_name}</p>

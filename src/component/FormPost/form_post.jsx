@@ -157,7 +157,7 @@ export default function FormPost({ group_id = undefined }) {
       <div className="form-post--popup--wrapper">
         <div className="privacy-main">
           <div className="avt-img">
-            <img src={dataOwner && dataOwner?.avatar} alt="avatar" />
+            <img onError={(e) => { e.target.src = "https://tenten.vn/tin-tuc/wp-content/uploads/2022/06/loi-http-error-4.png"; }}src={dataOwner && dataOwner?.avatar} alt="avatar" />
           </div>
           <div className="privacy-container">
             <p className="name">
@@ -290,7 +290,7 @@ export default function FormPost({ group_id = undefined }) {
         <div className="form-post--container">
           <div className="row input-func">
             <div className="avt-img">
-              <img src={dataOwner && dataOwner?.avatar} alt="avatar" />
+              <img onError={(e) => { e.target.src = "https://tenten.vn/tin-tuc/wp-content/uploads/2022/06/loi-http-error-4.png"; }}src={dataOwner && dataOwner?.avatar} alt="avatar" />
             </div>
             <div
               onClick={() => {

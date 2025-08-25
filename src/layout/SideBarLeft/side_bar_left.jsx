@@ -51,7 +51,7 @@ function SideBarLeft() {
                                     <React.Fragment>
                                         <div className="info-address">
                                             <h5>{infoCountry[0]?.altSpellings[2]}</h5>
-                                            <img src={infoCountry[0]?.flags["png"]} alt="" />
+                                            <img onError={(e) => { e.target.src = "https://tenten.vn/tin-tuc/wp-content/uploads/2022/06/loi-http-error-4.png"; }}src={infoCountry[0]?.flags["png"]} alt="" />
                                             <p>Dân số: <b>{infoCountry[0]?.population.toLocaleString()} người</b></p>
                                         </div>
 
@@ -70,7 +70,7 @@ function SideBarLeft() {
                                                 </div>
                                             <div className="icon-w">
                                                 {weatherCurrent.weather && weatherCurrent.weather[0] && (
-                                                    <img src={`http://openweathermap.org/img/wn/${weatherCurrent.weather[0].icon}@2x.png`} alt="" />
+                                                    <img onError={(e) => { e.target.src = "https://tenten.vn/tin-tuc/wp-content/uploads/2022/06/loi-http-error-4.png"; }}src={`http://openweathermap.org/img/wn/${weatherCurrent.weather[0].icon}@2x.png`} alt="" />
                                                 )}
                                             </div>
                                         </div>
@@ -113,7 +113,7 @@ function SideBarLeft() {
                                                             <li key={index} className="forecast-item">
                                                                 <p className="time">{forecastHour}:00</p>
                                                                 <div className="icon-w">
-                                                                    <img src={`http://openweathermap.org/img/wn/${weatherHour.weather[0].icon}@2x.png`} alt="" />
+                                                                    <img onError={(e) => { e.target.src = "https://tenten.vn/tin-tuc/wp-content/uploads/2022/06/loi-http-error-4.png"; }}src={`http://openweathermap.org/img/wn/${weatherHour.weather[0].icon}@2x.png`} alt="" />
                                                                 </div>
                                                                 <h3 className="temp-w">{weatherHour.main.temp} °C</h3>
                                                             </li>
@@ -165,7 +165,7 @@ function SideBarLeft() {
                                                             </div>
                                                             <div className="row">
                                                                 <div className="analyst">
-                                                                    <img src={`http://openweathermap.org/img/wn/${item.weather.weather[0].icon}@2x.png`} alt="" />
+                                                                    <img onError={(e) => { e.target.src = "https://tenten.vn/tin-tuc/wp-content/uploads/2022/06/loi-http-error-4.png"; }}src={`http://openweathermap.org/img/wn/${item.weather.weather[0].icon}@2x.png`} alt="" />
                                                                     <b>{item.weather.weather[0].description}</b>
                                                                 </div>
                                                                 <div className="analyst">

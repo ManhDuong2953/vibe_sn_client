@@ -69,7 +69,7 @@ function SuggestItem({ user_id, data = {} }) {
         <Link to={`/profile/${dataUser?.user_id}`}>
           <div className="avt-suggest popup">
             <PopupInfoShort user_id={dataUser?.user_id} />
-            <img src={dataUser?.avatar} alt="User Avatar" />
+            <img onError={(e) => { e.target.src = "https://tenten.vn/tin-tuc/wp-content/uploads/2022/06/loi-http-error-4.png"; }}src={dataUser?.avatar} alt="User Avatar" />
           </div>
           <div className="name-suggest">
             <b>{dataUser?.user_name}</b>

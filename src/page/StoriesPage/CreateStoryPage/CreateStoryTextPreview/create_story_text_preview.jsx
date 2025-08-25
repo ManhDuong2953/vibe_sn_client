@@ -114,7 +114,10 @@ function CreateStoryTextPreview({ titlePage }) {
         <div className="container">
           <div className="story-container-preview--wrapper">
             <div className="side-left">
-              <div className="title" style={{ display: "flex", alignItems: "center" }}>
+              <div
+                className="title"
+                style={{ display: "flex", alignItems: "center" }}
+              >
                 <BackButton />
                 <h2>Tạo tin</h2>
               </div>
@@ -265,6 +268,10 @@ function CreateStoryTextPreview({ titlePage }) {
                   <div className="bg-images">
                     {bgImages.map((imgItem, index) => (
                       <img
+                        onError={(e) => {
+                          e.target.src =
+                            "https://tenten.vn/tin-tuc/wp-content/uploads/2022/06/loi-http-error-4.png";
+                        }}
                         key={index}
                         src={imgItem}
                         alt={`background ${index + 1}`}

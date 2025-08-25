@@ -78,7 +78,10 @@ function PostDetail({ titlePage }) {
         <div className="post-detail--container">
           <div className="post-detail--media">
             {/* Nút đóng */}
-            <div className="close" onClick={() => navigate(location.state?.from || -1)}>
+            <div
+              className="close"
+              onClick={() => navigate(location.state?.from || -1)}
+            >
               <MdOutlineClose />
             </div>
 
@@ -94,6 +97,10 @@ function PostDetail({ titlePage }) {
               {data.media && data.media.length > 0 ? (
                 data.media[currentImageIndex]?.media_type === "image" ? (
                   <img
+                    onError={(e) => {
+                      e.target.src =
+                        "https://tenten.vn/tin-tuc/wp-content/uploads/2022/06/loi-http-error-4.png";
+                    }}
                     src={data.media[currentImageIndex]?.media_link}
                     alt={`media-${currentImageIndex}`}
                   />
@@ -127,7 +134,8 @@ function PostDetail({ titlePage }) {
             {/* Nội dung text của bài viết */}
             {data?.post_text &&
               !(
-                data?.post_text === "<p></p>" || data?.post_text === "<span></span>"
+                data?.post_text === "<p></p>" ||
+                data?.post_text === "<span></span>"
               ) && <ContentText data={data} />}
 
             {/* Phần bình luận */}
