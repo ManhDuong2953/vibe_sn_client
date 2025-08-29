@@ -1,4 +1,4 @@
-import { Suspense, useEffect } from "react";
+import { Suspense, useEffect, useState } from "react";
 import routes from "./router/router";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -56,12 +56,11 @@ function App() {
   }, [theme, root]);
 
   const handleBackHistory = (key) => {
-    console.log(key);
-
     if (key === "Escape") {
       window.history.back();
     }
   };
+
 
   return (
     <div className="App" onKeyDown={(e) => handleBackHistory(e.key)}>
@@ -98,7 +97,6 @@ function App() {
                           <SocketProvider>
                             <ImageProvider>{route.component}</ImageProvider>
                           </SocketProvider>
-                          <BoxChatAI />
                         </OwnDataProvider>
                       }
                     />
