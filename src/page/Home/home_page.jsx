@@ -4,7 +4,6 @@ import NavigativeBar from "../../layout/NavigativeBar/navigative_bar";
 import SideBarLeft from "../../layout/SideBarLeft/side_bar_left";
 import ListPosts from "../../layout/ListPosts/list_posts";
 import SideBarRight from "../../layout/SideBarRight/side_bar_right";
-import getToken from "../../ultils/getToken/get_token";
 import Chatbox from "../../component/BoxChatAPI/box_chat_ai";
 
 function HomePage({ titlePage }) {

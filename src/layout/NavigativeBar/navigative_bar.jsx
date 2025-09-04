@@ -29,9 +29,9 @@ import {
 } from "../../API/api_server";
 import { Popover } from "@mui/material";
 import { toast } from "react-toastify";
-import Cookies from "js-cookie";
 import Web3 from "web3";
 import { setWallet } from "../../redux/Reducer/wallet";
+import { logout } from "../../redux/Reducer/auth";
 
 function NavigativeBar() {
   const navigate = useNavigate();
@@ -182,15 +182,15 @@ function NavigativeBar() {
     }
   };
 
-  const logout = async () => {
+  const logoutHandle = async () => {
     try {
       // Gọi API để xóa token từ phía server (nếu cần)
       const response = await deleteData(API_LOGOUT);
       if (response?.status) {
         // Xóa token từ cookie
-        Cookies.remove("accessToken");
         localStorage.clear();
         // Redirect đến trang đăng nhập
+        dispatch(logout());
         navigate("/login");
       }
     } catch (error) {
@@ -504,7 +504,7 @@ function NavigativeBar() {
                   </li>
                   <li
                     className="function-direct logout"
-                    onClick={() => logout()}
+                    onClick={() => logoutHandle()}
                   >
                     <div className="list">
                       <span>

@@ -1,5 +1,5 @@
 // src/components/Login.jsx
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { FaFacebook, FaGoogle } from "react-icons/fa";
 import "./login_page.scss";
 import logo from "../../www/logo.png"; // Add your logo image here
@@ -16,25 +16,26 @@ import {
   API_LOGIN_POST,
   API_SIGNUP_SOCIALNETWORK_POST,
 } from "../../API/api_server";
-import getToken from "../../ultils/getToken/get_token";
 import { LuScanFace } from "react-icons/lu";
-import { toast } from "react-toastify";
 import { LoadingIcon } from "../../ultils/icons/loading";
+import { useDispatch, useSelector } from "react-redux";
+import { loginSuccess } from "../../redux/Reducer/auth";
 
 const LoginPage = ({ titlePage }) => {
   useEffect(() => {
     document.title = titlePage;
   }, [titlePage]);
-
+  
+  const { isLoggedIn } = useSelector((state) => state.auth);
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [textError, setTextError] = useState("");
   useEffect(() => {
-    const storedToken = getToken();
-    if (storedToken) {
+    if (isLoggedIn) {
       navigate("/");
     }
   }, []);
+  const dispatch = useDispatch();
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -45,8 +46,13 @@ const LoginPage = ({ titlePage }) => {
       const response = await postData(API_LOGIN_POST, {
         type_account: "register",
         ...data,
-      });      
+      });
       if (response?.status) {
+        dispatch(
+          loginSuccess({
+            isLoggedIn: true,
+          })
+        );
         navigate("/");
         return;
       } else {
@@ -79,6 +85,11 @@ const LoginPage = ({ titlePage }) => {
 
         if (responseLogin?.status || responseLogin?.status === true) {
           navigate("/");
+          dispatch(
+            loginSuccess({
+              isLoggedIn: true,
+            })
+          );
           return;
         } else {
           setTextError(
@@ -120,9 +131,25 @@ const LoginPage = ({ titlePage }) => {
   return (
     <div className="login-main">
       <div className="login-container">
-        <img onError={(e) => { e.target.src = "https://tenten.vn/tin-tuc/wp-content/uploads/2022/06/loi-http-error-4.png"; }}className="img-thumb" src={bgAuthentication} alt="Marketing" />
+        <img
+          onError={(e) => {
+            e.target.src =
+              "https://tenten.vn/tin-tuc/wp-content/uploads/2022/06/loi-http-error-4.png";
+          }}
+          className="img-thumb"
+          src={bgAuthentication}
+          alt="Marketing"
+        />
         <div className="flex flex-col items-center w-full login-box">
-          <img onError={(e) => { e.target.src = "https://tenten.vn/tin-tuc/wp-content/uploads/2022/06/loi-http-error-4.png"; }}src={logo} alt="Logo" className="logo" />
+          <img
+            onError={(e) => {
+              e.target.src =
+                "https://tenten.vn/tin-tuc/wp-content/uploads/2022/06/loi-http-error-4.png";
+            }}
+            src={logo}
+            alt="Logo"
+            className="logo"
+          />
           <h2 className="bg-red-400 text-red-600">Đăng nhập</h2>
           <form className="w-full form-login" onSubmit={handleLogin}>
             <div className="input-group">

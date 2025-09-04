@@ -1,16 +1,13 @@
 import { toast } from "react-toastify";
-import getToken from "../getToken/get_token";
 
 const fetchData = async (url, options = {}) => {
   try {
-    const token = getToken();
 
     const mergedOptions = {
       ...options,
       credentials: "include",
       headers: {
         ...options.headers,
-        ...(token && { Authorization: `Bearer ${token}` }),
       },
     };
 
