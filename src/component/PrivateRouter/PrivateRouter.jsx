@@ -8,11 +8,14 @@ import Spinner from "../Spinner/spinner";
 const PrivateRoute = () => {    
   const [isAuthenticated, setIsAuthenticated] = useState(Cookies.get("accessToken") ? true : false);
   const accessToken = Cookies.get("accessToken");
+  console.log("accessToken: ",accessToken);
+  
   useEffect(() => {
       const checkAuthentication = async () => {
       if (accessToken) {
           try {
               const responseDecodeToken = await getData(API_AUTH_TOKEN);
+              console.log("responseDecodeToken",responseDecodeToken);
               
               if (responseDecodeToken?.status) {
                   setIsAuthenticated(true);
