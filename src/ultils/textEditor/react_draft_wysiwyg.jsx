@@ -17,7 +17,7 @@ const TextEditor = ({ initialContent, getText }) => {
 
   return (
     <Editor
-      apiKey="on891pw4e6e919vmtxxs8u19wg917thpgssk32sw0mty1qe0" // Thay thế bằng API key của bạn nếu cần
+      apiKey="kjxqg2b5c901kfpxcboxdcu2ga1isi3pa9rfgwqjloqq0y9m" // Thay thế bằng API key của bạn nếu cần
       onInit={(evt, editor) => (editorRef.current = editor)}
       initialValue={initialContent || ""}
       init={{
