@@ -21,9 +21,11 @@ const PrivateRoute = () => {
         if (responseDecodeToken?.status) {
           dispatch(loginSuccess(responseDecodeToken.user)); // ✅ lưu user vào redux
         } else {
+            navigator("/login");
           dispatch(logout()); // ❌ clear redux nếu không hợp lệ
         }
       } catch (error) {
+        navigator("/login");
         dispatch(logout());
       } finally {
         setLoading(false);
