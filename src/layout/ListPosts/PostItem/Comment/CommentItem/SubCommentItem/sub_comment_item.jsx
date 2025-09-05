@@ -82,7 +82,7 @@ function SubCommentItem({
             </div>
           </div>
         </div>
-        <div className="avt-img">
+        <div className="avt-img popup">
           <PopupInfoShort user_id={data?.replying_user_id} />
           <img onError={(e) => { e.target.src = "https://tenten.vn/tin-tuc/wp-content/uploads/2022/06/loi-http-error-4.png"; }}src={data?.replying_user_avatar} alt="" />
         </div>

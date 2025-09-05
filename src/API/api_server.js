@@ -1,4 +1,4 @@
-const API_HOST = process.env.REACT_APP_API_URL;
+const API_HOST = import.meta.env.VITE_API_URL;
 
 // User account API endpoints
 const API_SIGNUP_POST = API_HOST + "/users/account/signup";

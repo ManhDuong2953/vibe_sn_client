@@ -74,7 +74,7 @@ function HeaderPost({ data }) {
     <React.Fragment>
       <div className="header-main">
         <div className="header-post--item">
-          <div className="avt-img">
+          <div className="avt-img popup">
             <PopupInfoShort user_id={data?.user_id} />
             {data?.group?.group_id ? (
               <>

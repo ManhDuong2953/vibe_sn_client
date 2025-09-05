@@ -140,8 +140,8 @@ const VideoCall = ({ isVideoCall = true, titlePage }) => {
   useEffect(() => {
     if (socket && sender_id && receiver_id && dataOwner) {
       const peer = new Peer(undefined, {
-        host: process.env.REACT_APP_HOST,
-        port: process.env.REACT_APP_PORT_PEER,
+        host: import.meta.env.VITE_HOST,
+        port: import.meta.env.VITE_PORT_PEER,
         path: "/peerjs",
       });
 

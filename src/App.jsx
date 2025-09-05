@@ -1,4 +1,4 @@
-import { Suspense, useEffect, useState } from "react";
+import { Suspense, useEffect } from "react";
 import routes from "./router/router";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -15,7 +15,6 @@ import PrivateRoute from "./component/PrivateRouter/PrivateRouter";
 import OwnDataProvider from "./provider/own_data";
 import { SocketProvider } from "./provider/socket_context";
 import Spinner from "./component/Spinner/spinner";
-import BoxChatAI from "./component/BoxChatAPI/box_chat_ai";
 
 function App() {
   const theme = useSelector((state) => state.themeUI.theme);
@@ -66,7 +65,7 @@ function App() {
     <div className="App" onKeyDown={(e) => handleBackHistory(e.key)}>
       <ToastContainer
         position="top-right"
-        autoClose={2000}
+        autoClose={1000}
         hideProgressBar={true}
         newestOnTop={false}
         closeOnClick

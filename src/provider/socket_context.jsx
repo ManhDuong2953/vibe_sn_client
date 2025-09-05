@@ -19,7 +19,7 @@ import AudioRing from "../www/mp3/receive-phone-calls-get-a-phone-call-get-calle
 const SocketContext = createContext();
 
 // URL server của bạn, thay đổi nếu cần
-const SOCKET_URL = process.env.REACT_APP_PORT_SOCKET;
+const SOCKET_URL = import.meta.env.VITE_PORT_SOCKET;
 
 export const SocketProvider = ({ children }) => {
   const [socket, setSocket] = useState(null);

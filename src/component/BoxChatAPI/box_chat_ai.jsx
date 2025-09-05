@@ -1,7 +1,7 @@
-import React, { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect } from "react";
 import "./box_chat_ai.scss";
-import generateContent from "../../config/ai_studio.config";
 import icon from "../../www/icons/chatboxicon.png";
+import generateContent from "../../config/ai_studio.config";
 
 export default function Chatbox() {
   const [isOpen, setIsOpen] = useState(false);

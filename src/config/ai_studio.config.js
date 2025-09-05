@@ -1,6 +1,6 @@
-const { GoogleGenerativeAI } = require("@google/generative-ai");
+import { GoogleGenerativeAI } from "@google/generative-ai";
 
-const KEY_AI = process.env.REACT_APP_API_KEY_GOOGLE_AI;
+const KEY_AI = import.meta.env.VITE_API_KEY_GOOGLE_AI;
 
 // Hàm generateContent nhận vào prompt và trả về kết quả
 async function generateContent(prompt) {
@@ -19,4 +19,4 @@ async function generateContent(prompt) {
   }
 }
 
-module.exports = generateContent;
+export default generateContent;

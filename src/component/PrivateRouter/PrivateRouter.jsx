@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Navigate, Outlet } from "react-router-dom";
+import { Navigate, Outlet, useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { getData } from "../../ultils/fetchAPI/fetch_API";
 import { API_AUTH_TOKEN } from "../../API/api_server";
@@ -8,27 +8,32 @@ import { loginSuccess, logout } from "../../redux/Reducer/auth";
 
 const PrivateRoute = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const { isLoggedIn } = useSelector((state) => state.auth);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const checkAuthentication = async () => {
+      console.log("🔍 Bắt đầu check auth...");
       try {
         const responseDecodeToken = await getData(API_AUTH_TOKEN, {
-          credentials: "include", // gửi cookie HttpOnly kèm theo
+          credentials: "include",
         });
+        console.log("✅ API_AUTH_TOKEN response:", responseDecodeToken);
 
         if (responseDecodeToken?.status) {
-          dispatch(loginSuccess(responseDecodeToken.user)); // ✅ lưu user vào redux
+          dispatch(loginSuccess(responseDecodeToken.user));
+          console.log("👉 loginSuccess dispatch");
         } else {
-            navigator("/login");
-          dispatch(logout()); // ❌ clear redux nếu không hợp lệ
+          dispatch(logout());
+          console.log("❌ Token invalid -> logout");
         }
       } catch (error) {
-        navigator("/login");
+        console.error("🔥 Auth check error:", error);
         dispatch(logout());
       } finally {
         setLoading(false);
+        console.log("⏹️ Done check auth, loading=false");
       }
     };
 
@@ -37,7 +42,7 @@ const PrivateRoute = () => {
 
   if (loading) return <Spinner />;
 
-  return isLoggedIn ? <Outlet /> : <Navigate to="/login" />;
+  return isLoggedIn ? <Outlet /> : <Navigate to="/login" replace />;
 };
 
 export default PrivateRoute;

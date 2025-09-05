@@ -8,6 +8,8 @@
   --bg-active-color: #0654d21b;
   --active-status-color: #46ab5e;
   --black-text: black;
+  --disable-status-color: #787878;
+  --toast-bg--color: black;
   --blue-link: #5aa7ff;
   --always-dark-overlay: rgba(0, 0, 0, 0.7);
   --shadow-1: rgba(0, 0, 0, 0.3);
