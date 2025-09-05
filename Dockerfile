@@ -1,21 +1,17 @@
-FROM node:22-slim AS build
-
+# Build stage
+FROM node:22-alpine AS build
 WORKDIR /app
 
 COPY package*.json ./
-RUN npm ci
-
+RUN npm install
 COPY . .
+RUN npm run build
 
-ENV NODE_OPTIONS="--max-old-space-size=4096"
-
-RUN npm install @rollup/rollup-linux-x64-gnu --save-dev
-
-# Serve stage
-FROM node:22-slim
-
+# Production stage
+FROM node:22-alpine AS prod
 WORKDIR /app
 RUN npm install -g serve
+
 COPY --from=build /app/dist ./dist
 
 EXPOSE 2003
