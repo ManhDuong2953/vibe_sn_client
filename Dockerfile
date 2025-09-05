@@ -1,17 +1,22 @@
-# Build React app
-FROM node:18 AS build
+FROM node:22-slim AS build
 
 WORKDIR /app
 
 COPY package*.json ./
-RUN npm install
+RUN npm ci
+
 COPY . .
 
-# Đặt NODE_OPTIONS ở đây (trước khi build)
 ENV NODE_OPTIONS="--max-old-space-size=4096"
 
-RUN npm run build
+RUN npm install @rollup/rollup-linux-x64-gnu --save-dev
+
+# Serve stage
+FROM node:22-slim
+
+WORKDIR /app
+RUN npm install -g serve
+COPY --from=build /app/dist ./dist
 
 EXPOSE 2003
-
-CMD ["npm", "run", "dev"]
+CMD ["serve", "-s", "dist", "-l", "2003"]
