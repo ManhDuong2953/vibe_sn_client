@@ -4,7 +4,6 @@ npm-debug.log
 yarn-error.log
 build
 # Env files
-.env
 
 # Git
 .git

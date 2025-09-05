@@ -24,6 +24,8 @@ import { loginSuccess } from "../../redux/Reducer/auth";
 const LoginPage = ({ titlePage }) => {
   useEffect(() => {
     document.title = titlePage;
+    console.log(API_LOGIN_POST);
+    
   }, [titlePage]);
   const dispatch = useDispatch();
   const navigate = useNavigate();
