@@ -29,6 +29,8 @@ export default async function ShowPopupLoginWithGoogle() {
       type_account: "google",
     };
   } catch (error) {
+    console.error(error);
+
     toast.error("Đăng nhập thất bại. Thử lại!");
   }
 }

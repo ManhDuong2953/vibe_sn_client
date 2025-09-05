@@ -55,7 +55,6 @@ const LoginPage = ({ titlePage }) => {
           response?.message ||
             "Lỗi đăng nhập, vui lòng thử lại hoặc dùng phương thức đăng nhập khác"
         );
-        return;
       }
     } catch (error) {
       setTextError(error.message);
@@ -90,7 +89,6 @@ const LoginPage = ({ titlePage }) => {
           setTextError(
             "Lỗi đăng nhập, vui lòng thử lại hoặc dùng phương thức đăng nhập khác"
           );
-          return;
         }
       } else {
         const responseSignup = await postData(
@@ -103,7 +101,6 @@ const LoginPage = ({ titlePage }) => {
           setTextError(
             "Lỗi đăng nhập, vui lòng thử lại hoặc dùng phương thức đăng nhập khác"
           );
-          return;
         }
       }
     } catch (error) {

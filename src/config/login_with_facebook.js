@@ -29,6 +29,8 @@ async function ShowPopupLoginWithFacebook() {
     };
   } catch (error) {
     toast.error("Đăng nhập thất bại. Thử lại!");
+    console.error(error);
+    
   }
 }
 
