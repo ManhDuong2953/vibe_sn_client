@@ -18,24 +18,17 @@ import {
 } from "../../API/api_server";
 import { LuScanFace } from "react-icons/lu";
 import { LoadingIcon } from "../../ultils/icons/loading";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { loginSuccess } from "../../redux/Reducer/auth";
 
 const LoginPage = ({ titlePage }) => {
   useEffect(() => {
     document.title = titlePage;
   }, [titlePage]);
-  
-  const { isLoggedIn } = useSelector((state) => state.auth);
+  const dispatch = useDispatch();
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [textError, setTextError] = useState("");
-  useEffect(() => {
-    if (isLoggedIn) {
-      navigate("/");
-    }
-  }, []);
-  const dispatch = useDispatch();
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -171,7 +164,7 @@ const LoginPage = ({ titlePage }) => {
                 required
               />
             </div>
-            <Link to="/login/forgot-password">
+            <Link to="/login/forgot-password" className="fg-pws">
               <p className="forgot-password">Quên mật khẩu?</p>
             </Link>
             {textError && <p className="text-danger">{textError}</p>}

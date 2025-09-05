@@ -1,5 +1,5 @@
 import { configureStore } from '@reduxjs/toolkit'
-import themeReducer from '../Reducer/reducer'
+import themeReducer from '../Reducer/theme'
 import authReducer from '../Reducer/auth'
 import walletReducer from '../Reducer/wallet'
 export default configureStore({

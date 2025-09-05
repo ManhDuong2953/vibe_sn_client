@@ -6,6 +6,11 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  a.fg-pws {
+    width: fit-content;
+    display: block;
+    height: initial;
+  }
   p {
     color: #000;
     font-size: 12px;
@@ -15,6 +20,7 @@
       padding: 5px 0 10px;
       margin-top: -15px;
       text-align: left;
+      width: fit-content;
       &:hover {
         text-decoration: underline;
         cursor: pointer;

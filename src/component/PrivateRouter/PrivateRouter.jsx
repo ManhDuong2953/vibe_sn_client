@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Navigate, Outlet, useNavigate } from "react-router-dom";
+import { Navigate, Outlet } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { getData } from "../../ultils/fetchAPI/fetch_API";
 import { API_AUTH_TOKEN } from "../../API/api_server";
@@ -8,8 +8,9 @@ import { loginSuccess, logout } from "../../redux/Reducer/auth";
 
 const PrivateRoute = () => {
   const dispatch = useDispatch();
-  const navigate = useNavigate();
   const { isLoggedIn } = useSelector((state) => state.auth);
+  console.log("🔐 PrivateRoute render, isLoggedIn:", isLoggedIn);
+
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {

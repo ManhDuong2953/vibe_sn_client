@@ -15,7 +15,7 @@ import NoticeItem from "../../component/NoticeItem/notice_item";
 import ToggleButton from "react-toggle-button";
 import useToggleListener from "../../ultils/animation/toggle_active";
 import { useDispatch, useSelector } from "react-redux";
-import { darkHandle, lightHandle } from "../../redux/Reducer/reducer";
+import { darkHandle, lightHandle } from "../../redux/Reducer/theme";
 import { IoListOutline, IoSettingsSharp } from "react-icons/io5";
 import { OwnDataContext } from "../../provider/own_data";
 import { useSocket } from "../../provider/socket_context";
