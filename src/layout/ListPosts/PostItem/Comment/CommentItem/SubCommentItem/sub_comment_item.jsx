@@ -7,7 +7,10 @@ import { MdBugReport, MdDelete } from "react-icons/md";
 import { toast } from "react-toastify";
 import { timeAgo } from "../../../../../../ultils/formatDate/format_date";
 import { postData } from "../../../../../../ultils/fetchAPI/fetch_API";
-import { API_DELETE_SUB_COMMENT_POST_BY_SUB_COMMENT_ID, API_HEART_SUB_COMMENT_BY_COMMENT_ID } from "../../../../../../API/api_server";
+import {
+  API_DELETE_SUB_COMMENT_POST_BY_SUB_COMMENT_ID,
+  API_HEART_SUB_COMMENT_BY_COMMENT_ID,
+} from "../../../../../../API/api_server";
 import { OwnDataContext } from "../../../../../../provider/own_data";
 
 function SubCommentItem({
@@ -16,7 +19,7 @@ function SubCommentItem({
   commenting_user_id,
   user_id,
   post_id,
-  fetchData
+  fetchData,
 }) {
   const [isActive, setIsActive] = useState(false);
   const [heartCmt, setHeartCmt] = useState(data?.sub_comment_count_heart);
@@ -41,11 +44,12 @@ function SubCommentItem({
     }
   };
 
-  const handleDeleteComment = async()=>{
+  const handleDeleteComment = async () => {
     try {
       const response = await postData(
-        API_DELETE_SUB_COMMENT_POST_BY_SUB_COMMENT_ID(data?.sub_comment_id),{
-          post_id
+        API_DELETE_SUB_COMMENT_POST_BY_SUB_COMMENT_ID(data?.sub_comment_id),
+        {
+          post_id,
         }
       );
       if (response?.status) {
@@ -54,7 +58,7 @@ function SubCommentItem({
     } catch (error) {
       console.error("Lỗi khi xóa bình luận:", error);
     }
-  }
+  };
 
   return (
     <React.Fragment>
@@ -64,7 +68,7 @@ function SubCommentItem({
           <div className="action-func">
             {(data?.replying_user_id === dataOwner?.user_id ||
               user_id === dataOwner?.user_id) && (
-              <div className="row" onClick={()=>handleDeleteComment()}>
+              <div className="row" onClick={() => handleDeleteComment()}>
                 <MdDelete />
                 Xóa
               </div>
@@ -84,7 +88,14 @@ function SubCommentItem({
         </div>
         <div className="avt-img popup">
           <PopupInfoShort user_id={data?.replying_user_id} />
-          <img onError={(e) => { e.target.src = "https://tenten.vn/tin-tuc/wp-content/uploads/2022/06/loi-http-error-4.png"; }}src={data?.replying_user_avatar} alt="" />
+          <img
+            onError={(e) => {
+              e.target.src =
+                "https://tenten.vn/tin-tuc/wp-content/uploads/2022/06/loi-http-error-4.png";
+            }}
+            src={data?.replying_user_avatar}
+            alt=""
+          />
         </div>
         <div className="comment-content--wrapper--container">
           <div className="comment-content--wrapper">
@@ -101,17 +112,26 @@ function SubCommentItem({
               {data?.media_link && (
                 <div className="comment-content--img">
                   {data?.media_type === "image" && (
-                    <img onError={(e) => { e.target.src = "https://tenten.vn/tin-tuc/wp-content/uploads/2022/06/loi-http-error-4.png"; }}src={data?.media_link} alt="" />
+                    <img
+                      onError={(e) => {
+                        e.target.src =
+                          "https://tenten.vn/tin-tuc/wp-content/uploads/2022/06/loi-http-error-4.png";
+                      }}
+                      src={data?.media_link}
+                      alt=""
+                    />
                   )}
                   {data?.media_type === "video" && (
                     <video controls loop src={data?.media_link} />
                   )}
                 </div>
               )}
-              <p className="quantity-heart">
-                <FaHeart />
-                <b>{heartCmt}</b>
-              </p>
+              {heartCmt > 0 && (
+                <p className="quantity-heart">
+                  <FaHeart />
+                  <b>{heartCmt}</b>
+                </p>
+              )}
             </div>
             <div className="comment-action--reply">
               <div className="action">

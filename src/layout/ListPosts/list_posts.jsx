@@ -9,12 +9,13 @@ import { API_GET_POSTS } from "../../API/api_server";
 function ListPosts() {
   const [listPost, setListPost] = useState([]);
   const [isDataLoaded, setIsDataLoaded] = useState(false);
-
+  const [currentPage, setCurrentPage] = useState(1);
+  const postsPerPage = 10; // Số bài viết hiển thị trên mỗi trang
   useEffect(() => {
     // Fetch dữ liệu bài viết
     const fetchData = async () => {
       try {
-        const response = await getData(API_GET_POSTS);
+        const response = await getData(API_GET_POSTS+`?page=${currentPage}&limit=${postsPerPage}`);
         if (response?.status) {
           setListPost(response.data);
         }
@@ -26,7 +27,24 @@ function ListPosts() {
     };
 
     fetchData();
+
+        const observer = new IntersectionObserver(entries => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    console.log('Element entered viewport:', entry.target);
+                } else {
+                    console.log('Element exited viewport:', entry.target);
+                }
+            });
+        });
+
+        const targetElement = document.getElementById('temp-tag');
+        observer.observe(targetElement);
+        
+
   }, []);
+
+
 
   return (
     <React.Fragment>
@@ -41,6 +59,8 @@ function ListPosts() {
           ) : (
             <h4 className="box-center">Đang tải bài viết...</h4>
           )}
+        {/* thẻ giả để obserser thì tăng currentPage */}
+        <div id="temp-tag" style={{height: 100, background: "red"}}></div>
         </span>
       </div>
     </React.Fragment>

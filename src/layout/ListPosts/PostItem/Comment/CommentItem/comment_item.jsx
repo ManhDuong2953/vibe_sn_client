@@ -206,7 +206,14 @@ export default function CommentItem({ data, user_id, fetchData }) {
             </div>
             <div className="avt-img popup">
               <PopupInfoShort user_id={data?.commenting_user_id} />
-              <img onError={(e) => { e.target.src = "https://tenten.vn/tin-tuc/wp-content/uploads/2022/06/loi-http-error-4.png"; }}src={data?.avatar} alt="" />
+              <img
+                onError={(e) => {
+                  e.target.src =
+                    "https://tenten.vn/tin-tuc/wp-content/uploads/2022/06/loi-http-error-4.png";
+                }}
+                src={data?.avatar}
+                alt=""
+              />
             </div>
             <div className="comment-content--wrapper--container">
               <div className="comment-content--wrapper">
@@ -220,17 +227,26 @@ export default function CommentItem({ data, user_id, fetchData }) {
                   {data?.media_link && (
                     <div className="comment-content--img">
                       {data?.media_type === "image" && (
-                        <img onError={(e) => { e.target.src = "https://tenten.vn/tin-tuc/wp-content/uploads/2022/06/loi-http-error-4.png"; }}src={data?.media_link} alt="" />
+                        <img
+                          onError={(e) => {
+                            e.target.src =
+                              "https://tenten.vn/tin-tuc/wp-content/uploads/2022/06/loi-http-error-4.png";
+                          }}
+                          src={data?.media_link}
+                          alt=""
+                        />
                       )}
                       {data?.media_type === "video" && (
                         <video controls loop src={data?.media_link} />
                       )}
                     </div>
                   )}
-                  <p className="quantity-heart">
-                    <FaHeart />
-                    <b>{heartCmt}</b>
-                  </p>
+                  {heartCmt > 0 && (
+                    <p className="quantity-heart">
+                      <FaHeart />
+                      <b>{heartCmt}</b>
+                    </p>
+                  )}
                 </div>
                 <div className="comment-action--reply">
                   <div className="action">
@@ -287,7 +303,14 @@ export default function CommentItem({ data, user_id, fetchData }) {
               onSubmit={(e) => handleSubmitComment(e)}
             >
               <div className="avt-img">
-                <img onError={(e) => { e.target.src = "https://tenten.vn/tin-tuc/wp-content/uploads/2022/06/loi-http-error-4.png"; }}src={dataOwner?.avatar} alt="" />
+                <img
+                  onError={(e) => {
+                    e.target.src =
+                      "https://tenten.vn/tin-tuc/wp-content/uploads/2022/06/loi-http-error-4.png";
+                  }}
+                  src={dataOwner?.avatar}
+                  alt=""
+                />
               </div>
               <div className="input-wrapper">
                 {showFilePond && (

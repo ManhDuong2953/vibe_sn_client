@@ -4,17 +4,17 @@
   a {
     color: aqua;
   }
-  *{
+  * {
     font-size: 0.9rem;
   }
 }
 .toggle-text {
-  color: #007bff;
+  color: #0de1f2;
   cursor: pointer;
-  font-weight: bold;
+  font-weight: 700;
   padding-right: 15px;
   padding-left: 15px;
-  font-size: 0.9rem;
+  font-size: 0.7rem;
   &:hover {
     text-decoration: underline;
   }

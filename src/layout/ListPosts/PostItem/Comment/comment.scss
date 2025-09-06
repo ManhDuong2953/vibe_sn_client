@@ -262,13 +262,12 @@
 
     .input-wrapper {
       flex: 12;
-      padding: 0 10px;
       display: flex;
       align-items: center;
 
       .input-control--container {
         width: 100%;
-        border: 1px solid var(--text-blur-color);
+        // border: 1px solid var(--text-blur-color);
         border-radius: 10px;
         background-color: var(--hover-color);
         display: flex;
@@ -330,6 +329,6 @@
     height: auto;
     display: flex;
     align-items: center;
-    padding: 5px 0 40px 70px;
+    padding: 5px 0 5px 50px;
   }
 }
