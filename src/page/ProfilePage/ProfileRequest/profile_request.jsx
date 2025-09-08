@@ -45,14 +45,11 @@ function ProfileRequest({ titlePage }) {
                   />
                 ))
               ) : (
-                <h5
-                  style={{
-                    margin: "10px 0",
-                  }}
-                  className="text-center"
+                <h4
+                  className="box-center"
                 >
                   Bạn không có lời mời kết bạn nào
-                </h5>
+                </h4>
               )}
             </ul>
           </div>

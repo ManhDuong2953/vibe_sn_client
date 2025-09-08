@@ -40,10 +40,18 @@ function ProfileGroup({ titlePage }) {
               </form>
             </h3>
 
-            {dataGroup.length > 0 &&
-              dataGroup.map((data, index) => (
+            {dataGroup ? (
+              dataGroup?.length > 0 &&
+              dataGroup &&
+              dataGroup?.map((data, index) => (
                 <GroupItem key={index} group_id={data?.group_id} />
-              ))}
+              ))
+            ) : (
+              <h4 className="box-center">
+                Bạn chưa tham gia nhóm nào, hãy bắt đầu bằng việc tìm kiếm nhóm
+                ở thanh tìm kiếm.
+              </h4>
+            )}
           </div>
         </div>
       </div>
