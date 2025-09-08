@@ -110,26 +110,28 @@ function ProfilePage({ titlePage }) {
                   </Link>
                 )}
               </div>
-              <div className="title-friend box">
-                <h3>Bạn bè • {dataFriend?.length}</h3>
-                <Link to={`/profile/${user_id}/friends`}>
-                  <ul className="list-fr">
-                    {dataFriend &&
-                      dataFriend?.map((dataFriendItem) => (
-                        <li className="friend-item">
-                          <img
-                            onError={(e) => {
-                              e.target.src =
-                                "https://tenten.vn/tin-tuc/wp-content/uploads/2022/06/loi-http-error-4.png";
-                            }}
-                            src={dataFriendItem?.avatar}
-                            alt={dataFriendItem?.user_name}
-                          />
-                        </li>
-                      ))}
-                  </ul>
-                </Link>
-              </div>
+              {dataFriend && dataFriend?.length > 0 && (
+                <div className="title-friend box">
+                  <h3>Bạn bè • {dataFriend?.length}</h3>
+                  <Link to={`/profile/${user_id}/friends`}>
+                    <ul className="list-fr">
+                      {dataFriend &&
+                        dataFriend?.map((dataFriendItem) => (
+                          <li className="friend-item">
+                            <img
+                              onError={(e) => {
+                                e.target.src =
+                                  "https://tenten.vn/tin-tuc/wp-content/uploads/2022/06/loi-http-error-4.png";
+                              }}
+                              src={dataFriendItem?.avatar}
+                              alt={dataFriendItem?.user_name}
+                            />
+                          </li>
+                        ))}
+                    </ul>
+                  </Link>
+                </div>
+              )}
             </div>
             <div className="profile-right">
               {dataOwner && dataOwner?.user_id === user_id && (
@@ -149,7 +151,7 @@ function ProfilePage({ titlePage }) {
               >
                 <h3>Bài viết</h3>
               </div>
-              {listPost ? (
+              {listPost?.length > 0 ? (
                 listPost?.map((item, index) => (
                   <PostItem key={index} data={item} />
                 ))
