@@ -29,8 +29,6 @@ function ProfileLiked({ titlePage }) {
     getHeart();
   }, [user_id]);
 
-
-
   const socket = useSocket();
   const [listUsersOnline, setListUsersOnline] = useState([]);
 
@@ -48,8 +46,10 @@ function ProfileLiked({ titlePage }) {
       <div className="profile">
         <div className="profile-container">
           <ProfileHeader userId={user_id} classNameActive="liked" />
+
           <div className="profile-liked--container">
-            <div className="box">
+            <div>
+              <h3 className="box">Người yêu thích bạn</h3>
               {data?.length > 0 ? (
                 <ul>
                   {data.map((heartedItem, index) => (
@@ -62,9 +62,9 @@ function ProfileLiked({ titlePage }) {
                     />
                   ))}
                 </ul>
-                ) : (
-                    <h4 className="text-center">Không có bạn nào yêu thích bạn!</h4>
-                )}
+              ) : (
+                <h4 className="box-center">Không có bạn nào yêu thích bạn!</h4>
+              )}
             </div>
           </div>
         </div>

@@ -173,11 +173,8 @@ const fetchData = async (url, options = {}) => {
     const response = await axiosInstance(config);
     return handleResponse(response);
   } catch (error) {
-<<<<<<< Updated upstream
-    console.log(error.message ?? error);
-=======
+
     return handleError(error);
->>>>>>> Stashed changes
   }
 };
 

@@ -9,24 +9,13 @@ import { API_GET_POSTS } from "../../API/api_server";
 function ListPosts() {
   const [listPost, setListPost] = useState([]);
   const [isDataLoaded, setIsDataLoaded] = useState(false);
-<<<<<<< Updated upstream
-
-=======
   const [currentPage, setCurrentPage] = useState(1);
   const postsPerPage = 10; // Số bài viết hiển thị trên mỗi trang
-
-  // Fetch dữ liệu khi currentPage thay đổi
->>>>>>> Stashed changes
   useEffect(() => {
     const fetchData = async () => {
       try {
-<<<<<<< Updated upstream
-        const response = await getData(API_GET_POSTS);
-=======
-        const response = await getData(
-          API_GET_POSTS + `?page=${currentPage}&limit=${postsPerPage}`
-        );
->>>>>>> Stashed changes
+
+        const response = await getData(API_GET_POSTS+`?page=${currentPage}&limit=${postsPerPage}`);
         if (response?.status) {
           // Gộp thêm data mới thay vì ghi đè
           setListPost((prev) => [...prev, ...response.data]);
@@ -39,10 +28,7 @@ function ListPosts() {
     };
 
     fetchData();
-<<<<<<< Updated upstream
-  }, []);
 
-=======
   }, [currentPage]);
   // Observer chỉ cần gắn một lần
   useEffect(() => {
@@ -62,9 +48,7 @@ function ListPosts() {
     };
   }, []);
 
-  console.log("Element entered viewport:", currentPage);
 
->>>>>>> Stashed changes
   return (
     <React.Fragment>
       <div id="list-post--container">
@@ -78,11 +62,10 @@ function ListPosts() {
           ) : (
             <h4 className="box-center">Đang tải bài viết...</h4>
           )}
-<<<<<<< Updated upstream
-=======
+
           {/* thẻ giả để observer tăng currentPage */}
           <div id="temp-tag" style={{ height: 100 }}></div>
->>>>>>> Stashed changes
+
         </span>
       </div>
     </React.Fragment>

@@ -42,17 +42,17 @@ function ListPostGroupPage({ titlePage }) {
   }, []);
 
   const [dataListPost, setDataListPost] = useState([]);
-  useEffect(() => {
-    const getAllGroupPost = async () => {
-      try {
-        const response = await getData(API_LIST_MY_GROUP_POST);
-        if (response?.status) {
-          setDataListPost(response?.data);
-        }
-      } catch (error) {
-        console.error("Error fetching group detail:", error);
+  const getAllGroupPost = async () => {
+    try {
+      const response = await getData(API_LIST_MY_GROUP_POST);
+      if (response?.status) {
+        setDataListPost(response?.data);
       }
-    };
+    } catch (error) {
+      console.error("Error fetching group detail:", error);
+    }
+  };
+  useEffect(() => {
     getAllGroupPost();
   }, []);
 
@@ -70,8 +70,8 @@ function ListPostGroupPage({ titlePage }) {
                 <MdOutlineGroupAdd />
                 <h5 style={{ marginLeft: "5px" }}>Tạo nhóm</h5>
               </Link>
-              {dataGroup.length > 0 &&
-                dataGroup.map((data, index) => (
+              {dataGroup?.length > 0 &&
+                dataGroup?.map((data, index) => (
                   <GroupItem key={index} group_id={data?.group_id} />
                 ))}
             </ul>
@@ -80,7 +80,7 @@ function ListPostGroupPage({ titlePage }) {
             <ul className="list-gr">
               {dataListPost.length > 0 ? (
                 dataListPost?.map((data, index) => {
-                  return <PostItem key={index} data={data} />;
+                  return data && <PostItem key={index} data={data} />;
                 })
               ) : (
                 <h4 className="box-center">

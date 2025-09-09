@@ -88,7 +88,7 @@ function ProfileFriend({ titlePage }) {
                 />
               ))
             ) : (
-              <h4 className="text-centerpop">Không tìm thấy bạn bè nào.</h4>
+              <h4 className="box-center">Không tìm thấy bạn bè nào.</h4>
             )}
           </div>
         </div>
