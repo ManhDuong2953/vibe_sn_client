@@ -9,16 +9,29 @@ import { API_GET_POSTS } from "../../API/api_server";
 function ListPosts() {
   const [listPost, setListPost] = useState([]);
   const [isDataLoaded, setIsDataLoaded] = useState(false);
+<<<<<<< Updated upstream
 
+=======
+  const [currentPage, setCurrentPage] = useState(1);
+  const postsPerPage = 10; // Số bài viết hiển thị trên mỗi trang
+
+  // Fetch dữ liệu khi currentPage thay đổi
+>>>>>>> Stashed changes
   useEffect(() => {
-    // Fetch dữ liệu bài viết
     const fetchData = async () => {
       try {
+<<<<<<< Updated upstream
         const response = await getData(API_GET_POSTS);
+=======
+        const response = await getData(
+          API_GET_POSTS + `?page=${currentPage}&limit=${postsPerPage}`
+        );
+>>>>>>> Stashed changes
         if (response?.status) {
-          setListPost(response.data);
+          // Gộp thêm data mới thay vì ghi đè
+          setListPost((prev) => [...prev, ...response.data]);
         }
-        setIsDataLoaded(true); // Đánh dấu đã tải xong dữ liệu
+        setIsDataLoaded(true);
       } catch (error) {
         console.error(error);
         setIsDataLoaded(true);
@@ -26,8 +39,32 @@ function ListPosts() {
     };
 
     fetchData();
+<<<<<<< Updated upstream
   }, []);
 
+=======
+  }, [currentPage]);
+  // Observer chỉ cần gắn một lần
+  useEffect(() => {
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          setCurrentPage((prev) => prev + 1); // dùng callback form
+        }
+      });
+    });
+
+    const targetElement = document.getElementById("temp-tag");
+    if (targetElement) observer.observe(targetElement);
+
+    return () => {
+      if (targetElement) observer.unobserve(targetElement);
+    };
+  }, []);
+
+  console.log("Element entered viewport:", currentPage);
+
+>>>>>>> Stashed changes
   return (
     <React.Fragment>
       <div id="list-post--container">
@@ -41,6 +78,11 @@ function ListPosts() {
           ) : (
             <h4 className="box-center">Đang tải bài viết...</h4>
           )}
+<<<<<<< Updated upstream
+=======
+          {/* thẻ giả để observer tăng currentPage */}
+          <div id="temp-tag" style={{ height: 100 }}></div>
+>>>>>>> Stashed changes
         </span>
       </div>
     </React.Fragment>
