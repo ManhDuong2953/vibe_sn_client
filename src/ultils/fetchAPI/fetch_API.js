@@ -111,7 +111,7 @@ import { toast } from "react-toastify";
 // Tạo instance axios chung
 const axiosInstance = axios.create({
   withCredentials: true, // gửi cookie
-  timeout: 15000, // timeout 15s
+  timeout: 120000, // timeout 15s
 });
 
 // Hàm xử lý phản hồi chung
