@@ -75,8 +75,11 @@ b {
   /* white-space: pre-wrap; */
 }
 
-html {
+html, textarea {
   font-family: "Roboto", sans-serif;
+}
+.tox-tinymce{
+  background: white;
 }
 
 body {

@@ -271,6 +271,7 @@ function ChatMessengerPage({ titlePage }) {
           console.error("Error: " + error);
         }
       };
+      
       const getAllMessages = async () => {
         try {
           const response = await postData(API_GET_ALL_MESSAGE(id_receiver), {
@@ -289,7 +290,9 @@ function ChatMessengerPage({ titlePage }) {
       };
 
       checkReceiverExistKeyPair();
-      getAllMessages();
+      if(localStorage.getItem("private_key")){
+        getAllMessages();
+      }
     }
   }, [id_receiver]);
   // Hàm nhóm tin nhắn theo ngày

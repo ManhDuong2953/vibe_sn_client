@@ -3,7 +3,12 @@
   margin-top: 56px;
   height: calc(100vh - 56px);
   background-color: var(--bg-color);
-
+  input[type="checkbox"] {
+    appearance: auto !important;
+    &::after{
+      display: none !important;
+    }
+  }
   .left-panel {
     flex: 1;
     padding: 20px;
@@ -97,7 +102,9 @@
     .results {
       padding: 20px;
       border-radius: 10px;
+      font-size: 0.9rem;
       i {
+        font-size: 0.9rem;
         color: var(--success-color);
       }
       #group-container {
