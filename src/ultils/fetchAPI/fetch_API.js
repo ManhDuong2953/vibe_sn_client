@@ -135,6 +135,10 @@ const handleResponse = (response) => {
 
 // Hàm xử lý lỗi chung
 const handleError = (error) => {
+    // Nếu lỗi do timeout thì chỉ return, không toast
+  if (error.code === "ECONNABORTED") {
+    return { status: false, message: "Yêu cầu đã hủy bởi phản hồi quá thời hạn!" };
+  }
   // Axios ném lỗi khi status >= 400
   const errMsg =
     error.response?.data?.message ||

@@ -64,7 +64,7 @@ function App() {
   return (
     <div className="App" onKeyDown={(e) => handleBackHistory(e.key)}>
       <ToastContainer
-        position="top-right"
+        position="bottom-left"
         autoClose={1000}
         hideProgressBar={true}
         newestOnTop={false}
