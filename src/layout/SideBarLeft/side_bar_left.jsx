@@ -43,7 +43,6 @@ function SideBarLeft() {
         <React.Fragment>
             <div id="sidebar-left--container">
                 <span className="sidebar-left--span">
-
                     <div className="template-container">
                         <div className="template-wrap">
                             {

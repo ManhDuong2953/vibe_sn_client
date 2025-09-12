@@ -27,6 +27,7 @@ import {
 import { OwnDataContext } from "../../provider/own_data";
 import { getCountMutualFriends } from "../../services/fetch_api";
 import { useSocket } from "../../provider/socket_context";
+import { truncateText } from "../../ultils/text/textHandler";
 
 function ProfileHeader({ classNameActive, userId }) {
   const [isHearted, setIsHearted] = useState(false);
@@ -241,7 +242,7 @@ function ProfileHeader({ classNameActive, userId }) {
             <div className="header-container">
               <div className="info-analyst">
                 <h1 className="name">
-                  {data?.user_name?.length > 30 ? data?.user_name?.slice(0, 30) + "..." : data?.user_name}
+                  {truncateText(data?.user_name, 30)}
                   <TbRosetteDiscountCheckFilled className="icon-checked" />
                 </h1>
                 <p className="nickname">@{data?.user_nickname}</p>
