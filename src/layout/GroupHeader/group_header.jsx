@@ -117,7 +117,7 @@ function GroupHeader({ classNameActive, group_id }) {
               <img onError={(e) => { e.target.src = "https://tenten.vn/tin-tuc/wp-content/uploads/2022/06/loi-http-error-4.png"; }}src={dataGroup?.avatar_media_link} alt="" />
               <div className="header-container">
                 <div className="info-analyst">
-                  <h1 className="name">{dataGroup?.group_name}</h1>
+                  <h1 className="name">{dataGroup?.group_name?.length > 20 ? dataGroup?.group_name?.slice(0, 30) + "..." : dataGroup?.group_name}</h1>
                   <div className="analyst">
                     <p
                       className="private"
