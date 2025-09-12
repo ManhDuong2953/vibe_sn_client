@@ -130,6 +130,7 @@ export default function FormPost({ group_id = undefined }) {
           }
         }
         setShowPopup(false);
+        window.location.reload();
       }
     } catch (error) {
       alert("Lỗi khi đăng bài");
