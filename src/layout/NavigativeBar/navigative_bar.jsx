@@ -56,6 +56,17 @@ function NavigativeBar() {
     setSearchString(e);
   };
 
+  const [showSearchHistory, setShowSearchHistory] = useState(false);
+  const [dataSearchHistory, setDataSearchHistory] = useState([
+    "Bài viết React",
+    "Học VueJS",
+    "Nuxt 2 hướng dẫn",
+    "Nuxt 3 nâng cao",
+    "Docker Compose cơ bản",
+    "Socket.IO Realtime",
+    "Điện mặt trời EVN",
+  ]);
+
   const handleSubmit = (e) => {
     if (e === "Enter") {
       navigate(`/search?searchString=` + searchString);
@@ -305,18 +316,38 @@ function NavigativeBar() {
                 />
               </Link>
             </div>
-            <form method="get" onSubmit={(e) => e.preventDefault()}>
+            <form
+              className="search-form"
+              method="get"
+              onSubmit={(e) => e.preventDefault()}
+            >
               <Link to="/search">
                 <IoMdSearch />
               </Link>
               <input
+                className="input-search"
                 type="text"
                 onKeyDown={(e) => handleSubmit(e.key)}
                 onChange={(e) => handleInput(e.target.value)}
                 placeholder="Tìm kiếm theo bài viết..."
+                onFocus={() => setShowSearchHistory(true)}
+                onBlur={() => {
+                  setTimeout(() => {
+                    setShowSearchHistory(false);
+                  }, 100);
+                }}
                 value={searchString}
                 name="searchString"
               />
+              {dataSearchHistory.length > 0 && showSearchHistory && (
+                <ul className="suggestion-list">
+                  {dataSearchHistory.map((item, idx) => (
+                    <li key={idx}>
+                      <Link to={`/search?query=${item}`}>{item}</Link>
+                    </li>
+                  ))}
+                </ul>
+              )}
             </form>
             <IoListOutline className="toggle-navbar" />
             <div className="temp"></div>
