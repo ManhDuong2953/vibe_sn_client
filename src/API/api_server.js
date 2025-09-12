@@ -5,6 +5,7 @@ const API_SIGNUP_POST = API_HOST + "/users/account/signup";
 const API_SIGNUP_SOCIALNETWORK_POST =
   API_HOST + "/users/account/social-network/signup";
 const API_LOGIN_POST = API_HOST + "/users/account/login";
+const API_LOGOUT_POST = API_HOST + "/users/account/logout";
 const API_GET_ALL_USERS = API_HOST + "/users/account/all";
 const API_GET_USER_BY_ID = (id) => `${API_HOST}/users/account/info/${id}`;
 const API_UPDATE_USER_PASSWORD = `${API_HOST}/users/account/reset-password`;
@@ -313,5 +314,6 @@ export {
   API_COUNT_MANUAL_FRIEND,
   API_AUTH_TOKEN,
   API_POST_CONFIRM_PURCHASE,
-  API_GET_LINK_THREE_DIMENSION
+  API_GET_LINK_THREE_DIMENSION,
+  API_LOGOUT_POST,
 };

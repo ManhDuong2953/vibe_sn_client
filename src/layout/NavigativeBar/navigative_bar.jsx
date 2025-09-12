@@ -186,6 +186,7 @@ function NavigativeBar() {
     try {
       // Gọi API để xóa token từ phía server (nếu cần)
       const response = await deleteData(API_LOGOUT);
+
       if (response?.status) {
         // Xóa token từ cookie
         localStorage.clear();
