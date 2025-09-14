@@ -1,251 +1,119 @@
-
 #sidebar-left--container {
-  background: var(--bg-color);
-  flex: 6;
+  flex: 8;
   height: 100%;
-  overflow-y: auto;
+  overflow-y: scroll;
   overflow-x: hidden;
   padding: 0 25px;
+  font-size: 14px;
+  &::-webkit-scrollbar {
+    display: none !important;
+  }
   /* Máy tính bảng loại to, hiển thị chiều ngang */
   @media (max-width: 1024px) {
     display: none;
   }
+  background: var(--navbar-color);
+  border-right: 1px solid var(--border-color);
+  padding: 16px 12px;
+  font-family: "Segoe UI", sans-serif;
+  color: var(--text-color);
 
-  &::-webkit-scrollbar {
-    display: none !important;
+  .sidebar-left--wrap {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
   }
-  h5 {
-    font-size: 13px !important;
+  .sidebar-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
   }
-  h3 {
-    font-size: 12px !important;
-  }
+  /* Item chung */
+  .sidebar-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 500;
+    text-decoration: none;
+    color: var(--text-color);
+    transition: background 0.2s, color 0.2s;
 
-  span.sidebar-left--span {
-    display: block;
-    width: 100%;
-    .template-container {
-      width: 100%;
-      height: 100%;
-      margin: 20px 0;
-      img {
-        filter: drop-shadow(0px 1px 1px black);
+    &:hover,
+    &.profile {
+      background: var(--hover-color);
+      color: var(--primary-color);
+
+      .sidebar-icon {
+        color: var(--primary-color);
       }
-      .template-wrap {
-        background: var(--bg-temp-color);
-        width: 100%;
-        height: 100%;
-        padding: 20px;
-        border-radius: 10px;
-        box-shadow: rgba(200, 200, 200, 0.3) 0px 1px 2px 0px,
-          rgba(200, 200, 200, 0.15) 0px 1px 3px 1px;
+    }
 
-        .info-address {
-          display: flex;
-          flex-direction: column;
-          align-items: center;
-          margin-bottom: 20px;
-          h5 {
-            text-transform: uppercase;
-          }
-          img {
-            width: 100px;
-            padding: 10px 0;
-          }
-          p {
-            font-size: 12px;
+    .sidebar-icon {
+      font-size: 20px;
+      color: var(--icon-color);
+      min-width: 24px;
+    }
+  }
+
+  /* Gợi ý nhóm */
+  .sidebar-suggest {
+    margin-top: 20px;
+
+    h5 {
+      margin-bottom: 12px;
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--text-color);
+    }
+
+    .suggest-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+
+      .suggest-item {
+        display: flex;
+        align-items: center;
+        background: transparent;
+        border-radius: 8px;
+        text-decoration: none;
+        color: var(--text-color);
+        transition: background 0.2s, color 0.2s;
+        padding: 8px;
+        margin: 0 -8px;
+        &:hover {
+          background: var(--hover-color);
+        }
+        .group-avatar {
+          width: 45px;
+          height: 45px;
+          border-radius: 5px;
+          overflow: hidden;
+          img.avatar {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
           }
         }
 
-        h5 {
-          color: var(--text-blur-color);
-          text-align: center;
-          font-size: 15px;
-        }
-        h3 {
-          font-weight: 600;
-        }
+        .group-info {
+          flex: 1;
+          margin-left: 10px;
 
-        .current-w {
-          display: flex;
-          justify-content: space-between;
-          align-items: center;
-          .address-w {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-
-            h3.address {
-              font-size: 14px !important;
-              text-transform: uppercase;
-              margin-bottom: 4px;
-            }
-            p.date {
-              font-size: 10px !important;
-              color: var(--text-blur-color);
-            }
+          .group-name {
+            font-weight: bold;
+            font-size: 13px;
           }
-          .temp-w {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
 
-            h3.temp {
-              font-size: 14px !important;
-              text-transform: uppercase;
-              margin-bottom: 4px;
-            }
-            p.status {
-              text-transform: uppercase;
-              font-size: 10px !important;
-              color: var(--text-blur-color);
-            }
-          }
-          .icon-w {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-          }
-        }
-
-        .air-condidate--w {
-          display: flex;
-          align-items: center;
-          justify-content: space-between;
-          height: 100px;
-
-          .air-condidate--item {
-            flex: 1;
-            flex-direction: column;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            p.icon-air {
-              color: var(--text-blur-color);
-              display: flex;
-              align-items: center;
-              font-size: 12px;
-              svg {
-                font-size: 14px;
-                margin-right: 4px;
-                path {
-                  color: var(--text-blur-color);
-                }
-              }
-            }
-            h3.value {
-              margin: 10px 0;
-              font-size: 14px;
-            }
-          }
-        }
-
-        .forecast-in--day {
-          text-align: center;
-          padding-bottom: 10px;
-          b {
-            padding: 12px 0 10px 0;
-            height: 29px;
-            display: block;
+          .group-members {
             font-size: 10px;
-            color: var(--primary-color);
-          }
-          ul.list-forecast {
-            overflow-x: auto;
-            height: 100px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            &::-webkit-scrollbar {
-              display: none;
-            }
-            li.forecast-item {
-              flex: 1;
-              display: flex;
-              flex-direction: column;
-              justify-content: center;
-              background: linear-gradient(
-                  0deg,
-                  rgba(255, 255, 255, 0.05) 0%,
-                  rgba(171, 203, 222, 0.05) 100%
-                )
-                0% 0%;
-              border-radius: 8px;
-              box-shadow: rgba(0, 0, 0, 0.05) 0px 10px 15px -3px,
-                rgba(0, 0, 0, 0.05) 0px 4px 6px -2px;
-              text-align: center;
-              padding: 8px 0px;
-              width: 100%;
-              margin: 0 0 4px 4px;
-              p.time {
-                color: var(--text-blur-color);
-                font-size: 11px;
-              }
-              .icon-w {
-                img {
-                  width: 42px;
-                  height: 42px;
-                }
-              }
-              h3.temp-w {
-                font-size: 13px;
-              }
-            }
-
-            li.forecast-item.active {
-              background: rgba(171, 203, 222, 0.3);
-            }
-          }
-        }
-
-        ul.list-forecast--weeks {
-          display: flex;
-          flex-direction: column;
-          justify-content: center;
-          li.forecast-week--item {
-            padding: 10px;
-            background: linear-gradient(
-                0deg,
-                rgba(255, 255, 255, 0.05) 0%,
-                rgba(171, 203, 222, 0.05) 100%
-              )
-              0% 0%;
-            box-shadow: rgba(0, 0, 0, 0.05) 0px 10px 15px -3px,
-              rgba(0, 0, 0, 0.05) 0px 4px 6px -2px;
-            h3 {
-              font-size: 14px !important ;
-            }
-            b {
-              text-transform: uppercase;
-              font-size: 10px;
-              font-size: 400;
-            }
-            .row {
-              height: 31px;
-              display: flex;
-              align-items: center;
-              .analyst {
-                flex: 1;
-                font-size: 11px;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                padding: 0;
-                svg {
-                  margin-right: 4px;
-                  font-size: 15px;
-                }
-                img {
-                  width: 30px;
-                }
-              }
-            }
+            color: var(--text-blur-color);
           }
         }
       }

@@ -320,6 +320,7 @@ function NavigativeBar() {
               className="search-form"
               method="get"
               onSubmit={(e) => e.preventDefault()}
+              autoComplete="off"
             >
               <Link to="/search">
                 <IoMdSearch />
@@ -343,7 +344,7 @@ function NavigativeBar() {
                 <ul className="suggestion-list">
                   {dataSearchHistory.map((item, idx) => (
                     <li key={idx}>
-                      <Link to={`/search?query=${item}`}>{item}</Link>
+                      <Link to={`/search?searchString=${item}`}>{item}</Link>
                     </li>
                   ))}
                 </ul>

@@ -103,6 +103,7 @@ const API_DELETE_STORY = (id) => `${API_HOST}/stories/delete-story/${id}`;
 const API_GROUP_CREATE = API_HOST + "/group/channel/create";
 const API_LIST_GROUP_BY_USERID = (id) =>
   API_HOST + "/group/members/list-all-group/" + id;
+const API_LIST_GROUP_SUGGEST = API_HOST + "/group/members/list-suggest-group/";
 const API_GROUP_DETAIL = (id) => API_HOST + "/group/channel/details/" + id;
 const API_UPDATE_GROUP = (id) => API_HOST + "/group/channel/update/" + id;
 const API_DELETE_GROUP = (id) => API_HOST + "/group/channel/delete/" + id;
@@ -316,4 +317,5 @@ export {
   API_POST_CONFIRM_PURCHASE,
   API_GET_LINK_THREE_DIMENSION,
   API_LOGOUT_POST,
+  API_LIST_GROUP_SUGGEST,
 };

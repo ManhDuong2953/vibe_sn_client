@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { API_GROUP_DETAIL } from "../../API/api_server";
 import AvatarWithText from "../../skeleton/avatarwithtext";
 import { getData } from "../../ultils/fetchAPI/fetch_API";
+import { truncateText } from "../../ultils/text/textHandler";
 function GroupItem({ group_id = null, data = null }) {
   const [loading, setLoading] = useState(false);
   const [dataGr, setDataGr] = useState(data);
@@ -44,7 +45,8 @@ function GroupItem({ group_id = null, data = null }) {
             />
           </div>
           <div className="name-group">
-            <b>{dataGr.group_name}</b>
+            <b>{truncateText(dataGr.group_name, 50)}</b> 
+            <i>{dataGr.member_count || 0} thành viên</i>
           </div>
         </Link>
       )}

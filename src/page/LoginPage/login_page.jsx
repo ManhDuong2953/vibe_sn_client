@@ -15,6 +15,7 @@ import {
   API_CHECK_EXIST_USER,
   API_LOGIN_POST,
   API_SIGNUP_SOCIALNETWORK_POST,
+  API_LOGOUT_POST,
 } from "../../API/api_server";
 import { LuScanFace } from "react-icons/lu";
 import { LoadingIcon } from "../../ultils/icons/loading";
@@ -24,13 +25,17 @@ import { loginSuccess } from "../../redux/Reducer/auth";
 const LoginPage = ({ titlePage }) => {
   useEffect(() => {
     document.title = titlePage;
-    
   }, [titlePage]);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [textError, setTextError] = useState("");
-
+  const logout = async () => {
+    await postData(API_LOGOUT_POST);
+  };
+  useEffect(() => {
+    logout();
+  }, []);
   const handleLogin = async (e) => {
     e.preventDefault();
     try {

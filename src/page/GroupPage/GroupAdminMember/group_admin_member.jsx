@@ -15,6 +15,7 @@ import { Link, useParams } from "react-router-dom";
 import { getData, postData } from "../../../ultils/fetchAPI/fetch_API";
 import {
   API_ACCEPT_INVITE_MEMBER_GROUP,
+  API_GROUP_DETAIL,
   API_LIST_MEMBERS_OFFICAL_GROUP,
   API_LIST_MEMBERS_UNAPPROVED_GROUP,
   API_REFUSE_INVITE_MEMBER_GROUP,
@@ -200,12 +201,8 @@ function GroupAdminMemberPage({ titlePage }) {
               </div>
               <div className="group-right">
                 <div className="title-intro box">
-                  <h3>Thống kê bài viết</h3>
+                  <h3>Thống kê thành viên ({members?.length ?? 0})</h3>
                   <div className="info-short--item info-school">
-                    <MdDateRange />
-                    100.000 bài viết
-                  </div>
-                  <div className="info-short--item info-address">
                     <FaPeopleGroup />
                     {members?.length.toLocaleString() ?? 0} thành viên
                   </div>

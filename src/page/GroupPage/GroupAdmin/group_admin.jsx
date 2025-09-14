@@ -20,9 +20,9 @@ import {
 import {
   API_ACCEPT_GROUP_POST,
   API_DELETE_GROUP,
+  API_GROUP_DETAIL,
   API_LIST_GROUP_UNAPPROVED_POST,
   API_REFUSE_GROUP_POST,
-  API_UPDATE_GROUP_POST,
 } from "../../../API/api_server";
 import { toast } from "react-toastify";
 
@@ -32,6 +32,23 @@ function GroupAdminPage({ titlePage }) {
   }, [titlePage]);
   const { group_id } = useParams();
   const navigate = useNavigate();
+  const [dataGroup, setDataGroup] = useState();
+  useEffect(() => {
+    try {
+      if (!group_id) return;
+      const getGroupDetail = async () => {
+        const response = await getData(API_GROUP_DETAIL(group_id));
+        if (response?.status) {
+          setDataGroup(response?.data);
+        }
+      };
+
+      getGroupDetail();
+    } catch (error) {
+      console.error(error.message);
+    }
+  }, [group_id]);
+
   const handleDeleteGroup = async () => {
     try {
       const response = await deleteData(API_DELETE_GROUP(group_id));
@@ -94,7 +111,7 @@ function GroupAdminPage({ titlePage }) {
             <div className="group-main">
               <div className="group-left">
                 <div className="title-content box">
-                  <h3>Phê duyệt bài viết (15)</h3>
+                  <h3>Phê duyệt bài viết ({listPostGroup?.length})</h3>
                 </div>
                 <form action="" method="get">
                   <input
@@ -137,7 +154,7 @@ function GroupAdminPage({ titlePage }) {
                   ))
                 ) : (
                   <h4 className="box-center">
-                    Nhóm chưa có bài viết nào hoặc nhóm đang để chế độ riêng tư. 
+                    Nhóm chưa có bài viết nào hoặc nhóm đang để chế độ riêng tư.
                   </h4>
                 )}
               </div>
@@ -146,11 +163,11 @@ function GroupAdminPage({ titlePage }) {
                   <h3>Thống kê bài viết</h3>
                   <div className="info-short--item info-school">
                     <MdDateRange />
-                    100.000 bài viết (+3 bài viết hôm nay)
+                    {listPostGroup?.length?.toLocaleString()} bài viết 
                   </div>
                   <div className="info-short--item info-address">
                     <FaPeopleGroup />
-                    100.000 thành viên (+5 thành viên hôm nay)
+                    {dataGroup?.member_count?.toLocaleString()} thành viên 
                   </div>
                 </div>
                 <Link to={`/group/${group_id}/admin/edit`}>

@@ -19,6 +19,7 @@
           width: 100%;
           aspect-ratio: 2.5;
           object-fit: cover;
+          object-position: top;
           background-color: var(--bg-accent-color);
         }
       }
@@ -178,7 +179,7 @@
         }
         &.active {
           color: var(--active-color);
-          border-bottom: 1px solid var(--active-color);
+          border-bottom: 3px solid var(--active-color);
           background-color: var(--hover-color);
         }
       }

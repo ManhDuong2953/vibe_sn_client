@@ -1,5 +1,5 @@
 #sidebar-right--container {
-  flex: 6;
+  flex: 8;
   height: 100%;
   overflow-y: scroll;
   overflow-x: hidden;
@@ -15,7 +15,7 @@
     display: block;
     width: 100%;
     h4 {
-      font-size: 14px;
+      font-size: 12px;
       font-weight: 500;
       margin-bottom: 5px;
       padding-bottom: 10px;
@@ -33,7 +33,7 @@
         margin-right: 8px;
       }
       p {
-        font-size: 14px;
+        font-size: 12px;
         b:hover {
           text-decoration: underline;
         }
