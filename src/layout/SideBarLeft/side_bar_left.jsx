@@ -1,7 +1,7 @@
 import { useContext, useState, useEffect } from "react";
 import "./side_bar_left.scss";
 import { FaUsers, FaStore } from "react-icons/fa";
-import { MdGroups } from "react-icons/md";
+import { FaPeopleGroup } from "react-icons/fa6";
 import { OwnDataContext } from "../../provider/own_data";
 import {
   API_LIST_GROUP_BY_USERID,
@@ -60,7 +60,7 @@ function SideBarLeft() {
 
         {/* Nhóm */}
         <Link to={`/group`} className="sidebar-item">
-          <MdGroups className="sidebar-icon" />
+          <FaPeopleGroup  className="sidebar-icon" />
           <span>Nhóm</span>
         </Link>
 
@@ -87,7 +87,7 @@ function SideBarLeft() {
                     </div>
                     <div className="group-info">
                       <p className="group-name">
-                        {truncateText(group.group_name, 30)}
+                        {truncateText(group.group_name, 50)}
                       </p>
                       <i className="group-members">
                         {group.member_count} thành viên
@@ -115,7 +115,7 @@ function SideBarLeft() {
                   </div>
                   <div className="group-info">
                     <p className="group-name">
-                      {truncateText(group.group_name, 30)}
+                      {truncateText(group.group_name, 50)}
                     </p>
                     <i className="group-members">
                       {group.member_count} thành viên

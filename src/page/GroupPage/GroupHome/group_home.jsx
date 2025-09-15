@@ -3,7 +3,7 @@ import "./group_home.scss";
 import NavigativeBar from "../../../layout/NavigativeBar/navigative_bar";
 import PostItem from "../../../layout/ListPosts/PostItem/post_item";
 import GroupHeader from "../../../layout/GroupHeader/group_header";
-import { MdDateRange } from "react-icons/md";
+import { MdDateRange, MdOutlinePublic } from "react-icons/md";
 import { FaPeopleGroup } from "react-icons/fa6";
 import FormPost from "../../../component/FormPost/form_post";
 import { useParams } from "react-router-dom";
@@ -14,6 +14,7 @@ import {
   API_LIST_MEMBERS_OFFICAL_GROUP,
 } from "../../../API/api_server";
 import { formatDate } from "../../../ultils/formatDate/format_date";
+import { RiGitRepositoryPrivateFill } from "react-icons/ri";
 
 function GroupHomePage({ titlePage }) {
   useEffect(() => {
@@ -92,7 +93,7 @@ function GroupHomePage({ titlePage }) {
                   ))
                 ) : (
                   <h4 className="box-center">
-                    Nhóm chưa có bài viết nào hoặc nhóm đang để chế độ riêng tư. 
+                    Nhóm chưa có bài viết nào hoặc nhóm đang để chế độ riêng tư.
                   </h4>
                 )}
               </div>
@@ -102,10 +103,29 @@ function GroupHomePage({ titlePage }) {
                   {dataGroup && (
                     <div className="slogan">{dataGroup?.group_slogan}</div>
                   )}
+                  <div className="info-short">
+                    <div className="info-short--item info-name">
+                      <b>{dataGroup?.group_name}</b>
+                    </div>
+                    {dataGroup?.group_privacy === 0 && (
+                      <div className="info-short--item info-privacy">
+                        <RiGitRepositoryPrivateFill />
+                        Nhóm riêng tư: Chỉ thành viên mới có thể xem nội dung
+                        bài viết và thành viên trong nhóm
+                      </div>
+                    )}
+                    {dataGroup?.group_privacy === 1 && (
+                      <div className="info-short--item info-privacy">
+                        <MdOutlinePublic />
+                        Nhóm công khai: Bất kỳ ai cũng có thể xem nội dung bài
+                        viết
+                      </div>
+                    )}
+                  </div>
                   {dataGroup?.created_at && (
                     <div className="info-short--item info-school">
                       <MdDateRange />
-                      Tạo ngày:{" "}
+                      Tạo ngày:
                       <b>{formatDate(dataGroup?.created_at, "dd/mm/yy")}</b>
                     </div>
                   )}

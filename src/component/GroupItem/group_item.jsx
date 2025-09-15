@@ -45,7 +45,7 @@ function GroupItem({ group_id = null, data = null }) {
             />
           </div>
           <div className="name-group">
-            <b>{truncateText(dataGr.group_name, 50)}</b> 
+            <b>{truncateText(dataGr.group_name, 50)}</b>{" "}
             <i>{dataGr.member_count || 0} thành viên</i>
           </div>
         </Link>

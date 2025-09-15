@@ -193,11 +193,12 @@ function NavigativeBar() {
     }
   };
 
+  const [loadingLogout, setLoadingLogout] = useState(false);
   const logoutHandle = async () => {
     try {
       // Gọi API để xóa token từ phía server (nếu cần)
       const response = await deleteData(API_LOGOUT);
-
+      setLoadingLogout(true);
       if (response?.status) {
         // Xóa token từ cookie
         localStorage.clear();
@@ -208,6 +209,8 @@ function NavigativeBar() {
     } catch (error) {
       // Thông báo lỗi nếu có
       toast.error("Đăng xuất thất bại");
+    } finally {
+      setLoadingLogout(false);
     }
   };
 
@@ -535,18 +538,30 @@ function NavigativeBar() {
                       <FaChevronRight />
                     </Link>
                   </li>
-                  <li
-                    className="function-direct logout"
-                    onClick={() => logoutHandle()}
-                  >
-                    <div className="list">
-                      <span>
-                        <MdLogout />
-                        <p>Đăng xuất</p>
-                      </span>
-                      <FaChevronRight />
-                    </div>
-                  </li>
+                  {loadingLogout ? (
+                    <li className="function-direct logout">
+                      <div className="list">
+                        <span>
+                          <MdLogout />
+                          <p>Đang đăng xuất...</p>
+                        </span>
+                        <FaChevronRight />
+                      </div>
+                    </li>
+                  ) : (
+                    <li
+                      className="function-direct logout"
+                      onClick={() => logoutHandle()}
+                    >
+                      <div className="list">
+                        <span>
+                          <MdLogout />
+                          <p>Đăng xuất</p>
+                        </span>
+                        <FaChevronRight />
+                      </div>
+                    </li>
+                  )}
                 </ul>
               </div>
             </div>

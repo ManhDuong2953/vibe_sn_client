@@ -105,6 +105,7 @@ svg {
   /* Ẩn phần chữ thừa */
   text-overflow: ellipsis;
   /* Thay thế phần chữ thừa bằng dấu '...' */
+  max-width: 100%;
 }
 
 .text-center {

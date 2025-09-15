@@ -273,7 +273,7 @@ function StoriesPage({ titlePage }) {
                 </div>
               ) : (
                 <div className="box-center">
-                  Rất tiếc, tin không còn tồn tại hoặc đã hết hạn.
+                 Đang cố gắng tải tin...Tin có thể đã bị xóa hoặc hết hạn.
                 </div>
               )}
             </div>

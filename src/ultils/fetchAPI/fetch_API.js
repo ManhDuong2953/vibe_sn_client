@@ -118,7 +118,7 @@ const axiosInstance = axios.create({
 const handleResponse = (response) => {
   const data = response.data;
 
-  if ([true, 200, 201, 304].includes(data?.status)) {
+  if ([true, 200, 201, 204, 304].includes(data?.status)) {
     data.status = true;
   } else {
     data.status = false;
