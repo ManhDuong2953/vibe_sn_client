@@ -16,6 +16,7 @@ function EditInfoGroupPage({ titlePage }) {
   useEffect(() => {
     document.title = titlePage;
   }, [titlePage]);
+
   const navigate = useNavigate();
   const { group_id } = useParams();
   const [groupName, setGroupName] = useState("");
@@ -26,6 +27,7 @@ function EditInfoGroupPage({ titlePage }) {
   const [croppedAvatar, setCroppedAvatar] = useState(null);
   const [croppedCover, setCroppedCover] = useState(null);
   const [isShowCropContainer, setIsShowCropContainer] = useState(false);
+  const [currentImageToCrop, setCurrentImageToCrop] = useState(null); // Trạng thái để xác định ảnh đang crop
   const [crop, setCrop] = useState({ x: 0, y: 0 });
   const [zoom, setZoom] = useState(1);
   const [croppedAreaPixels, setCroppedAreaPixels] = useState(null);
@@ -68,6 +70,7 @@ function EditInfoGroupPage({ titlePage }) {
           const croppedImage = await getCroppedImg(image, croppedAreaPixels);
           setCroppedImage(croppedImage);
           setIsShowCropContainer(false);
+          setCurrentImageToCrop(null);
         } catch (e) {
           console.error(e);
         }
@@ -78,6 +81,7 @@ function EditInfoGroupPage({ titlePage }) {
 
   const handleAvatarChange = (e) => {
     setIsShowCropContainer(true);
+    setCurrentImageToCrop("avatar");
     if (e.target.files && e.target.files.length > 0) {
       const file = e.target.files[0];
       const imageUrl = URL.createObjectURL(file);
@@ -88,12 +92,18 @@ function EditInfoGroupPage({ titlePage }) {
 
   const handleCoverChange = (e) => {
     setIsShowCropContainer(true);
+    setCurrentImageToCrop("cover");
     if (e.target.files && e.target.files.length > 0) {
       const file = e.target.files[0];
       const imageUrl = URL.createObjectURL(file);
       setCoverImage(imageUrl);
       setCroppedCover(null);
     }
+  };
+
+  const cancelCrop = () => {
+    setIsShowCropContainer(false);
+    setCurrentImageToCrop(null);
   };
 
   const handleSubmit = async (e) => {
@@ -105,7 +115,6 @@ function EditInfoGroupPage({ titlePage }) {
     formData.append("group_slogan", introduction);
     formData.append("group_privacy", privacy);
 
-    // Kiểm tra và thêm ảnh vào formData
     if (croppedAvatar) {
       const blobAvatar = await fetch(croppedAvatar).then((r) => r.blob());
       formData.append("avatar", blobAvatar, "avatar.jpg");
@@ -134,8 +143,8 @@ function EditInfoGroupPage({ titlePage }) {
     <React.Fragment>
       <NavigativeBar />
       <div className="edit-group-page">
-        <BackButton />
         <form onSubmit={handleSubmit}>
+          <BackButton />
           <h1>Sửa thông tin nhóm</h1>
           <div className="side-container">
             <div className="side-left">
@@ -174,8 +183,7 @@ function EditInfoGroupPage({ titlePage }) {
                   <h3>Ảnh đại diện nhóm:</h3>
                   <img
                     onError={(e) => {
-                      e.target.src =
-                        "https://tenten.vn/tin-tuc/wp-content/uploads/2022/06/loi-http-error-4.png";
+                      e.target.src = tempAvt;
                     }}
                     src={croppedAvatar ?? avatarImage}
                     alt="Cropped Avatar"
@@ -188,6 +196,7 @@ function EditInfoGroupPage({ titlePage }) {
                   hidden
                   accept="image/*"
                   onChange={handleAvatarChange}
+                  aria-label="Chọn ảnh đại diện nhóm"
                 />
               </div>
               <div className="form-group">
@@ -195,8 +204,7 @@ function EditInfoGroupPage({ titlePage }) {
                   <h3>Ảnh bìa nhóm:</h3>
                   <img
                     onError={(e) => {
-                      e.target.src =
-                        "https://tenten.vn/tin-tuc/wp-content/uploads/2022/06/loi-http-error-4.png";
+                      e.target.src = tempCover;
                     }}
                     src={croppedCover ?? coverImage}
                     alt="Cropped Cover"
@@ -209,6 +217,7 @@ function EditInfoGroupPage({ titlePage }) {
                   hidden
                   accept="image/*"
                   onChange={handleCoverChange}
+                  aria-label="Chọn ảnh bìa nhóm"
                 />
               </div>
             </div>
@@ -216,55 +225,46 @@ function EditInfoGroupPage({ titlePage }) {
           {loading ? (
             <LoadingIcon />
           ) : (
-            <button type="submit">Lưu thay đổi</button>
+            <div className="btn-container">
+              <button type="submit">Lưu thay đổi</button>
+             
+            </div>
           )}
         </form>
-        {isShowCropContainer && (
+        {isShowCropContainer && currentImageToCrop && (
           <div className="crop-img-container">
-            {avatarImage && !croppedAvatar && (
-              <div className="crop-container">
-                <Cropper
-                  image={avatarImage}
-                  crop={crop}
-                  zoom={zoom}
-                  aspect={1}
-                  onCropChange={setCrop}
-                  onZoomChange={setZoom}
-                  onCropComplete={onCropComplete}
-                />
+            <div className="crop-container">
+              <Cropper
+                image={currentImageToCrop === "avatar" ? avatarImage : coverImage}
+                crop={crop}
+                zoom={zoom}
+                aspect={currentImageToCrop === "avatar" ? 1 : 2.5}
+                onCropChange={setCrop}
+                onZoomChange={setZoom}
+                onCropComplete={onCropComplete}
+              />
+              <div className="btn-container">
                 <button
                   type="button"
                   className="btn-func crop"
                   onClick={() =>
-                    generateCroppedImage(avatarImage, setCroppedAvatar)
+                    generateCroppedImage(
+                      currentImageToCrop === "avatar" ? avatarImage : coverImage,
+                      currentImageToCrop === "avatar" ? setCroppedAvatar : setCroppedCover
+                    )
                   }
                 >
-                  Cắt ảnh đại diện
+                  Cắt ảnh {currentImageToCrop === "avatar" ? "đại diện" : "bìa"}
                 </button>
-              </div>
-            )}
-            {coverImage && !croppedCover && (
-              <div className="crop-container">
-                <Cropper
-                  image={coverImage}
-                  crop={crop}
-                  zoom={zoom}
-                  aspect={2.5}
-                  onCropChange={setCrop}
-                  onZoomChange={setZoom}
-                  onCropComplete={onCropComplete}
-                />
                 <button
                   type="button"
-                  className="btn-func crop"
-                  onClick={() =>
-                    generateCroppedImage(coverImage, setCroppedCover)
-                  }
+                  className="btn-func cancel"
+                  onClick={cancelCrop}
                 >
-                  Cắt ảnh bìa
+                  Hủy
                 </button>
               </div>
-            )}
+            </div>
           </div>
         )}
       </div>

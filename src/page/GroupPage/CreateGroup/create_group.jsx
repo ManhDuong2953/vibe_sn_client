@@ -105,8 +105,8 @@ function CreateGroupPage({ titlePage }) {
     <React.Fragment>
       <NavigativeBar />
       <div className="create-group-page">
-        <BackButton />
         <form onSubmit={(e) => handleSubmit(e)}>
+          <BackButton />
           <h1>Tạo nhóm</h1>
           <div className="side-container">
             <div className="side-left">

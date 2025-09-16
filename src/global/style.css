@@ -136,6 +136,7 @@ button[type="submit"] {
   border: none;
   outline: unset;
   background-color: transparent !important;
+  border-radius: 15px;
 }
 
 button[type="submit"]:hover {
