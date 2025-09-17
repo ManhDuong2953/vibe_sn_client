@@ -20,11 +20,13 @@ function PopupInfoShort({ user_id }) {
   const [countHearted, setCountHearted] = useState(0);
   const [infoUser, setInfoUser] = useState();
   const dataOwner = useContext(OwnDataContext);
-
+  const [loading, setLoading] = useState(false);
+  
   useEffect(() => {
     try {
       if (!user_id) return;
       const fetchAPI = async () => {
+        setLoading(true);
         const response = await getData(
           API_GET_INFO_USER_PROFILE_BY_ID(user_id)
         );
@@ -35,8 +37,13 @@ function PopupInfoShort({ user_id }) {
       fetchAPI();
     } catch (error) {
       console.error(error);
+    } finally {
+      setLoading(false);
     }
   }, [user_id]);
+
+  console.log(infoUser);
+
   const [countMutual, setCountMutual] = useState();
 
   useEffect(() => {
@@ -45,9 +52,7 @@ function PopupInfoShort({ user_id }) {
     const fetchFriends = async () => {
       if (dataOwner && dataOwner.user_id !== user_id) {
         try {
-          const response = await getCountMutualFriends(
-            user_id
-          );
+          const response = await getCountMutualFriends(user_id);
 
           setCountMutual(response);
         } catch (error) {
@@ -56,7 +61,7 @@ function PopupInfoShort({ user_id }) {
       }
     };
     fetchFriends();
-  }, [dataOwner]);
+  }, [dataOwner, user_id]);
 
   useEffect(() => {
     const popupInfoElements = document.querySelectorAll(
@@ -102,6 +107,7 @@ function PopupInfoShort({ user_id }) {
 
   useEffect(() => {
     const getHeart = async () => {
+      if (!user_id) return;
       const responseHeart = await getData(API_PROFILE_HEART_GET(user_id));
       setCountHearted(responseHeart.data.length);
       if (responseHeart?.status) {
@@ -115,7 +121,7 @@ function PopupInfoShort({ user_id }) {
       }
     };
     getHeart();
-  }, []);
+  }, [user_id]);
 
   const handleHeartClick = async (e) => {
     e.preventDefault();
@@ -138,56 +144,76 @@ function PopupInfoShort({ user_id }) {
 
   return (
     <React.Fragment>
-      {infoUser && (
+      {loading ? (
         <div className="popup-info--container">
           <div className="popup-row-container">
             <div className="popup-row popup-info">
-              <img onError={(e) => { e.target.src = "https://tenten.vn/tin-tuc/wp-content/uploads/2022/06/loi-http-error-4.png"; }}className="popup-avt" src={infoUser?.avatar} alt="" />
-              <div className="popup-info-short">
-                <b className="popup-name-user">{infoUser?.user_name}</b>
-                <p className="popup-nickname-user">
-                  @{infoUser?.user_nickname}
-                </p>
-                {infoUser?.user_school && (
-                  <div className="popup-info-short--item info-school">
-                    <FaSchoolCircleCheck />
-                    Từng học tại <b>{infoUser?.user_school}</b>
-                  </div>
-                )}
-                {infoUser?.user_address && (
-                  <div className="popup-info-short--item info-address">
-                    <IoHome />
-                    Đang sống tại <b>{infoUser?.user_address}</b>
-                  </div>
-                )}
-                <div className="popup-info-short--item info-quantity--fr">
-                  <FaUserFriends />
-                  Có <b>{countMutual} bạn chung</b>
-                </div>
-                <div className="popup-info-short--item info-quantity--fr">
-                  <IoHeartCircleSharp />
-                  Có <b>{countHearted} lượt yêu thích</b>
-                </div>
+              <div className="loading-skeleton">
+                <DevtoCard />
               </div>
-            </div>
-            <div className="popup-row action">
-              <Link to={`/profile/${user_id}`}>
-                <h5 className="popup-direct-info--detail">
-                  Xem trang cá nhân <FaArrowUpRightFromSquare />
-                </h5>
-              </Link>
-              <div className="popup-temp"></div>
-              <form
-                action=""
-                onClick={handleHeartClick}
-                method="post"
-                className={hearted ? "active" : ""}
-              >
-                <IoHeartCircleSharp /> <p>{hearted ? "Đã thích" : "Thích"}</p>
-              </form>
             </div>
           </div>
         </div>
+      ) : (
+        infoUser && (
+          <div className="popup-info--container">
+            <div className="popup-row-container">
+              <div className="popup-row popup-info">
+                <img
+                  onError={(e) => {
+                    e.target.src =
+                      "https://tenten.vn/tin-tuc/wp-content/uploads/2022/06/loi-http-error-4.png";
+                  }}
+                  className="popup-avt"
+                  src={infoUser?.avatar}
+                  alt=""
+                />
+                <div className="popup-info-short">
+                  <b className="popup-name-user">{infoUser?.user_name}</b>
+                  <p className="popup-nickname-user">
+                    @{infoUser?.user_nickname}
+                  </p>
+                  {infoUser?.user_school && (
+                    <div className="popup-info-short--item info-school">
+                      <FaSchoolCircleCheck />
+                      Từng học tại <b>{infoUser?.user_school}</b>
+                    </div>
+                  )}
+                  {infoUser?.user_address && (
+                    <div className="popup-info-short--item info-address">
+                      <IoHome />
+                      Đang sống tại <b>{infoUser?.user_address}</b>
+                    </div>
+                  )}
+                  <div className="popup-info-short--item info-quantity--fr">
+                    <FaUserFriends />
+                    Có <b>{countMutual} bạn chung</b>
+                  </div>
+                  <div className="popup-info-short--item info-quantity--fr">
+                    <IoHeartCircleSharp />
+                    Có <b>{countHearted} lượt yêu thích</b>
+                  </div>
+                </div>
+              </div>
+              <div className="popup-row action">
+                <Link to={`/profile/${user_id}`}>
+                  <h5 className="popup-direct-info--detail">
+                    Xem trang cá nhân <FaArrowUpRightFromSquare />
+                  </h5>
+                </Link>
+                <div className="popup-temp"></div>
+                <form
+                  action=""
+                  onClick={handleHeartClick}
+                  method="post"
+                  className={hearted ? "active" : ""}
+                >
+                  <IoHeartCircleSharp /> <p>{hearted ? "Đã thích" : "Thích"}</p>
+                </form>
+              </div>
+            </div>
+          </div>
+        )
       )}
     </React.Fragment>
   );

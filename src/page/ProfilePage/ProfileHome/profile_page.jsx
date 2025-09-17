@@ -94,7 +94,7 @@ function ProfilePage({ titlePage }) {
                       <div className="info-short--item info-school">
                         <MdDateRange />
                         <p>
-                          Tạo ngày: <b>{formatDateVN(data?.date_of_birth)}</b>
+                          Sinh nhật: <b>{formatDateVN(data?.date_of_birth)}</b>
                         </p>
                       </div>
                     )}
