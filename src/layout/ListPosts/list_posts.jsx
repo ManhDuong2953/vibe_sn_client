@@ -5,6 +5,7 @@ import FormPost from "../../component/FormPost/form_post";
 import PostItem from "./PostItem/post_item";
 import { getData } from "../../ultils/fetchAPI/fetch_API";
 import { API_GET_POSTS } from "../../API/api_server";
+import ClassicPostLoader from "../../skeleton/classic_post_loader";
 
 function ListPosts() {
   const [listPost, setListPost] = useState([]);
@@ -63,20 +64,19 @@ function ListPosts() {
         <span className="list-post--span">
           <ListStories />
           <FormPost />
-
           {listPost.length > 0 ? (
             <>
               {listPost.map((item, index) => (
                 <PostItem key={index} data={item} />
               ))}
-              {isLoading && (
-                <h4 className="box-center">Đang tải thêm...</h4>
-              )}
+              {isLoading && <h4 className="box-center">Đang tải thêm...</h4>}
             </>
           ) : isDataLoaded ? (
             <h4 className="box-center">Không có bài viết nào dành cho bạn</h4>
           ) : (
-            <h4 className="box-center">Đang tải bài viết...</h4>
+            <div className="loading-skeleton">
+              <ClassicPostLoader />
+            </div>
           )}
 
           <div id="temp-tag" style={{ height: 100 }}></div>

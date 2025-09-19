@@ -10,15 +10,11 @@ import { API_GET_INFO_USER_PROFILE_BY_ID } from "../../../../API/api_server";
 
 function SuggestItem({ user_id, data = {} }) {
   const [loading, setLoading] = useState(true);
-  const [countMutualFr, setCountMutualFr] = useState(0);
   const [dataUser, setDataUser] = useState(data);
   const dataOwner = useContext(OwnDataContext);
 
   useEffect(() => {
-    if (data) setLoading(false);
-  }, [data]);
-
-    useEffect(() => {
+    if (data && Object.keys(data).length > 0) return;
     const fetchDataUser = async () => {
       if (!user_id) return;
       if (user_id && Object.keys(data).length === 0) {
@@ -42,13 +38,12 @@ function SuggestItem({ user_id, data = {} }) {
     fetchDataUser();
   }, [user_id]);
 
+  const [countMutualFr, setCountMutualFr] = useState(0);
   useEffect(() => {
     const fetchMutualFriendsCount = async () => {
       try {
         if (dataOwner && user_id) {
-          const mutualCount = await getCountMutualFriends(
-            user_id
-          );
+          const mutualCount = await getCountMutualFriends(user_id);
           setCountMutualFr(mutualCount);
         }
       } catch (error) {
@@ -69,7 +64,14 @@ function SuggestItem({ user_id, data = {} }) {
         <Link to={`/profile/${dataUser?.user_id}`}>
           <div className="avt-suggest popup">
             <PopupInfoShort user_id={dataUser?.user_id} />
-            <img onError={(e) => { e.target.src = "https://tenten.vn/tin-tuc/wp-content/uploads/2022/06/loi-http-error-4.png"; }}src={dataUser?.avatar} alt="User Avatar" />
+            <img
+              onError={(e) => {
+                e.target.src =
+                  "https://tenten.vn/tin-tuc/wp-content/uploads/2022/06/loi-http-error-4.png";
+              }}
+              src={dataUser?.avatar}
+              alt="User Avatar"
+            />
           </div>
           <div className="name-suggest">
             <b>{dataUser?.user_name}</b>

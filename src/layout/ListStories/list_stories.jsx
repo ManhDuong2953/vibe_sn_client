@@ -7,6 +7,7 @@ import { FaCircleChevronLeft, FaCircleChevronRight } from "react-icons/fa6";
 import { OwnDataContext } from "../../provider/own_data";
 import { getData } from "../../ultils/fetchAPI/fetch_API.js";
 import { API_LIST_STORY } from "../../API/api_server.js";
+import InstagramStyle from "../../skeleton/insta_style.jsx";
 function ListStories() {
   const [listStories, setListStories] = useState([]);
   const [indexItemStart, setIndexItemStart] = useState(0);
@@ -52,8 +53,11 @@ function ListStories() {
     listStories.style.transform = `translateX(calc(-25% * ${indexItemStart}))`;
   }, [indexItemStart]);
 
+  //loading
+  const [loading, setLoading] = useState(true);
   //fetch data
   useEffect(() => {
+    setLoading(true);
     const fetchData = async () => {
       try {
         const response = await getData(API_LIST_STORY);
@@ -70,6 +74,8 @@ function ListStories() {
         }
       } catch (error) {
         console.error(error);
+      } finally {
+        setLoading(false);
       }
     };
 
@@ -98,10 +104,22 @@ function ListStories() {
               </div>
             </Link>
           </li>
-          {listStories &&
+          {!loading ? (
+            listStories &&
             listStories?.map((story, index) => (
               <StoryItem key={story.story_id} story={story} index={index} />
-            ))}
+            ))
+          ) : (
+            <div
+              className="loading-skeleton"
+              style={{ display: "flex", gap: "10px" }}
+            >
+              <InstagramStyle />
+              <InstagramStyle />
+              <InstagramStyle />
+              <InstagramStyle />
+            </div>
+          )}
         </ul>
         <FaCircleChevronRight className="btn btn-next" />
       </div>

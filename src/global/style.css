@@ -78,7 +78,8 @@ b {
 html, textarea {
   font-family: "Roboto", sans-serif;
 }
-.tox-tinymce{
+
+.tox-tinymce {
   background: white;
 }
 
@@ -254,12 +255,13 @@ a {
 .loading-skeleton svg {
   width: 100%;
   height: auto;
-  padding: 5px 0 0;
+  padding: 10px;
+  border-radius: 10px;
 }
 
 .loading-skeleton {
-  padding: 0 30px;
-  height: 100%;
+  margin: 10px 0;
+  width: 100%;
 }
 
 a.filepond--credits {

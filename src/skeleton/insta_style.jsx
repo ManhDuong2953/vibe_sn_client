@@ -1,21 +1,27 @@
-import React from 'react'
-import ContentLoader from 'react-content-loader'
+import React from "react";
+import ContentLoader from "react-content-loader";
 
-const InstagramStyle = props => (
-  <ContentLoader viewBox="0 0 400 460" width={100} height={150}    backgroundColor="gray"
-  foregroundColor="white" {...props}>
+const InstagramStyle = (props) => (
+  <ContentLoader
+    viewBox="0 0 300 500"
+    width={100}
+    height={200}
+    backgroundColor="gray"
+    foregroundColor="white"
+    {...props}
+  >
     <circle cx="31" cy="31" r="15" />
     <rect x="58" y="18" rx="2" ry="2" width="140" height="10" />
     <rect x="58" y="34" rx="2" ry="2" width="140" height="10" />
-    <rect x="0" y="60" rx="2" ry="2" width="400" height="400" />
+    <rect x="0" y="60" rx="2" ry="2" width="400" height="2000" />
   </ContentLoader>
-)
+);
 
 InstagramStyle.metadata = {
-  name: 'DaniloWoz',
-  github: 'danilowoz',
-  description: 'Instagram style',
-  filename: 'Instagram',
-}
+  name: "DaniloWoz",
+  github: "danilowoz",
+  description: "Instagram style",
+  filename: "Instagram",
+};
 
-export default InstagramStyle
+export default InstagramStyle;

@@ -4,8 +4,8 @@ import ContentLoader from 'react-content-loader'
 const ClassicPostLoader = props => {
     return (
         <ContentLoader
-            viewBox="0 0 800 400"
-            height={100} width={150}
+            viewBox="0 -10 550 400"
+            height={300} width={400}
             backgroundColor="gray"  // Black background
             foregroundColor="white"  // White foreground
             {...props}>

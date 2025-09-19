@@ -42,7 +42,6 @@ function PopupInfoShort({ user_id }) {
     }
   }, [user_id]);
 
-  console.log(infoUser);
 
   const [countMutual, setCountMutual] = useState();
 

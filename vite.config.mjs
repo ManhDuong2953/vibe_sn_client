@@ -10,4 +10,11 @@ export default defineConfig({
     loader: "jsx",
     include: /src\/.*\.[jt]sx?$/, // xử lý cả js, jsx, ts, tsx
   },
+  css: {
+    preprocessorOptions: {
+      scss: {
+        silenceDeprecations: ["legacy-js-api"],
+      },
+    },
+  },
 });

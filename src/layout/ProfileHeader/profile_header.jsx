@@ -228,7 +228,7 @@ function ProfileHeader({ classNameActive, userId }) {
 
   return (
     <div className="profile-header--container">
-      {loading ? (
+      {true ? (
         <div className="loading-skeleton">
           <DevtoCard />
         </div>

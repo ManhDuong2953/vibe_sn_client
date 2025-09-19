@@ -10,35 +10,56 @@ import {
 import { getData } from "../../ultils/fetchAPI/fetch_API";
 import { truncateText } from "../../ultils/text/textHandler";
 import { Link } from "react-router-dom";
+import AvatarWithText from "../../skeleton/avatarwithtext";
+
 function SideBarLeft() {
-  // Dữ liệu gợi ý nhóm mẫu
   const dataOwner = useContext(OwnDataContext);
-  // Lấy danh sách nhóm của chủ sở hữu
+
+  // Nhóm của tôi
   const [listMyGroups, setMyGroups] = useState([]);
+  const [loadingMyGroups, setLoadingMyGroups] = useState(true);
+
   useEffect(() => {
     const getAllGroupByOwner = async () => {
       if (!dataOwner?.user_id) return;
-      const response = await getData(
-        API_LIST_GROUP_BY_USERID(dataOwner?.user_id)
-      );
-      if (response?.status) {
-        setMyGroups(response.data);
+      try {
+        setLoadingMyGroups(true);
+        const response = await getData(
+          API_LIST_GROUP_BY_USERID(dataOwner?.user_id)
+        );
+        if (response?.status) {
+          setMyGroups(response.data);
+        }
+      } catch (error) {
+        console.error("Error fetching my groups:", error);
+      } finally {
+        setLoadingMyGroups(false);
       }
     };
     getAllGroupByOwner();
   }, [dataOwner]);
 
+  // Nhóm gợi ý
   const [suggestedGroups, setSuggestedGroups] = useState([]);
+  const [loadingSuggestedGroups, setLoadingSuggestedGroups] = useState(true);
+
   useEffect(() => {
     const getSuggestedGroups = async () => {
-      if (!dataOwner?.user_id) return;
-      const response = await getData(API_LIST_GROUP_SUGGEST);
-      if (response?.status) {
-        setSuggestedGroups(response.data);
+      try {
+        setLoadingSuggestedGroups(true);
+        const response = await getData(API_LIST_GROUP_SUGGEST);
+        if (response?.status) {
+          setSuggestedGroups(response.data);
+        }
+      } catch (error) {
+        console.error("Error fetching suggested groups:", error);
+      } finally {
+        setLoadingSuggestedGroups(false);
       }
     };
     getSuggestedGroups();
   }, [dataOwner]);
+
   return (
     <div id="sidebar-left--container">
       <div className="sidebar-left--wrap">
@@ -53,14 +74,17 @@ function SideBarLeft() {
         </Link>
 
         {/* Bạn bè */}
-        <Link to={`/profile/${dataOwner?.user_id}/friends`} className="sidebar-item">
+        <Link
+          to={`/profile/${dataOwner?.user_id}/friends`}
+          className="sidebar-item"
+        >
           <FaUsers className="sidebar-icon" />
           <span>Bạn bè</span>
         </Link>
 
         {/* Nhóm */}
         <Link to={`/group`} className="sidebar-item">
-          <FaPeopleGroup  className="sidebar-icon" />
+          <FaPeopleGroup className="sidebar-icon" />
           <span>Nhóm</span>
         </Link>
 
@@ -71,13 +95,19 @@ function SideBarLeft() {
         </Link>
 
         {/* Nhóm của bạn */}
-        {listMyGroups.length > 0 && (
-          <div className="sidebar-suggest">
-            <h5>Nhóm của bạn</h5>
-            <ul className="suggest-list">
-              {listMyGroups.map((group) => (
+        <div className="sidebar-suggest">
+          <h5>Nhóm của bạn</h5>
+          <ul className="suggest-list">
+            {loadingMyGroups ? (
+              <div className="loading-skeleton">
+                {[...Array(6)].map((_, i) => (
+                  <AvatarWithText key={i} />
+                ))}
+              </div>
+            ) : listMyGroups.length > 0 ? (
+              listMyGroups.map((group) => (
                 <li key={group.group_id}>
-                  <Link to={"/group/"+group?.group_id} className="suggest-item">
+                  <Link to={`/group/${group?.group_id}`} className="suggest-item">
                     <div className="group-avatar">
                       <img
                         src={group?.avatar_media_link}
@@ -95,35 +125,51 @@ function SideBarLeft() {
                     </div>
                   </Link>
                 </li>
-              ))}
-            </ul>
-          </div>
-        )}
-        {/* Danh sách nhóm gợi ý */}
+              ))
+            ) : (
+              <p className="text-muted">Bạn chưa tham gia nhóm nào</p>
+            )}
+          </ul>
+        </div>
+
+        {/* Nhóm gợi ý */}
         <div className="sidebar-suggest">
           <h5>Nhóm gợi ý cho bạn</h5>
           <ul className="suggest-list">
-            {suggestedGroups.map((group) => (
-              <li key={group?.group_id}>
-                <Link to={"/group/"+group?.group_id} className="suggest-item">
-                  <div className="group-avatar">
-                    <img
-                      src={group?.avatar_media_link}
-                      alt=""
-                      className="avatar"
-                    />
-                  </div>
-                  <div className="group-info">
-                    <p className="group-name">
-                      {truncateText(group.group_name, 50)}
-                    </p>
-                    <i className="group-members">
-                      {group.member_count} thành viên
-                    </i>
-                  </div>
-                </Link>
-              </li>
-            ))}
+            {loadingSuggestedGroups ? (
+              <div className="loading-skeleton">
+                {[...Array(6)].map((_, i) => (
+                  <AvatarWithText key={i} />
+                ))}
+              </div>
+            ) : suggestedGroups.length > 0 ? (
+              suggestedGroups.map((group) => (
+                <li key={group?.group_id}>
+                  <Link
+                    to={`/group/${group?.group_id}`}
+                    className="suggest-item"
+                  >
+                    <div className="group-avatar">
+                      <img
+                        src={group?.avatar_media_link}
+                        alt=""
+                        className="avatar"
+                      />
+                    </div>
+                    <div className="group-info">
+                      <p className="group-name">
+                        {truncateText(group.group_name, 50)}
+                      </p>
+                      <i className="group-members">
+                        {group.member_count} thành viên
+                      </i>
+                    </div>
+                  </Link>
+                </li>
+              ))
+            ) : (
+              <p className="text-muted">Không có gợi ý nhóm nào</p>
+            )}
           </ul>
         </div>
       </div>
